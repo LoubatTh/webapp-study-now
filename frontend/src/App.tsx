@@ -1,7 +1,9 @@
+import { Button } from "./components/ui/button";
+
 function App() {
   return (
     <>
-      <div className="uppercase">hello</div>
+      <Button className="uppercase">hello</Button>
     </>
   );
 }

@@ -4,6 +4,16 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [react()],
+  server: {
+    host: true,
+    port: 8000,
+    proxy: {
+      "/api": "http://backend",
+    },
+    watch: {
+      usePolling: true,
+    },
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

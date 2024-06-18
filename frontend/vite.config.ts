@@ -6,9 +6,19 @@ export default defineConfig({
   plugins: [react()],
   test: {
     globals: true,
-    environment: 'jsdom', 
-    include: ['./tests/vitest/*.test.js'],
-    exclude: ['./tests/playwright/**'], 
+    environment: "jsdom",
+    include: ["./tests/vitest/*.test.js"],
+    exclude: ["./tests/playwright/**"],
+  },
+  server: {
+    host: true,
+    port: 8000,
+    proxy: {
+      "/api": "http://backend",
+    },
+    watch: {
+      usePolling: true,
+    },
   },
   resolve: {
     alias: {

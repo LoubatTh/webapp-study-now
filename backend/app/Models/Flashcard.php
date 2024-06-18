@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Flashcard extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'question',
+        'response',
+    ];
+
+    public function deck()
+    {
+        return $this->belongsTo(Deck::class);
+    }
 }

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreFlashcardRequest;
-use App\Http\Requests\UpdateFlashcardRequest;
-use App\Models\Flashcard;
+use App\Http\Requests\StoreDeckRequest;
+use App\Http\Requests\UpdateDeckRequest;
+use App\Models\Deck;
 
-class FlashcardController
+class DeckController
 {
     /**
      * Display a listing of the resource.
@@ -27,7 +27,7 @@ class FlashcardController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreFlashcardRequest $request)
+    public function store(StoreDeckRequest $request)
     {
         //
     }
@@ -35,7 +35,7 @@ class FlashcardController
     /**
      * Display the specified resource.
      */
-    public function show(Flashcard $flashcard)
+    public function show(Deck $deck)
     {
         //
     }
@@ -43,7 +43,7 @@ class FlashcardController
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Flashcard $flashcard)
+    public function edit(Deck $deck)
     {
         //
     }
@@ -51,7 +51,7 @@ class FlashcardController
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateFlashcardRequest $request, Flashcard $flashcard)
+    public function update(UpdateDeckRequest $request, Deck $deck)
     {
         //
     }
@@ -59,7 +59,7 @@ class FlashcardController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Flashcard $flashcard)
+    public function destroy(Deck $deck)
     {
         //
     }

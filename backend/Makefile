@@ -14,3 +14,6 @@ migrate: ## Run migration
 
 cache: ## Clear cache
 	docker exec -it backend php artisan optimize:clear;
+
+reload-schema: ## Reload migrations to update db schema
+	docker exec -it backend php artisan migrate:refresh;

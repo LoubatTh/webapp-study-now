@@ -2,7 +2,7 @@ import React from 'react'
 
 const ProfilePage = () => {
   return (
-    <div>Pour voir cette page tu es censé être authentifié,</div>
+    <div>Profile Page (besoin d'être authentifié pour voir cette page)</div>
   )
 }
 

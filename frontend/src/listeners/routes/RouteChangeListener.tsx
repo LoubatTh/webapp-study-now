@@ -2,8 +2,10 @@ import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 
-
-const excludedPages = [
+/*
+Mettre ici toutes les routes que l'on souhaite exclure de la vérification d'authentification
+*/
+const excludedRoutes = [
   '/',
   '/login',
 ];
@@ -19,7 +21,7 @@ const RouteChangeListener = () => {
         /*
         Si cette page ne nécessite pas d'authentification alors on ne fait rien
         */
-        if (excludedPages.includes(location.pathname)) {
+        if (excludedRoutes.includes(location.pathname)) {
            return;
         }
 

@@ -5,6 +5,7 @@ const Homepage = () => {
 
   const { accessToken, receivedAt, setAccessToken, logout } = useAuth();
 
+  // TEST D'AUTHENTIFICATION
   return (
     <>
       <p>Token: {accessToken}</p>

@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('flashcards', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('deck_id');
+            $table->foreignId('deck_id');
             $table->string('question');
             $table->string('response');
             $table->timestamps();

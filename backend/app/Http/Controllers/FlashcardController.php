@@ -13,7 +13,7 @@ class FlashcardController
      */
     public function index()
     {
-        //
+        return Flashcard::all();
     }
 
     /**

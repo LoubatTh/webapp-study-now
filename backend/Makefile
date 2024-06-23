@@ -17,3 +17,6 @@ cache: ## Clear cache
 
 reload-schema: ## Reload migrations to update db schema
 	docker exec -it backend php artisan migrate:refresh;
+
+test: ## Run tests
+	docker exec -it backend php artisan test;

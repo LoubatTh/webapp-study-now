@@ -1,13 +1,5 @@
-import { createContext, useState, ReactNode, useContext } from 'react';
+import { createContext, useState, ReactNode, useContext, useEffect } from 'react';
 import { deleteCookie, getCookie, setCookie } from '../utils/cookie';
-
-type AuthContextType = {
-    accessToken: string | null; //A voir si laisser ce champ accessible partout dans le context est utile (car un peu dangereux je trouve)
-    expiresAt: number | null;
-    setToken: (token: string, refreshToken: string, expiresAt: number) => void;
-    logout: () => void;
-    checkToken: () => boolean | Promise<Boolean>;
-}
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -27,6 +19,14 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [expiresAt, setExpiresAt] = useState<number | null>(null);
+
+  /*
+  useEffect permettant de vérifier si un refreshToken est présent lors du premier chargement du site
+  permettant d'authentifier l'utilisateur directement sans qu'il ait à se reconnecter 
+  */
+  useEffect(() => {
+    // refreshToken();
+  }, [])
 
   /*
   Méthode "officielle" pour enregistrer le token de l'utilisateur,
@@ -53,6 +53,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setAccessToken(null);
       setExpiresAt(null);
       deleteCookie('refreshToken')
+
+      // TODO: Utiliser l'utils api.ts lorsque la méthode pour fetch avec un bearer token sera prête
+      fetch("http://localhost:8000/api/logout", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${accessToken}`
+        }
+      })
   };
 
   /*
@@ -83,6 +91,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return false;
       }
 
+      // TODO: Utiliser l'utils api.ts lorsque la méthode pour fetch avec un bearer token sera prête
       const response = await fetch("http://localhost:8000/api/refresh", {
         method: "GET",
         headers: {
@@ -104,13 +113,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 
   return (
-    <AuthContext.Provider value={{
-            accessToken,
-            expiresAt: expiresAt,
-            setToken,
-            logout,
-            checkToken
-        }}>
+    <AuthContext.Provider value={{ accessToken, expiresAt: expiresAt, setToken, logout, checkToken }}>
       {children}
     </AuthContext.Provider>
   );

@@ -43,6 +43,22 @@ services:
     networks:
       - network
 
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    env_file:
+      - ./frontend/.env
+    networks:
+      - network
+
 networks:
   network:
     driver: bridge

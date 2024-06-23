@@ -35,7 +35,7 @@ class AuthController extends Controller
         return response()->json([
             'token' => $accessToken->plainTextToken,
             'refresh-token' => $refreshToken->plainTextToken
-        ]);
+        ], 201);
     }
 
     public function login(Request $request)

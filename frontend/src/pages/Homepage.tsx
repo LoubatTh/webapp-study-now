@@ -1,20 +1,22 @@
 import { useAuth } from "../contexts/AuthContext";
+import { fetchApi } from "../utils/api";
+import { deleteCookie, getCookie } from "../utils/cookie";
 
 
 const Homepage = () => {
 
-  const { accessToken, receivedAt, setAccessToken, logout } = useAuth();
+  const { accessToken, expiresAt } = useAuth();
+  const refreshToken = getCookie('refreshToken');
+
 
   // TEST D'AUTHENTIFICATION
   return (
     <>
+      <p>HomePage</p>
+      <br />
       <p>Token: {accessToken}</p>
-      <p>receivedAt : {receivedAt}</p>
-      <br />
-      <br />
-      <button onClick={() => setAccessToken(crypto.randomUUID(), Date.now())}>Login</button>
-      <br />
-      <button onClick={logout}>Logout</button>
+      <p>expiresAt : {expiresAt}</p>
+      <p>refreshToken : {refreshToken} </p>
     </>
   )
 };

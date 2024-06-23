@@ -14,24 +14,33 @@ const RouteChangeListener = () => {
 
    const location = useLocation();
    const navigate = useNavigate();
-   const { checkToken } = useAuth();
+   const { checkToken, logout } = useAuth();
 
     useEffect(() => {
 
+      const verifyAccess = async () => {
+
         /*
-        Si cette page ne nécessite pas d'authentification alors on ne fait rien
-        */
+          Si cette page ne nécessite pas d'authentification alors on ne fait rien
+          */
         if (excludedRoutes.includes(location.pathname)) {
-           return;
+          return;
         }
+
+        
+        const tokenIsValid = await checkToken();
 
         /*
-        Si le token n'est plus valide alors on redirige vers la page de login
-        */
-        if(!checkToken()){
-            navigate("/login")
+          Si le token n'est plus valide alors on redirige vers la page de login
+          */
+        if (!tokenIsValid) {
+          console.log("La validation du token a échoué, redirection vers /login");
+          logout();
+          navigate("/login");
         }
+      };
 
+    verifyAccess();
 
     }, [location]);
 

@@ -1,11 +1,12 @@
 import { createContext, useState, ReactNode, useContext } from 'react';
+import { deleteCookie, getCookie, setCookie } from '../utils/cookie';
 
 type AuthContextType = {
-    accessToken: string | null;
-    receivedAt: number | null;
-    setAccessToken: (token: string | null, receivedAt: number | null) => void;
+    accessToken: string | null; //A voir si laisser ce champ accessible partout dans le context est utile (car un peu dangereux je trouve)
+    expiresAt: number | null;
+    setToken: (token: string, refreshToken: string, expiresAt: number) => void;
     logout: () => void;
-    checkToken: () => boolean;
+    checkToken: () => boolean | Promise<Boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -25,51 +26,88 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
-  const [receivedAt, setReceivedAt] = useState<number | null>(null);
+  const [expiresAt, setExpiresAt] = useState<number | null>(null);
 
-    /*
-    Méthode "officielle" pour enregistrer le token de l'utilisateur,
-    TODO: Trouver un nom plus simple et plus parlant
-    */
-    const handleSetAccessToken = (token: string | null, receivedAt: number | null) => {
-        setAccessToken(token);
-        setReceivedAt(receivedAt);
-    };
+  /*
+  Méthode "officielle" pour enregistrer le token de l'utilisateur,
+  */
+  const setToken = (token: string, refreshToken: string, expiresAt: number) => {
+    setAccessToken(token);
+    setExpiresAt(expiresAt);
+    setCookie('refreshToken', refreshToken, 7) //Le cookie expirera dans 7 jours
+  };
 
-    /*
-    Méthode permettant de déconnecter l'utilisateur en supprimant le 
-    l'accessToken, le refreshToken (TODO) et la date de reçu
-    */
-    const logout = () => {
-        setAccessToken(null);
-        setReceivedAt(null);
-    };
+  /*
+  Méthode permettant d'update le token de l'utilisateur lorsqu'il est refresh
+  */
+  const updateToken = (token: string) => {
+    setAccessToken(token)
+    setExpiresAt(Date.now() + 15 * 1000)
+  }
 
-    /*
-    Méthode permettant de vérifier la validité du token, déjà si il y en a un, 
-    et puis si c'est le cas, vérifier si sa date d'expiration est passé, si oui, alors la méthode refreshToken est appelé
-    */
-    const checkToken = () => {
-      return accessToken !== null;
-        // const now = new Date().getTime();
-        // const delay = 3 * 60 * 60 * 1000; // 3 heures en millisecondes
-        // if (receivedAt && (now > (receivedAt + delay))) {
-        //   //  TODO: Gérer le refresh token ici
-        // }
-    };
+  /*
+  Méthode permettant de déconnecter l'utilisateur en supprimant le 
+  l'accessToken, le refreshToken (TODO) et la date d'expiration
+  */
+  const logout = () => {
+      setAccessToken(null);
+      setExpiresAt(null);
+      deleteCookie('refreshToken')
+  };
 
-    /*
-    Méthode permettant de récupérer un nouvel accessToken A CONDITION que le refreshToken soit encore valide.
-    */
-    const refreshToken = () => {
-        //TODO: ici mettre le code pour récupérer le nouveau accessToken a condition que le refreshToken soit encore valide, sinon rediriger vers la page de login
+  /*
+  Méthode permettant de vérifier la validité du token, déjà si il y en a un, 
+  et puis si c'est le cas, vérifier si sa date d'expiration est passé, si oui, alors la méthode refreshToken est appelé
+  */
+  const checkToken = async () => {
+      const now = Date.now();
+      if(accessToken == null){
+        return false;
+      }
+
+      if(expiresAt && now > expiresAt){
+        console.log("le token doit être rafraîchis")
+        return await refreshToken();
+      }
+
+      console.log("le token n'a pas besoin d'être rafraîchis")
+      return true;
+  };
+
+  /*
+  Méthode permettant de récupérer un nouvel accessToken A CONDITION que le refreshToken soit encore valide.
+  */
+  const refreshToken = async () => {
+      const refreshToken = getCookie('refreshToken');
+      if(!refreshToken){
+        return false;
+      }
+
+      const response = await fetch("http://localhost:8000/api/refresh", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${refreshToken}`
+        },
+      });
+
+      if (!response.ok){
+        return false;
+      }
+
+      const data = await response.json();
+      updateToken(data.token);
+      console.log("le token a bien été rafraîchis")
+
+      return true;
     }
+
 
   return (
     <AuthContext.Provider value={{
             accessToken,
-            receivedAt,
-            setAccessToken: handleSetAccessToken,
+            expiresAt: expiresAt,
+            setToken,
             logout,
             checkToken
         }}>

@@ -15,8 +15,8 @@ import Navbar from "./components/Navbar";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <AuthProvider>
       <BrowserRouter>
+      <AuthProvider>
         <Navbar />
         <RouteChangeListener />
         <Routes>
@@ -24,7 +24,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route path="/login" element={<LoginPage />} />
           <Route path="/profile" element={<ProfilePage/> } />
         </Routes>
+        </AuthProvider>
       </BrowserRouter>
-    </AuthProvider>
   </React.StrictMode>
 );

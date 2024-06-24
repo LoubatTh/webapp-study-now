@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Qcm;
 use Illuminate\Http\JsonResponse;
 
-class QcmController extends Controller
+class QcmController
 {
     //
 
@@ -27,6 +27,13 @@ class QcmController extends Controller
         ]);
 
         return response()->json($qcm, 201);
+    }
+
+    public function show(Request $request, string $id): JsonResponse
+    {
+        $qcm = Qcm::findOrFail($id);
+
+        return response()->json($qcm);
     }
 
 }

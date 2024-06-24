@@ -1,4 +1,4 @@
-type AuthContextType = {
+export type AuthContextType = {
     accessToken: string | null; //A voir si laisser ce champ accessible partout dans le context est utile (car un peu dangereux je trouve)
     expiresAt: number | null;
     isReady: boolean;

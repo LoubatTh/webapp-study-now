@@ -1,6 +1,7 @@
 import { createContext, useState, ReactNode, useContext, useEffect } from 'react';
 import { deleteCookie, getCookie, setCookie } from '../utils/cookie';
 import { parseISODateToMilis } from '../utils/dateparser';
+import type { AuthContextType } from '../types/AuthContext.type';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -48,7 +49,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const updateToken = (accessToken: string, accessTokenExpiration: string) => {
     setAccessToken(accessToken)
     setExpiresAt(parseISODateToMilis(accessTokenExpiration));
-  
+    
   }
 
   /*

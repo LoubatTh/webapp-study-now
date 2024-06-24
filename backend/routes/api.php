@@ -4,6 +4,7 @@ use App\Enums\TokenAbility;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\QcmController;
 
 // Auth routes
 Route::post('register', [AuthController::class, 'register']);

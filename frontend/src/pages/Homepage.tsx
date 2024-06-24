@@ -1,5 +1,13 @@
+import Navbar from "../components/navbar.tsx";
+
 const Homepage = () => {
-  return <div className="uppercase">homepage</div>;
+  return (
+    <div className="homepage-container">
+      <Navbar />
+      <main>
+      </main>
+    </div>
+  );
 };
 
 export default Homepage;

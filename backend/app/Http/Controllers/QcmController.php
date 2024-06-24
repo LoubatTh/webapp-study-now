@@ -41,8 +41,8 @@ class QcmController extends Controller
     {
         $request->validate([
             'question' => 'sometimes|required|string',
-            'answers' => 'sometimes|required|array',
-            'answers.*.response' => 'sometimes|required|string',
+            'answers' => 'sometimes|required|array|size:4',
+            'answers.*.response' => 'required|string',
             'answers.*.isValid' => 'required|boolean',
         ]);
 

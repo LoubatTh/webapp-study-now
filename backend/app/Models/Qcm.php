@@ -9,5 +9,6 @@ class Qcm extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['question', 'answers'];
     protected $casts = ['answers' => 'array'];
 }

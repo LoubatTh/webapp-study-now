@@ -20,6 +20,7 @@ const RouteChangeListener = () => {
 
       const verifyAccess = async () => {
 
+        console.log("Vérification de l'accès à la page : ", location.pathname)
         /*
           Si cette page ne nécessite pas d'authentification alors on ne fait rien
           */

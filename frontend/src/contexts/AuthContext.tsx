@@ -26,8 +26,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   permettant d'authentifier l'utilisateur directement sans qu'il ait à se reconnecter 
   */
   useEffect(() => {
-    console.log("chargement initial de la page")
     refreshToken();
+    console.log("Le refreshToken a été vérifié")
   }, [])
 
   /*

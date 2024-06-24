@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateDeckRequest;
 use App\Http\Resources\DeckCollection;
 use App\Http\Resources\DeckResource;
 use App\Models\Deck;
+use App\Models\Flashcard;
 
 class DeckController
 {
@@ -17,7 +18,7 @@ class DeckController
     {
         try {
             // return new DeckCollection(Deck::where("user_id", auth()->user()->id)->get());
-            return response()->json(new DeckCollection(Deck::all()->with("flashcards")), 200);
+            return response()->json(new DeckCollection(Deck::with("flashcards")->get()), 200);
         } catch (\Exception $e) {
             return response()->json(["error" => $e->getMessage()], 400);
         }
@@ -29,7 +30,11 @@ class DeckController
     public function getDeckById(int $id)
     {
         try {
-            $deck = Deck::find($id);
+            $deck = Deck::with("flashcards")->find($id);
+            if (!$deck) {
+                return response()->json(["message" => "Deck not found"], 404);
+            }
+
             return response()->json(new DeckResource($deck), 200);
         } catch (\Exception $e) {
             return response()->json(["error" => $e->getMessage()], 400);
@@ -43,6 +48,7 @@ class DeckController
     {
         try {
             Deck::create($request->validated());
+            Flashcard::create($request->flashcards->validated());
             return response()->json(["message" => "Deck created successfully"], 201);
         } catch (\Exception $e) {
             return response()->json(["error" => $e->getMessage()], 400);

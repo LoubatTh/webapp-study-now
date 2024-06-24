@@ -5,7 +5,6 @@ use App\Http\Controllers\FlashcardController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(["namespace" => "App\Http\Controllers"], function () {
-    Route::get("flashcards/{id}", [FlashcardController::class, "getFlashcardById"]);
     Route::post("flashcards", [FlashcardController::class, "createFlashcard"]);
     Route::put("flashcards/{id}", [FlashcardController::class, "updateFlashcardById"]);
     Route::delete("flashcards/{id}", [FlashcardController::class, "deleteFlashcardById"]);

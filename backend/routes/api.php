@@ -23,3 +23,4 @@ Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->valu
 
 Route::post('/qcms', [QcmController::class, 'store']);
 Route::get('/qcms/{id}', [QcmController::class, 'show']);
+Route::put('/qcms/{id}', [QcmController::class, 'update']);

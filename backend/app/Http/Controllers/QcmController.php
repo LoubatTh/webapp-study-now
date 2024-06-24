@@ -37,4 +37,28 @@ class QcmController extends Controller
         return response()->json($qcm);
     }
 
+    public function update(Request $request, string $id): JsonResponse
+    {
+        $request->validate([
+            'question' => 'sometimes|required|string',
+            'answers' => 'sometimes|required|array',
+            'answers.*.response' => 'sometimes|required|string',
+            'answers.*.isValid' => 'required|boolean',
+        ]);
+
+        $qcm = Qcm::findOrFail($id);
+
+        if ($request->has('question')) {
+            $qcm->question = $request->question;
+        }
+
+        if ($request->has('answers')) {
+            $qcm->answers = $request->answers;
+        }
+
+        $qcm->save();
+
+        return response()->json($qcm);
+    }
+
 }

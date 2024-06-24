@@ -14,6 +14,13 @@ class QcmController extends Controller
     public function store(Request $request): JsonResponse
     {
 
+        $request->validate([
+            'question' => 'required|string',
+            'answers' => 'required|array|size:4',
+            'answers.*.response' => 'required|string',
+            'answers.*.isValid' => 'required|boolean',
+        ]);
+
         $qcm = Qcm::create([
             'question' => $request->question,
             'answers' => $request->answers

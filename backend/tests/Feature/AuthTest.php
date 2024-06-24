@@ -25,8 +25,8 @@ class AuthTest extends TestCase
                 'password' => Hash::make('testPassword'),
             ]
         );
-        $this->accessToken = $this->user->createToken('access_token', [TokenAbility::ACCESS_API->value], Carbon::now()->addMinutes(config('sanctum.ac_expiration')))->plainTextToken;
-        $this->refreshToken = $this->user->createToken('refresh_token', [TokenAbility::ISSUE_ACCESS_TOKEN->value], Carbon::now()->addMinutes(config('sanctum.rt_expiration')))->plainTextToken;
+        $this->accessToken = $this->user->createToken('accessToken', [TokenAbility::ACCESS_API->value], Carbon::now()->addMinutes(config('sanctum.ac_expiration')))->plainTextToken;
+        $this->refreshToken = $this->user->createToken('refreshToken', [TokenAbility::ISSUE_ACCESS_TOKEN->value], Carbon::now()->addMinutes(config('sanctum.rt_expiration')))->plainTextToken;
     }
 
     protected function tearDown(): void
@@ -54,7 +54,7 @@ class AuthTest extends TestCase
 
         $response->assertStatus(201)->assertJson(
             fn(AssertableJson $json) =>
-            $json->hasAll(['access-token', 'access-token-expiration', 'refresh-token', 'refresh-token-expiration'])
+            $json->hasAll(['accessToken', 'accessTokenExpiration', 'refreshToken', 'refreshTokenExpiration'])
         );
 
     }
@@ -96,10 +96,10 @@ class AuthTest extends TestCase
 
         $response->assertStatus(200)->assertJson(
             fn(AssertableJson $json) =>
-            $json->hasAll(['access-token', 'access-token-expiration', 'refresh-token', 'refresh-token-expiration'])
+            $json->hasAll(['accessToken', 'accessTokenExpiration', 'refreshToken', 'refreshTokenExpiration'])
         );
 
-        $token = $response['access-token'];
+        $token = $response['accessToken'];
         $deleteResponse = $this->deleteJson(
             '/api/user',
             [],
@@ -128,7 +128,7 @@ class AuthTest extends TestCase
 
         $response->assertStatus(200)->assertJson(
             fn(AssertableJson $json) =>
-            $json->hasAll(['access-token', 'access-token-expiration'])
+            $json->hasAll(['accessToken', 'accessTokenExpiration'])
         );
     }
 

@@ -20,14 +20,15 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [expiresAt, setExpiresAt] = useState<number | null>(null);
+  const [isReady, setIsReady] = useState<boolean>(false);
 
   /*
   useEffect permettant de vérifier si un refreshToken est présent lors du premier chargement du site
   permettant d'authentifier l'utilisateur directement sans qu'il ait à se reconnecter 
   */
   useEffect(() => {
-    refreshToken();
-    console.log("Le refreshToken a été vérifié")
+    console.log("chargement initial de la page")
+    refreshToken().finally(() => setIsReady(true));
   }, [])
 
   /*
@@ -35,8 +36,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   */
   const setToken = (accessToken: string, accessTokenExpiration: string, refreshToken: string, refreshTokenExpiration: string) => {
     //Access token
-    setAccessToken(accessToken);
-    setExpiresAt(parseISODateToMilis(accessTokenExpiration));
+    updateToken(accessToken, accessTokenExpiration);
 
     //RefreshToken
     setCookie('refreshToken', refreshToken, refreshTokenExpiration)
@@ -48,6 +48,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const updateToken = (accessToken: string, accessTokenExpiration: string) => {
     setAccessToken(accessToken)
     setExpiresAt(parseISODateToMilis(accessTokenExpiration));
+  
   }
 
   /*
@@ -83,7 +84,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return await refreshToken();
       }
 
-      console.log("le token n'a pas besoin d'être rafraîchis")
       return true;
   };
 
@@ -118,7 +118,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 
   return (
-    <AuthContext.Provider value={{ accessToken, expiresAt: expiresAt, setToken, logout, checkToken }}>
+    <AuthContext.Provider value={{ accessToken, expiresAt: expiresAt, setToken, logout, checkToken, isReady }}>
       {children}
     </AuthContext.Provider>
   );

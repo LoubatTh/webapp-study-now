@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { deleteCookie } from '../utils/cookie';
 
 const LoginPage = () => {
-  const { setToken, logout, checkToken } = useAuth();
+  const { accessToken, setToken, logout, checkToken } = useAuth();
   const [message, setMessage] = useState("");
 
   // Infos de connexion pré-remplies pour la simplicité de l'exemple

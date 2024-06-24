@@ -14,13 +14,17 @@ const RouteChangeListener = () => {
 
    const location = useLocation();
    const navigate = useNavigate();
-   const { checkToken, logout } = useAuth();
+   const { checkToken, logout, isReady } = useAuth();
 
     useEffect(() => {
 
       const verifyAccess = async () => {
 
-        console.log("Vérification de l'accès à la page : ", location.pathname)
+       /*
+       Attendre que le AuthContext soit initialisé avant de vérifier l'accès
+        */
+        if (!isReady) return;
+
         /*
           Si cette page ne nécessite pas d'authentification alors on ne fait rien
           */
@@ -43,7 +47,7 @@ const RouteChangeListener = () => {
 
     verifyAccess();
 
-    }, [location]);
+    }, [location, isReady]);
 
      return null;
 

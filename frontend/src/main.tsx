@@ -14,18 +14,16 @@ import { UserProvider } from "./contexts/UserContext";
 import ProfilePage from "./pages/ProfilePage";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
       <BrowserRouter>
         <AuthProvider>
-          {/* <UserProvider> */}
+          <UserProvider>
             <RouteChangeListener />
             <Routes>
               <Route path="/" element={<Homepage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/profile" element={<ProfilePage />} />
             </Routes>
-          {/* </UserProvider> */}
+          </UserProvider>
         </AuthProvider>
       </BrowserRouter>
-  </React.StrictMode>
 );

@@ -1,4 +1,5 @@
-import { ReactNode, createContext, useContext, useState } from "react";
+import { ReactNode, createContext, useContext, useEffect, useState } from "react";
+import { useAuth } from "./AuthContext";
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
@@ -33,6 +34,40 @@ export const useUser = () => {
 export const UserProvider = ({ children }: { children: ReactNode }) => {
 
     const [user, setUser] = useState<UserContextType>(defaultState);
+    const { accessToken, isReady, setToken, logout} = useAuth();
+
+    /*
+    useEffect permettant de récupérer les informations de l'utilisateur
+    */
+    useEffect(() => {
+
+        const fetchUser = async () => {
+            if (accessToken) {
+                const response = await fetch("http://localhost:8000/api/user", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${accessToken}`
+                    }
+                });
+
+                const data = await response.json();
+                console.log(data);
+                setUser(data);
+            }
+        }
+
+        fetchUser();
+
+    }, [isReady, setToken]);
+
+
+    /* 
+    useEffect permettant de supprimer les infos de l'utilisateurs lors de la déconnexion
+    */
+    useEffect(() => {
+        logout();
+    }, [logout]);
 
     /*
     Méthode permettant de set l'utilisateur dans le context

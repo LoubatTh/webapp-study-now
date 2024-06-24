@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Qcm;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controller;
 
 class QcmController extends Controller
 {
@@ -27,6 +28,13 @@ class QcmController extends Controller
         ]);
 
         return response()->json($qcm, 201);
+    }
+
+    public function show(Request $request, string $id): JsonResponse
+    {
+        $qcm = Qcm::findOrFail($id);
+
+        return response()->json($qcm);
     }
 
 }

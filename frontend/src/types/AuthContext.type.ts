@@ -4,5 +4,5 @@ export type AuthContextType = {
     isReady: boolean;
     setToken: (accessToken: string, accessTokenExpiration: string, refreshToken: string, refreshTokenExpiration: string) => void;
     logout: () => void;
-    checkToken: () => boolean | Promise<Boolean>;
+    checkToken: () => boolean | Promise<boolean>;
 }

@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\FlashcardController;
 use App\Http\Requests\StoreDeckRequest;
 use App\Http\Requests\UpdateDeckRequest;
 use App\Http\Resources\DeckCollection;
 use App\Http\Resources\DeckResource;
 use App\Models\Deck;
-use App\Models\Flashcard;
 
 class DeckController
 {
@@ -44,11 +44,19 @@ class DeckController
     /**
      * Store a newly created resource in storage.
      */
-    public function createDeck(StoreDeckRequest $request)
+    public function createDeck(StoreDeckRequest $request, FlashcardController $flashcardController)
     {
         try {
-            Deck::create($request->validated());
-            Flashcard::create($request->flashcards->validated());
+            $deck = Deck::create([
+                "name" => $request->name,
+                "visibility" => $request->visibility ? $request->visibility : "Public",
+                "likes" => 0,
+            ]);
+
+            foreach ($request->flashcards as $flashcard) {
+                $flashcardController->createFlashcard($flashcard, $deck->id);
+            }
+
             return response()->json(["message" => "Deck created successfully"], 201);
         } catch (\Exception $e) {
             return response()->json(["error" => $e->getMessage()], 400);
@@ -58,7 +66,7 @@ class DeckController
     /**
      * Update the specified resource in storage.
      */
-    public function updateDeckById(UpdateDeckRequest $request, int $id)
+    public function updateDeckById(UpdateDeckRequest $request, int $id, FlashcardController $flashcardController)
     {
         try {
             $deck = Deck::find($id);
@@ -66,7 +74,20 @@ class DeckController
                 return response()->json(["message" => "Deck not found"], 404);
             }
 
-            $deck->update($request->all());
+            $deck->update([
+                "name" => $request->name ? $request->name : $deck->name,
+                "visibility" => $request->visibility ? $request->visibility : $deck->visibility,
+                "likes" => $request->likes ? $request->likes : $deck->likes,
+            ]);
+
+            if (!$flashcardController->deleteFlashcardsByDeck($deck->id)) {
+                return response()->json(["error" => "Error during flashcards replacement"], 400);
+            }
+
+            foreach ($request->flashcards as $flashcard) {
+                $flashcardController->createFlashcard($flashcard, $deck->id);
+            }
+
             return response()->noContent();
         } catch (\Exception $e) {
             return response()->json(["error" => $e->getMessage()], 400);

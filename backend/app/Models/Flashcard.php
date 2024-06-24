@@ -11,7 +11,8 @@ class Flashcard extends Model
 
     protected $fillable = [
         'question',
-        'response',
+        'answer',
+        'deck_id',
     ];
 
     public function deck()

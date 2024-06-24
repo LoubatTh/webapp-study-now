@@ -2,65 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreFlashcardRequest;
-use App\Http\Requests\UpdateFlashcardRequest;
 use App\Models\Flashcard;
 
 class FlashcardController
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        return Flashcard::all();
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreFlashcardRequest $request)
+    public function createFlashcard(array $flashcard, int $deckId)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Flashcard $flashcard)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Flashcard $flashcard)
-    {
-        //
+        Flashcard::create([
+            "question" => $flashcard["question"],
+            "answer" => $flashcard["answer"],
+            "deck_id" => $deckId,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateFlashcardRequest $request, Flashcard $flashcard)
+    public function deleteFlashcardsByDeck(int $deckId)
     {
-        //
-    }
+        try {
+            $flashcards = Flashcard::where("deck_id", $deckId)->get();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Flashcard $flashcard)
-    {
-        //
+            foreach ($flashcards as $flashcard) {
+                $flashcard->delete();
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 }

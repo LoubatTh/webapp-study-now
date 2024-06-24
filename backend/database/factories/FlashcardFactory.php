@@ -21,12 +21,12 @@ class FlashcardFactory extends Factory
     {
         $wordsNum = $this->faker->numberBetween(5, 10);
         $question = $this->faker->sentence($wordsNum);
-        $response = $this->faker->word();
+        $answer = $this->faker->word();
 
         return [
             "deck_id" => Deck::factory(),
             "question" => $question,
-            "response" => $response
+            "answer" => $answer
         ];
     }
 }

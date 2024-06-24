@@ -18,6 +18,7 @@ class DeckResource extends JsonResource
             "id" => $this->id,
             "name" => $this->name,
             "visibility" => $this->visibility,
+            "likes" => $this->likes,
             "flashcards" => FlashcardResource::collection($this->whenLoaded("flashcards"))
         ];
     }

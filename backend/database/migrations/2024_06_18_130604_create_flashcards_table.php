@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('deck_id');
             $table->string('question');
-            $table->string('response');
+            $table->string('answer');
             $table->timestamps();
 
             $table->foreign('deck_id')->references('id')->on('decks')->onDelete('cascade');

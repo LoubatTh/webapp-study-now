@@ -16,7 +16,7 @@ class FlashcardResource extends JsonResource
     {
         return [
             "question" => $this->question,
-            "response" => $this->response,
+            "answer" => $this->answer,
         ];
     }
 }

@@ -23,9 +23,12 @@ class StoreDeckRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name" => ["required"],
-            "visibility" => ["required", Rule::in(["Public", "Private", "Limited"])],
-            "likes" => ["required"],
+            "name" => "required|string|max:255",
+            "visibility" => "string",
+            Rule::in(["Public", "Private", "Limited"]),
+            "flashcards" => "required|array",
+            "flashcards.*.question" => "required|string|max:255",
+            "flashcards.*.answer" => "required|string|max:255",
         ];
     }
 }

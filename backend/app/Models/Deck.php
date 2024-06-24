@@ -15,6 +15,12 @@ class Deck extends Model
         'likes',
     ];
 
+    protected $casts = [
+        'name' => 'string',
+        'visibility' => 'string',
+        'likes' => 'integer',
+    ];
+
     // public function tag()
     // {
     //     return $this->belongsTo(Tag::class);

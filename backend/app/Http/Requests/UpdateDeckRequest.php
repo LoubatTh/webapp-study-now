@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateDeckRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class UpdateDeckRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +23,13 @@ class UpdateDeckRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "name" => "string|max:255",
+            "visibility" => "string",
+            "likes" => "integer",
+            Rule::in(["Public", "Private", "Limited"]),
+            "flashcards" => "array",
+            "flashcards.*.question" => "string|max:255",
+            "flashcards.*.answer" => "string|max:255",
         ];
     }
 }

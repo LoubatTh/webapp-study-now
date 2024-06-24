@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Carbon;
 use \App\Enums\TokenAbility;
@@ -35,10 +36,10 @@ class AuthController extends Controller
         $refreshToken = $user->createToken('refresh_token', [TokenAbility::ISSUE_ACCESS_TOKEN->value], $refreshTokenExpirationDate);
 
         return response()->json([
-            'access-token' => $accessToken->plainTextToken,
-            'access-token-expiration' => $accessTokenExpirationDate,
-            'refresh-token' => $refreshToken->plainTextToken,
-            'refresh-token-expiration' => $refreshTokenExpirationDate,
+            'accessToken' => $accessToken->plainTextToken,
+            'accessTokenExpiration' => $accessTokenExpirationDate,
+            'refreshToken' => $refreshToken->plainTextToken,
+            'refreshTokenExpiration' => $refreshTokenExpirationDate,
         ], 201);
     }
 
@@ -66,10 +67,10 @@ class AuthController extends Controller
         $refreshToken = $user->createToken('refresh_token', [TokenAbility::ISSUE_ACCESS_TOKEN->value], $refreshTokenExpirationDate);
 
         return response()->json([
-            'access-token' => $accessToken->plainTextToken,
-            'access-token-expiration' => $accessTokenExpirationDate,
-            'refresh-token' => $refreshToken->plainTextToken,
-            'refresh-token-expiration' => $refreshTokenExpirationDate,
+            'accessToken' => $accessToken->plainTextToken,
+            'accessTokenExpiration' => $accessTokenExpirationDate,
+            'refreshToken' => $refreshToken->plainTextToken,
+            'refreshTokenExpiration' => $refreshTokenExpirationDate,
         ]);
     }
 
@@ -88,8 +89,8 @@ class AuthController extends Controller
         $accessToken = $request->user()->createToken('access_token', [TokenAbility::ACCESS_API->value], $accessTokenExpirationDate);
 
         return response()->json([
-            'access-token' => $accessToken->plainTextToken,
-            'access-token-expiration' => $accessTokenExpirationDate,
+            'accessToken' => $accessToken->plainTextToken,
+            'accessTokenExpiration' => $accessTokenExpirationDate,
         ]);
     }
 }

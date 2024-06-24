@@ -20,6 +20,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [expiresAt, setExpiresAt] = useState<number | null>(null);
+  const [isReady, setIsReady] = useState<boolean>(false);
 
   /*
   useEffect permettant de vérifier si un refreshToken est présent lors du premier chargement du site
@@ -27,7 +28,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   */
   useEffect(() => {
     console.log("chargement initial de la page")
-    refreshToken();
+    refreshToken().finally(() => setIsReady(true));
   }, [])
 
   /*
@@ -118,7 +119,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 
   return (
-    <AuthContext.Provider value={{ accessToken, expiresAt: expiresAt, setToken, logout, checkToken }}>
+    <AuthContext.Provider value={{ accessToken, expiresAt: expiresAt, setToken, logout, checkToken, isReady }}>
       {children}
     </AuthContext.Provider>
   );

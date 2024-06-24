@@ -1,5 +1,10 @@
 const Homepage = () => {
-  return <div className="uppercase">homepage</div>;
+
+return (
+    <>
+      <p>HomePage</p>
+    </>
+  )
 };
 
 export default Homepage;

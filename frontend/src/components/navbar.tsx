@@ -1,17 +1,37 @@
 import {
   NavigationMenu,
   NavigationMenuContent,
-  // NavigationMenuIndicator,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  // NavigationMenuViewport,
-} from "@/components/ui/navigation-menu";
+} from "@/components/ui/navigation-menu"
+
+import {
+  AlignJustify,
+  ClipboardList,
+  CreditCard,
+  LayoutDashboard,
+  BarChart3,
+  LogIn,
+  LogOut,
+  User,
+} from "lucide-react"
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
+import { Button } from "@/components/ui/button"
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { AlignJustify } from 'lucide-react';
 
 const Navbar = () => {
   return (
@@ -39,39 +59,56 @@ const Navbar = () => {
                   <ListItem key="profile" title="Profile" href="">Consult your profile</ListItem>
                   <ListItem key="stats" title="Stats" href="">Check your statistics</ListItem>
                   <ListItem key="premium" title="Premium" href="">Get access to premium content</ListItem>
+                  <ListItem key="login" title="Login" href="">Connect to your account or create one</ListItem>
                 </ul>
               </NavigationMenuContent>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()} href="">
-                Login
-              </NavigationMenuLink>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
       </div>
       <div className="md:hidden">
-        <NavigationMenu>
-          <NavigationMenuList>
-            <NavigationMenuItem>
-              <NavigationMenuTrigger>
-                <AlignJustify />
-              </NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul className="gap-3 p-4">
-                  <ListItem key="board" title="Board" href=""></ListItem>
-                  <ListItem key="organizations" title="Organizations" href=""></ListItem>
-                  <ListItem key="account" title="Account" href=""></ListItem>
-                </ul>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()} href="">
-                Login
-              </NavigationMenuLink>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline">
+              <AlignJustify />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56">
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem>
+                <User className="mr-2 h-4 w-4" />
+                <a href="">Profile</a>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <BarChart3 className="mr-2 h-4 w-4" />
+                <a href="">Statistics</a>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <CreditCard className="mr-2 h-4 w-4" />
+                <a href="">Premium</a>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem>
+                <ClipboardList className="mr-2 h-4 w-4" />
+                <a href="">Board</a>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <LayoutDashboard className="mr-2 h-4 w-4" />
+                <a href="">Organizations</a>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <LogIn className="mr-2 h-4 w-4" />
+              <a href="">Login</a>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
 

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreDeckRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class StoreDeckRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +23,9 @@ class StoreDeckRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "name" => ["required"],
+            "visibility" => ["required", Rule::in(["Public", "Private", "Limited"])],
+            "likes" => ["required"],
         ];
     }
 }

@@ -17,3 +17,7 @@ Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->valu
   Route::put('user', [UserController::class, 'update']);
   Route::delete('user', [UserController::class, 'destroy']);
 });
+
+// Qcm routes
+
+Route::post('/qcms', [QcmController::class, 'store']);

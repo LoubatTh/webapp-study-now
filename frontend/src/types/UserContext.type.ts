@@ -1,4 +1,4 @@
-type UserContextType = {
+export type UserContextType = {
     name: string,
     email: string,
     role: string,

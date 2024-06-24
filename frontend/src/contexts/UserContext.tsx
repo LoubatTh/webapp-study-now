@@ -53,7 +53,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
                 const data = await response.json();
                 console.log(data);
-                setUser(data);
+                handleSetUser(data);
             }
         }
 
@@ -66,21 +66,21 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     useEffect permettant de supprimer les infos de l'utilisateurs lors de la déconnexion
     */
     useEffect(() => {
-        logout();
+        handleClearUser();
     }, [logout]);
 
     /*
     Méthode permettant de set l'utilisateur dans le context
     */
     const handleSetUser = (newUser: UserContextType) => {
-        setUser({ ...newUser, setUser: handleSetUser, clearUser: handleClearUser });
+        setUser({ ...newUser });
     }
 
     /*
     Méthode permettant de clear l'utilisateur dans le context
     */
     const handleClearUser = () => {
-        setUser({...defaultState, setUser: handleSetUser, clearUser: handleClearUser });
+        setUser({...defaultState });
     }
 
     return (

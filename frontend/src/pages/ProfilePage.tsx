@@ -6,7 +6,7 @@ import { useUser } from '../contexts/UserContext'
 const ProfilePage = () => {
 
 
-  const { name, email, isSubscribed, setUser, clearUser } = useUser();
+  const { name, email, isSubscribed } = useUser();
 
   return (
     <>

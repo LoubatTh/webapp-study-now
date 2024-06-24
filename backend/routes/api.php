@@ -4,6 +4,7 @@ use App\Enums\TokenAbility;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\QcmController;
 
 // Auth routes
 Route::post('register', [AuthController::class, 'register']);
@@ -17,3 +18,7 @@ Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->valu
   Route::put('user', [UserController::class, 'update']);
   Route::delete('user', [UserController::class, 'destroy']);
 });
+
+// Qcm routes
+
+Route::post('/qcms', [QcmController::class, 'store']);

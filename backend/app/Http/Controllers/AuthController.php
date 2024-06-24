@@ -29,12 +29,16 @@ class AuthController extends Controller
             'password' => Hash::make($data['password']),
         ]);
 
-        $accessToken = $user->createToken('access_token', [TokenAbility::ACCESS_API->value], Carbon::now()->addMinutes(config('sanctum.ac_expiration')));
-        $refreshToken = $user->createToken('refresh_token', [TokenAbility::ISSUE_ACCESS_TOKEN->value], Carbon::now()->addMinutes(config('sanctum.rt_expiration')));
+        $accessTokenExpirationDate = Carbon::now()->addMinutes(config('sanctum.ac_expiration'));
+        $accessToken = $user->createToken('access_token', [TokenAbility::ACCESS_API->value], $accessTokenExpirationDate);
+        $refreshTokenExpirationDate = Carbon::now()->addMinutes(config('sanctum.rt_expiration'));
+        $refreshToken = $user->createToken('refresh_token', [TokenAbility::ISSUE_ACCESS_TOKEN->value], $refreshTokenExpirationDate);
 
         return response()->json([
-            'token' => $accessToken->plainTextToken,
-            'refresh-token' => $refreshToken->plainTextToken
+            'access-token' => $accessToken->plainTextToken,
+            'access-token-expiration' => $accessTokenExpirationDate,
+            'refresh-token' => $refreshToken->plainTextToken,
+            'refresh-token-expiration' => $refreshTokenExpirationDate,
         ], 201);
     }
 
@@ -56,12 +60,16 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $accessToken = $user->createToken('access_token', [TokenAbility::ACCESS_API->value], Carbon::now()->addMinutes(config('sanctum.ac_expiration')));
-        $refreshToken = $user->createToken('refresh_token', [TokenAbility::ISSUE_ACCESS_TOKEN->value], Carbon::now()->addMinutes(config('sanctum.rt_expiration')));
+        $accessTokenExpirationDate = Carbon::now()->addMinutes(config('sanctum.ac_expiration'));
+        $accessToken = $user->createToken('access_token', [TokenAbility::ACCESS_API->value], $accessTokenExpirationDate);
+        $refreshTokenExpirationDate = Carbon::now()->addMinutes(config('sanctum.rt_expiration'));
+        $refreshToken = $user->createToken('refresh_token', [TokenAbility::ISSUE_ACCESS_TOKEN->value], $refreshTokenExpirationDate);
 
         return response()->json([
-            'token' => $accessToken->plainTextToken,
-            'refresh-token' => $refreshToken->plainTextToken
+            'access-token' => $accessToken->plainTextToken,
+            'access-token-expiration' => $accessTokenExpirationDate,
+            'refresh-token' => $refreshToken->plainTextToken,
+            'refresh-token-expiration' => $refreshTokenExpirationDate,
         ]);
     }
 
@@ -76,10 +84,12 @@ class AuthController extends Controller
 
     public function refreshToken(Request $request)
     {
-        $accessToken = $request->user()->createToken('access_token', [TokenAbility::ACCESS_API->value], Carbon::now()->addMinutes(config('sanctum.ac_expiration')));
+        $accessTokenExpirationDate = Carbon::now()->addMinutes(config('sanctum.ac_expiration'));
+        $accessToken = $request->user()->createToken('access_token', [TokenAbility::ACCESS_API->value], $accessTokenExpirationDate);
 
         return response()->json([
-            'token' => $accessToken->plainTextToken
+            'access-token' => $accessToken->plainTextToken,
+            'access-token-expiration' => $accessTokenExpirationDate,
         ]);
     }
 }

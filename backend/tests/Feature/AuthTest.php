@@ -54,7 +54,7 @@ class AuthTest extends TestCase
 
         $response->assertStatus(201)->assertJson(
             fn(AssertableJson $json) =>
-            $json->hasAll(['token', 'refresh-token'])
+            $json->hasAll(['access-token', 'access-token-expiration', 'refresh-token', 'refresh-token-expiration'])
         );
 
     }
@@ -96,10 +96,10 @@ class AuthTest extends TestCase
 
         $response->assertStatus(200)->assertJson(
             fn(AssertableJson $json) =>
-            $json->hasAll(['token', 'refresh-token'])
+            $json->hasAll(['access-token', 'access-token-expiration', 'refresh-token', 'refresh-token-expiration'])
         );
 
-        $token = $response['token'];
+        $token = $response['access-token'];
         $deleteResponse = $this->deleteJson(
             '/api/user',
             [],
@@ -128,7 +128,7 @@ class AuthTest extends TestCase
 
         $response->assertStatus(200)->assertJson(
             fn(AssertableJson $json) =>
-            $json->hasAll(['token'])
+            $json->hasAll(['access-token', 'access-token-expiration'])
         );
     }
 
@@ -152,3 +152,4 @@ class AuthTest extends TestCase
         );
     }
 }
+

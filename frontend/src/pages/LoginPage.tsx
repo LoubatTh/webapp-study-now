@@ -21,9 +21,8 @@ const LoginPage = () => {
     });
 
     const data = await response.json();
-
     console.log(data);
-    setToken(data.token, data.refresh_token, Date.now() + 15 * 1000);
+    setToken(data.accessToken, data.accessTokenExpiration, data.refreshToken, data.refreshTokenExpiration);
 
   }
 

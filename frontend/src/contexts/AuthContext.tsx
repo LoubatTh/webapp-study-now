@@ -1,5 +1,6 @@
 import { createContext, useState, ReactNode, useContext, useEffect } from 'react';
 import { deleteCookie, getCookie, setCookie } from '../utils/cookie';
+import { parseISODateToMilis } from '../utils/dateparser';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -32,23 +33,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   /*
   Méthode "officielle" pour enregistrer le token de l'utilisateur,
   */
-  const setToken = (token: string, refreshToken: string, expiresAt: number) => {
-    setAccessToken(token);
-    setExpiresAt(expiresAt);
-    setCookie('refreshToken', refreshToken, 7) //Le cookie expirera dans 7 jours
+  const setToken = (accessToken: string, accessTokenExpiration: string, refreshToken: string, refreshTokenExpiration: string) => {
+    //Access token
+    setAccessToken(accessToken);
+    setExpiresAt(parseISODateToMilis(accessTokenExpiration));
+
+    //RefreshToken
+    setCookie('refreshToken', refreshToken, refreshTokenExpiration)
   };
 
   /*
   Méthode permettant d'update le token de l'utilisateur lorsqu'il est refresh
   */
-  const updateToken = (token: string) => {
-    setAccessToken(token)
-    setExpiresAt(Date.now() + 15 * 1000)
+  const updateToken = (accessToken: string, accessTokenExpiration: string) => {
+    setAccessToken(accessToken)
+    setExpiresAt(parseISODateToMilis(accessTokenExpiration));
   }
 
   /*
   Méthode permettant de déconnecter l'utilisateur en supprimant le 
-  l'accessToken, le refreshToken (TODO) et la date d'expiration
+  l'accessToken, le refreshToken et la date d'expiration, et en appelant la route /api/logout 
   */
   const logout = () => {
       setAccessToken(null);
@@ -106,7 +110,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       const data = await response.json();
-      updateToken(data.token);
+      updateToken(data.accessToken, data.accessTokenExpiration);
       console.log("le token a bien été rafraîchis")
 
       return true;

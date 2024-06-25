@@ -8,10 +8,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DeckController;
 use App\Http\Controllers\FlashcardController;
 use App\Http\Controllers\QcmController;
-
 use App\Http\Controllers\QuizController;
-
-use Illuminate\Support\Facades\Route;
 
 Route::group(["namespace" => "App\Http\Controllers"], function () {
     Route::get("decks", [DeckController::class, "getDecksByUser"]);

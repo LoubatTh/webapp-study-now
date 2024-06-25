@@ -27,7 +27,6 @@ import { RegisterFormSchema } from "@/lib/form/register.form";
 import { fetchApi } from "@/utils/api";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/components/ui/use-toast";
-import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
 
@@ -58,8 +57,8 @@ const LoginPage = () => {
 
         if(response.status != 200) {
           toast({
-            title: "Uh oh! Something went wrong.",
-            description: "There was a problem with your request.",
+            title: "Identifiants incorrects",
+            description: "Désolé, votre email/mot de passe ne sont pas corrects.",
             variant: "destructive"
           });
           return;

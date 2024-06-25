@@ -5,7 +5,19 @@ use App\Enums\TokenAbility;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DeckController;
+use App\Http\Controllers\FlashcardController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\QcmController;
+use Illuminate\Support\Facades\Route;
+
+Route::group(["namespace" => "App\Http\Controllers"], function () {
+    Route::get("decks", [DeckController::class, "getDecksByUser"]);
+    Route::get("decks/{id}", [DeckController::class, "getDeckById"]);
+    Route::post("decks", [DeckController::class, "createDeck"]);
+    Route::put("decks/{id}", [DeckController::class, "updateDeckById"]);
+    Route::delete("decks/{id}", [DeckController::class, "deleteDeckById"]);
+});
 
 // Auth routes
 Route::post('register', [AuthController::class, 'register']);
@@ -27,3 +39,6 @@ Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->valu
 
 // Qcm routes
 Route::post('/qcms', [QcmController::class, 'store']);
+Route::get('/qcms/{id}', [QcmController::class, 'show']);
+Route::put('/qcms/{id}', [QcmController::class, 'update']);
+Route::delete('/qcms/{id}', [QcmController::class, 'destroy']);

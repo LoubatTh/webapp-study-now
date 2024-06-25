@@ -61,4 +61,18 @@ class QcmController extends Controller
         return response()->json($qcm);
     }
 
+    public function delete(Request $request, string $id): JsonResponse
+    {
+        
+        if (Qcm::find($id)) {
+  
+            Qcm::destroy($id);
+            return response()->json(null, 204);
+
+        } else {
+            
+            return response()->json(['error' => 'Resource not found'], 404);
+        }
+    }
+
 }

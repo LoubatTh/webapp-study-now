@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Qcm;
+use App\Models\Quiz;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 
@@ -12,8 +13,10 @@ class QcmController extends Controller
     //
 
 
-    public function store(Request $request): JsonResponse
+    public function store(Request $request, string $id): JsonResponse
     {
+
+        $quiz = Quiz::find($id);
 
         $request->validate([
             'question' => 'required|string',
@@ -22,9 +25,9 @@ class QcmController extends Controller
             'answers.*.isValid' => 'required|boolean',
         ]);
 
-        $qcm = Qcm::create([
+        $qcm = $quiz->qcms()->create([
             'question' => $request->question,
-            'answers' => $request->answers
+            'answers' => $request->answers,
         ]);
 
         return response()->json($qcm, 201);

@@ -1,9 +1,26 @@
 import React from 'react'
-import { useUser } from '../contexts/UserContext'
+import CreateSetBtn from '@/components/createSetBtn'
+import FilterBtnsBar from '@/components/filterBtnsBar'
 
 const BoardPage = () => {
 
-  const { name, email, isSubscribed } = useUser();
+
+
+  return (
+    <>
+      <div className="flex justify-around">
+        <div className="">
+          <CreateSetBtn />
+        </div>
+        <div className="">
+          <h3>My board</h3>
+        </div>
+        <div className="">
+          <FilterBtnsBar />
+        </div>
+      </div>
+    </>
+  )
 
 }
 

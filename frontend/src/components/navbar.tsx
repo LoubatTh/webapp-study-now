@@ -36,7 +36,7 @@ import { cn } from "@/lib/utils"
 const Navbar = () => {
   return (
     <div className="flex justify-between p-5 items-center shadow-lg">
-      <div className="logo-container">
+      <div className="">
         <a className="" href="">Nom du site</a>
       </div>
       <div className="hidden md:flex">

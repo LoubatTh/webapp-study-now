@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Deck;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Tests\TestCase;
+use Illuminate\Foundation\Testing\TestCase;
 
 class DeckTest extends TestCase
 {

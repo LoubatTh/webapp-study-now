@@ -10,9 +10,6 @@ use Illuminate\Routing\Controller;
 
 class QcmController extends Controller
 {
-    //
-
-
     public function store(Request $request, string $id): JsonResponse
     {
 

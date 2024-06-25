@@ -5,11 +5,9 @@ namespace Tests\Feature;
 use App\Enums\TokenAbility;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Tests\TestCase;
+use Illuminate\Foundation\Testing\TestCase;
 
 class UserTest extends TestCase
 {
@@ -25,7 +23,6 @@ class UserTest extends TestCase
                 'name' => 'testUser' . date_create()->format('m-d-Y'),
                 'email' => 'testUser@test.test',
                 'password' => Hash::make('testPassword'),
-                'isSubscribed' => false,
             ]
         );
         $this->accessToken = $this->user->createToken('access_token', [TokenAbility::ACCESS_API->value], Carbon::now()->addMinutes(config('sanctum.ac_expiration')))->plainTextToken;
@@ -54,7 +51,7 @@ class UserTest extends TestCase
 
         $response->assertStatus(200)->assertJson(
             fn(AssertableJson $json) =>
-            $json->hasAll(['id', 'name', 'email', 'isSubscribed', 'email_verified_at', 'created_at', 'updated_at'])
+            $json->hasAll(['id', 'name', 'email', 'role', 'email_verified_at', 'created_at', 'updated_at', 'is_subscribed'])
         );
     }
 
@@ -72,14 +69,15 @@ class UserTest extends TestCase
                 'Authorization' => 'Bearer ' . $this->token
             ]
         );
-        
+
         $response->assertStatus(200)->assertJson(
             fn(AssertableJson $json) =>
             $json->hasAll(['message'])
         );
     }
 
-    public function test_delete_user_with_token(): void {
+    public function test_delete_user_with_token(): void
+    {
         $this->actingAs($this->user);
         $response = $this->deleteJson(
             '/api/user',
@@ -90,7 +88,7 @@ class UserTest extends TestCase
                 'Authorization' => 'Bearer ' . $this->token
             ]
         );
-        
+
         $response->assertStatus(200)->assertJson(
             fn(AssertableJson $json) =>
             $json->hasAll(['message'])

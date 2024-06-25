@@ -5,6 +5,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\QcmController;
+use App\Http\Controllers\QuizController;
 
 // Auth routes
 Route::post('register', [AuthController::class, 'register']);
@@ -25,3 +26,8 @@ Route::post('/qcms', [QcmController::class, 'store']);
 Route::get('/qcms/{id}', [QcmController::class, 'show']);
 Route::put('/qcms/{id}', [QcmController::class, 'update']);
 Route::delete('/qcms/{id}', [QcmController::class, 'destroy']);
+
+
+// Quiz routes
+
+Route::post('/quizzes', [QuizController::class, 'store']);

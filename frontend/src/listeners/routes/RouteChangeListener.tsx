@@ -9,7 +9,6 @@ const excludedRoutes = [
   '/',
   '/login',
   '/legacylogin',
-  '/test'
 ];
 
 const RouteChangeListener = () => {

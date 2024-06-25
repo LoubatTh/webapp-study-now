@@ -7,6 +7,23 @@ const LegacyLoginPage = () => {
   const { accessToken, setToken, logout, checkToken } = useAuth();
   const [message, setMessage] = useState("");
 
+  /*
+
+
+
+
+
+
+  CETTE PAGE EST DEPRÉCIÉE ET SERA BIENTOT SUPPRIMÉE DANS UNE PROCHAINE VERSION
+
+
+
+
+
+
+
+  */
+
   // Infos de connexion pré-remplies pour la simplicité de l'exemple
   const body = {
     "email": "nathan.dulac@epitech.eu",

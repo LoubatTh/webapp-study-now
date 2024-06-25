@@ -8,7 +8,7 @@ const BoardPage = () => {
 
   return (
     <>
-      <div className="flex justify-around">
+      <div className="flex justify-around p-10 items-center">
         <div className="">
           <CreateSetBtn />
         </div>
@@ -19,6 +19,7 @@ const BoardPage = () => {
           <FilterBtnsBar />
         </div>
       </div>
+      <div className=""></div>
     </>
   )
 

@@ -1,7 +1,7 @@
 const Footer = () => {
   return (
     <div className="">
-      <div className="hidden sm:block h-200 py-4 px-10 text-sm shadow-md">
+      <div className="hidden sm:block h-200 py-4 px-10 text-sm">
         <div className="flex content-center justify-between">
           <div className="">
             <div className="p-2">

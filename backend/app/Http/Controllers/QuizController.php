@@ -12,8 +12,20 @@ class QuizController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        $qcm = Qcm::create([
-            'name' => $request->name,
+        $user =  $request->user();
+
+        $data = $resquest->validate([
+            'name' => 'required|string',
+            'qcms' => 'required|array',
+            'qcms.*.question' => 'required|string',
+            'qcms.*.answers' => 'required|array|size:4',
+            'qcms.*.answers.*.response' => 'required|string',
+            'qcms.*.answers.*.isValid' => 'required|boolean',
+        ]);
+
+        $quiz = Quiz::create([
+            'name' => $data['name'],
+            'user' => $user
         ]);
 
     }

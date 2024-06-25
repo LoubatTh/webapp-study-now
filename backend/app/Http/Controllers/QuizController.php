@@ -11,8 +11,6 @@ use Illuminate\Routing\Controller;
 
 class QuizController extends Controller
 {
-    //
-
 
     public function store(Request $request): JsonResponse
     {
@@ -42,5 +40,9 @@ class QuizController extends Controller
         }
 
         return response()->json($quiz);
+    }
+
+    public function destroy(Request $request, string $id): JsonResponse
+    {
     }
 }

@@ -2,9 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Flashcard;
 
-class FlashcardController extends Controller
+class FlashcardController
 {
-    //
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function createFlashcard(array $flashcard, int $deckId)
+    {
+        Flashcard::create([
+            "question" => $flashcard["question"],
+            "answer" => $flashcard["answer"],
+            "deck_id" => $deckId,
+        ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function deleteFlashcardsByDeck(int $deckId)
+    {
+        try {
+            $flashcards = Flashcard::where("deck_id", $deckId)->get();
+
+            foreach ($flashcards as $flashcard) {
+                $flashcard->delete();
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

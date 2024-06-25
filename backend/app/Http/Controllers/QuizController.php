@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use App\Models\Qcm;
+use App\Models\Quiz;
 use Illuminate\Routing\Controller;
 
 class QuizController extends Controller
@@ -12,9 +15,9 @@ class QuizController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        $user =  $request->user();
+        // $user = $request->user();
 
-        $data = $resquest->validate([
+        $data = $request->validate([
             'name' => 'required|string',
             'qcms' => 'required|array',
             'qcms.*.question' => 'required|string',
@@ -25,8 +28,18 @@ class QuizController extends Controller
 
         $quiz = Quiz::create([
             'name' => $data['name'],
-            'user' => $user
+            // 'user' => $user->id,
+            'visibility' => 'public',
+            'likes' => 0
         ]);
 
+        foreach($data['qcms'] as $qcmData) {
+            $qcm = $quiz->qcms()->create([
+                'question' => $qcmData['question'],
+                'answers' => $qcmData['answers']
+            ]);
+        }
+
+        return response()->json($quiz);
     }
 }

@@ -17,11 +17,13 @@ Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->valu
   Route::get('user', [UserController::class, 'show']);
   Route::put('user', [UserController::class, 'update']);
   Route::delete('user', [UserController::class, 'destroy']);
+
+
+  // Qcm routes
+  Route::post('/qcms', [QcmController::class, 'store']);
+  Route::put('/qcms/{id}', [QcmController::class, 'update']);
+  Route::delete('/qcms/{id}', [QcmController::class, 'destroy']);
 });
 
 // Qcm routes
-
-Route::post('/qcms', [QcmController::class, 'store']);
 Route::get('/qcms/{id}', [QcmController::class, 'show']);
-Route::put('/qcms/{id}', [QcmController::class, 'update']);
-Route::delete('/qcms/{id}', [QcmController::class, 'destroy']);

@@ -1,66 +1,232 @@
-import { useEffect, useState } from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import { deleteCookie } from '../utils/cookie';
+import Footer from "@/components/footer";
+import Navbar from "@/components/navbar";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import heroImage from "@/assets/images/hero_login_page.png";
+import { useForm } from "react-hook-form";
+import { LoginFormSchema } from "@/lib/form/login.form";
+import { RegisterFormSchema } from "@/lib/form/register.form";
+import { fetchApi } from "@/utils/api";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "react-toastify";
+// import { ToastContainer, toast } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
 
 const LoginPage = () => {
-  const { accessToken, setToken, logout, checkToken } = useAuth();
-  const [message, setMessage] = useState("");
 
-  // Infos de connexion pré-remplies pour la simplicité de l'exemple
-  const body = {
-    "email": "nathan.dulac@epitech.eu",
-    "password": "password"
-  };
+     const { setToken } = useAuth();
 
-  // Fonction pour obtenir le token
-  const handleGetToken = async () => {
-    try {
-      const response = await fetch("http://localhost:8000/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body)
-      });
+    const loginForm = useForm({
+        resolver: zodResolver(LoginFormSchema),
+        defaultValues: {
+            email: "",
+            password: "",
+            },
+    });
 
-      if (!response.ok) throw new Error('Failed to fetch');
+    const registerForm = useForm({
+        resolver: zodResolver(RegisterFormSchema),
+        defaultValues: {
+            username: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+            },
+    });
 
-      const data = await response.json();
-      console.log(data);
-      setToken(data.accessToken, data.accessTokenExpiration, data.refreshToken, data.refreshTokenExpiration);
-      setMessage("Vous êtes connecté.");
-    } catch (error) {
-      console.error(error);
-      setMessage("Erreur lors de la connexion.");
-    }
-  };
+    const onSubmitLogin = async (values) => {
 
-  // Fonction pour supprimer le refreshToken
-  const deleteRefreshToken = () => {
-    deleteCookie('refreshToken');
-    setMessage("Refresh token supprimé. L'accessToken est toujours présent, mais sera invalide à la fin de la date d'expiration ou si vous rechargez la page.");
-  };
+        const response = await fetchApi("POST", "login", values)
+        const data = response.data;
+        toast("super cool") // a dégager, on utilise shadeUI plutôt
+        // setToken(data.accessToken, data.accessTokenExpiration, data.refreshToken, data.refreshTokenExpiration);
 
-  // Vérification du token à chaque chargement de la page
-  useEffect(() => {
-    const verifyToken = async () => {
-      const isValid = await checkToken();
-      setMessage(isValid ? "Token valide ✅" : "Token introuvable ou invalide. ❌");
     };
-    verifyToken();
-  }, [checkToken]);
 
-  return (
-    <>
-      <div>Login Page</div>
-      <p style={{ color: message.includes("Token valide") ? 'green' : 'red' }}>{message}</p>
-      <div className="space-x-1">
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleGetToken}>Login</button>
-        <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={logout}>Logout</button>
-        <button className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded" onClick={deleteRefreshToken}>Delete RefreshToken</button>
-      </div>
-    </>
-  );
-}
+    const onSubmitRegister = (values) => {
+        console.log(values);
+    };
+
+    return (
+      <>
+        <Navbar />
+        <div className="flex min-h-screen bg-gray-200">
+          <div className="max-w-md m-auto">
+            <Tabs defaultValue="login" className="w-[450px]">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="login">Login</TabsTrigger>
+                <TabsTrigger value="register">Register</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="login">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Login</CardTitle>
+                    <CardDescription>Rentrez vos identifiants.</CardDescription>
+                  </CardHeader>
+                  <Form {...loginForm}>
+                    <form
+                      onSubmit={loginForm.handleSubmit(onSubmitLogin)}
+                      className="space-y-8"
+                    >
+                      <CardContent className="space-y-2">
+                        <FormField
+                          control={loginForm.control}
+                          name="email"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Email</FormLabel>
+                              <FormControl>
+                                <Input
+                                  placeholder="votre.email@example.com"
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={loginForm.control}
+                          name="password"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Mot de passe</FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="password"
+                                  placeholder="********"
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </CardContent>
+                      <CardFooter>
+                        <Button type="submit">Se connecter</Button>
+                      </CardFooter>
+                    </form>
+                  </Form>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="register">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Register</CardTitle>
+                    <CardDescription>Création de votre compte</CardDescription>
+                  </CardHeader>
+                  <Form {...registerForm}>
+                    <form
+                      onSubmit={registerForm.handleSubmit(onSubmitRegister)}
+                      className="space-y-8"
+                    >
+                      <CardContent className="space-y-2">
+                        <FormField
+                          control={registerForm.control}
+                          name="username"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Nom d'utilisateur</FormLabel>
+                              <FormControl>
+                                <Input
+                                  placeholder="Votre nom d'utilisateur"
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={registerForm.control}
+                          name="email"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Email</FormLabel>
+                              <FormControl>
+                                <Input
+                                  placeholder="votre.email@example.com"
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={registerForm.control}
+                          name="password"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Mot de passe</FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="password"
+                                  placeholder="********"
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={registerForm.control}
+                          name="confirmPassword"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Confirmer le mot de passe</FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="password"
+                                  placeholder="********"
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </CardContent>
+                      <CardFooter>
+                        <Button type="submit">Créer un compte</Button>
+                      </CardFooter>
+                    </form>
+                  </Form>
+                </Card>
+              </TabsContent>
+            </Tabs>
+          </div>
+          <div className="hidden lg:flex w-1/2 items-center">
+            <div className="m-4">
+              <img src={heroImage} alt="Hero" className="rounded-md" />
+            </div>
+          </div>
+        </div>
+        <Footer />
+      </>
+    );
+};
 
 export default LoginPage;

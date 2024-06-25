@@ -3,6 +3,7 @@ export async function fetchApi<T>(
   endpoint: string,
   body?: T
 ): Promise<{ data?: unknown; status: number; error?: string }> {
+
   const headers = new Headers({
     "Content-Type": "application/json",
   });
@@ -10,10 +11,10 @@ export async function fetchApi<T>(
   const config: RequestInit = {
     method,
     headers,
-    body: body ? JSON.stringify(body) : null,
+    body: body ? JSON.stringify(body) : undefined
   };
 
-  if (method === "GET") {
+  if (method === "GET" || method == "DELETE") {
     delete config.body;
   }
 

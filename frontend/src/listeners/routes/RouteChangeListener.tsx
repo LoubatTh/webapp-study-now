@@ -8,6 +8,7 @@ Mettre ici toutes les routes que l'on souhaite exclure de la vérification d'aut
 const excludedRoutes = [
   '/',
   '/login',
+  '/legacylogin'
 ];
 
 const RouteChangeListener = () => {

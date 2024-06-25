@@ -43,4 +43,17 @@ class QuizController extends Controller
 
         return response()->json($quiz);
     }
+
+
+    public function show(Request $request, int $id): JsonResponse
+    {
+        $quiz = Quiz::with('qcms')->find($id);
+
+        if ($quiz) {
+            
+            return response()->json($quiz);
+        } else {
+            return response()->json(['error' => 'Resource not found'], 404);
+        }
+    }
 }

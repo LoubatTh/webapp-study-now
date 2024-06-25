@@ -7,7 +7,6 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DeckController;
 use App\Http\Controllers\FlashcardController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\QcmController;
 use Illuminate\Support\Facades\Route;
 

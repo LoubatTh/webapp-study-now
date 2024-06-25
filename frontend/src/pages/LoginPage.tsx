@@ -20,19 +20,19 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import heroImage from "@/assets/images/hero_login_page.png";
+import heroImage from "@/assets/images/hero_login_page.jpg";
 import { useForm } from "react-hook-form";
 import { LoginFormSchema } from "@/lib/form/login.form";
 import { RegisterFormSchema } from "@/lib/form/register.form";
 import { fetchApi } from "@/utils/api";
 import { useAuth } from "@/contexts/AuthContext";
-import { toast } from "react-toastify";
-// import { ToastContainer, toast } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
+import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
 
      const { setToken } = useAuth();
+     const { toast } = useToast();
 
     const loginForm = useForm({
         resolver: zodResolver(LoginFormSchema),
@@ -55,20 +55,54 @@ const LoginPage = () => {
     const onSubmitLogin = async (values) => {
 
         const response = await fetchApi("POST", "login", values)
+
+        if(response.status != 200) {
+          toast({
+            title: "Uh oh! Something went wrong.",
+            description: "There was a problem with your request.",
+            variant: "destructive"
+          });
+          return;
+        } 
+
         const data = response.data;
-        toast("super cool") // a dégager, on utilise shadeUI plutôt
-        // setToken(data.accessToken, data.accessTokenExpiration, data.refreshToken, data.refreshTokenExpiration);
+        toast({
+          title: "Connexion réussie",
+        });
+        setToken(data.accessToken, data.accessTokenExpiration, data.refreshToken, data.refreshTokenExpiration);
 
     };
 
-    const onSubmitRegister = (values) => {
-        console.log(values);
+    const onSubmitRegister = async (values) => {
+
+      const body = {
+        "name": values.username,
+        "email": values.email,
+        "password": values.password,
+      }
+
+      const response = await fetchApi("POST", "register", body);
+
+      console.log(response)
+      if (response.status != 201) {
+        toast({
+          title: "Uh oh! Something went wrong.",
+          description: "There was a problem with your request.",
+          variant: "destructive",
+        });
+        return;
+      } 
+
+      toast({
+        title: "Enregistrement effectué",
+      });
+
     };
 
     return (
       <>
         <Navbar />
-        <div className="flex min-h-screen bg-gray-200">
+        <div className="flex min-h-screen bg-gray-300">
           <div className="max-w-md m-auto">
             <Tabs defaultValue="login" className="w-[450px]">
               <TabsList className="grid w-full grid-cols-2">
@@ -220,7 +254,7 @@ const LoginPage = () => {
           </div>
           <div className="hidden lg:flex w-1/2 items-center">
             <div className="m-4">
-              <img src={heroImage} alt="Hero" className="rounded-md" />
+              <img src={heroImage} alt="Hero" className=" w-3/5 rounded-md" />
             </div>
           </div>
         </div>

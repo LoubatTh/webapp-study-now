@@ -13,23 +13,22 @@ import { UserProvider } from "./contexts/UserContext";
 import ProfilePage from "./pages/ProfilePage";
 import LegacyLoginPage from "./pages/LegacyLoginPage";
 import LoginPage from "./pages/LoginPage";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Toaster } from "./components/ui/toaster";
 
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <BrowserRouter>
-    <AuthProvider>
-      <UserProvider>
-        <RouteChangeListener />
-        <Routes>
-          <Route path="/" element={<Homepage />} />
-          <Route path="/legacylogin" element={<LegacyLoginPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/login" element={<LoginPage />} />
-        </Routes>
-        <ToastContainer />
-      </UserProvider>
-    </AuthProvider>
-  </BrowserRouter>
+    <BrowserRouter>
+    <Toaster/>
+      <AuthProvider>
+        <UserProvider>
+          <RouteChangeListener />
+          <Routes>
+            <Route path="/" element={<Homepage />} />
+            <Route path="/legacylogin" element={<LegacyLoginPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/login" element={<LoginPage />} />
+          </Routes>
+        </UserProvider>
+      </AuthProvider>
+    </BrowserRouter>
 );

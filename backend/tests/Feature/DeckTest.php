@@ -7,7 +7,7 @@ use App\Models\Deck;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Tests\TestCase;
+use Illuminate\Foundation\Testing\TestCase;
 
 class DeckTest extends TestCase
 {

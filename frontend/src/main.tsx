@@ -9,21 +9,26 @@ import {
 import Homepage from "./pages/Homepage";
 import { AuthProvider } from './contexts/AuthContext';
 import RouteChangeListener from "./listeners/routes/RouteChangeListener";
-import LoginPage from "./pages/LoginPage";
 import { UserProvider } from "./contexts/UserContext";
 import ProfilePage from "./pages/ProfilePage";
+import LegacyLoginPage from "./pages/LegacyLoginPage";
+import LoginPage from "./pages/LoginPage";
+import { Toaster } from "./components/ui/toaster";
+
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-      <BrowserRouter>
-        <AuthProvider>
-          <UserProvider>
-            <RouteChangeListener />
-            <Routes>
-              <Route path="/" element={<Homepage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/profile" element={<ProfilePage />} />
-            </Routes>
-          </UserProvider>
-        </AuthProvider>
-      </BrowserRouter>
+    <BrowserRouter>
+    <Toaster/>
+      <AuthProvider>
+        <UserProvider>
+          <RouteChangeListener />
+          <Routes>
+            <Route path="/" element={<Homepage />} />
+            <Route path="/legacylogin" element={<LegacyLoginPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/login" element={<LoginPage />} />
+          </Routes>
+        </UserProvider>
+      </AuthProvider>
+    </BrowserRouter>
 );

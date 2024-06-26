@@ -53,7 +53,6 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
                 });
 
                 const data = await response.json();
-                console.log(data);
                 handleSetUser(data);
             }
         }

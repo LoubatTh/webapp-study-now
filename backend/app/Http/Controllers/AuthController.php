@@ -36,10 +36,10 @@ class AuthController extends Controller
         $refreshToken = $user->createToken('refresh_token', [TokenAbility::ISSUE_ACCESS_TOKEN->value], $refreshTokenExpirationDate);
 
         return response()->json([
-            'accessToken' => $accessToken->plainTextToken,
-            'accessTokenExpiration' => $accessTokenExpirationDate,
-            'refreshToken' => $refreshToken->plainTextToken,
-            'refreshTokenExpiration' => $refreshTokenExpirationDate,
+            'access_token' => $accessToken->plainTextToken,
+            'access_token_expiration' => $accessTokenExpirationDate,
+            'refresh_token' => $refreshToken->plainTextToken,
+            'refresh_token_expiration' => $refreshTokenExpirationDate,
         ], 201);
     }
 
@@ -67,10 +67,10 @@ class AuthController extends Controller
         $refreshToken = $user->createToken('refresh_token', [TokenAbility::ISSUE_ACCESS_TOKEN->value], $refreshTokenExpirationDate);
 
         return response()->json([
-            'accessToken' => $accessToken->plainTextToken,
-            'accessTokenExpiration' => $accessTokenExpirationDate,
-            'refreshToken' => $refreshToken->plainTextToken,
-            'refreshTokenExpiration' => $refreshTokenExpirationDate,
+            'access_token' => $accessToken->plainTextToken,
+            'access_token_expiration' => $accessTokenExpirationDate,
+            'refresh_token' => $refreshToken->plainTextToken,
+            'refresh_token_expiration' => $refreshTokenExpirationDate,
         ]);
     }
 
@@ -89,8 +89,8 @@ class AuthController extends Controller
         $accessToken = $request->user()->createToken('access_token', [TokenAbility::ACCESS_API->value], $accessTokenExpirationDate);
 
         return response()->json([
-            'accessToken' => $accessToken->plainTextToken,
-            'accessTokenExpiration' => $accessTokenExpirationDate,
+            'access_token' => $accessToken->plainTextToken,
+            'access_token_expiration' => $accessTokenExpirationDate,
         ]);
     }
 }

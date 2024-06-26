@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Deck;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -26,7 +27,8 @@ class DeckFactory extends Factory
         return [
             "name" => $name,
             "visibility" => $visibility,
-            "likes" => $likes
+            "likes" => $likes,
+            "user_id" => User::factory(),
         ];
     }
 }

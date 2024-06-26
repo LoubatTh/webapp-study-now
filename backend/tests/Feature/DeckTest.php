@@ -2,7 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Enums\TokenAbility;
 use App\Models\Deck;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
@@ -10,23 +13,34 @@ class DeckTest extends TestCase
 {
     private $deck;
     private $flashcards;
+    private $user;
+    private $token;
+    private $refreshToken;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->deck = Deck::factory()->hasFlashcards(10)->create(
             [
+                'id' => 1,
                 'name' => 'Test',
                 'visibility' => 'Public',
                 'likes' => 2,
             ]
         );
+
+        $this->user = User::factory()->create();
+        $this->accessToken = $this->user->createToken('access_token', [TokenAbility::ACCESS_API->value], Carbon::now()->addMinutes(config('sanctum.ac_expiration')))->plainTextToken;
+        $this->refreshToken = $this->user->createToken('refresh_token', [TokenAbility::ISSUE_ACCESS_TOKEN->value], Carbon::now()->addMinutes(config('sanctum.rt_expiration')))->plainTextToken;
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
         $this->deck->delete();
+        $this->user->delete();
+        $this->token = null;
+        $this->refreshToken = null;
     }
 
     public function test_deck_get_by_id(): void
@@ -60,6 +74,8 @@ class DeckTest extends TestCase
 
     public function test_deck_can_be_created(): void
     {
+        $this->actingAs($this->user);
+
         $deckData = [
             'name' => 'Test2',
             'visibility' => 'Private',

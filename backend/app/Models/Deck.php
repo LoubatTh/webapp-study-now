@@ -13,12 +13,14 @@ class Deck extends Model
         'name',
         'visibility',
         'likes',
+        'user_id'
     ];
 
     protected $casts = [
         'name' => 'string',
         'visibility' => 'string',
         'likes' => 'integer',
+        'user_id' => 'integer',
     ];
 
     // public function tag()
@@ -26,10 +28,10 @@ class Deck extends Model
     //     return $this->belongsTo(Tag::class);
     // }
 
-    // public function user()
-    // {
-    //     return $this->belongsTo(User::class);
-    // }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function flashcards()
     {

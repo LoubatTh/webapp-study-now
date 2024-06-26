@@ -5,8 +5,6 @@ namespace Tests\Feature;
 use App\Enums\TokenAbility;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
@@ -72,14 +70,15 @@ class UserTest extends TestCase
                 'Authorization' => 'Bearer ' . $this->token
             ]
         );
-        
+
         $response->assertStatus(200)->assertJson(
             fn(AssertableJson $json) =>
             $json->hasAll(['message'])
         );
     }
 
-    public function test_delete_user_with_token(): void {
+    public function test_delete_user_with_token(): void
+    {
         $this->actingAs($this->user);
         $response = $this->deleteJson(
             '/api/user',
@@ -90,7 +89,7 @@ class UserTest extends TestCase
                 'Authorization' => 'Bearer ' . $this->token
             ]
         );
-        
+
         $response->assertStatus(200)->assertJson(
             fn(AssertableJson $json) =>
             $json->hasAll(['message'])

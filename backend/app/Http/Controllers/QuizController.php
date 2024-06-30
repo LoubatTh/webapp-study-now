@@ -11,8 +11,6 @@ use Illuminate\Routing\Controller;
 
 class QuizController extends Controller
 {
-    //
-
 
     public function store(Request $request): JsonResponse
     {
@@ -45,6 +43,19 @@ class QuizController extends Controller
     }
 
 
+    public function destroy(Request $request, string $id): JsonResponse
+    {
+
+        $quiz = Quiz::find($id);
+
+        if (!$quiz) {
+            return response()->json(['error' => 'Resource not found'], 404);
+        }
+
+        Quiz::destroy($id);
+        return response()->json(null, 204);
+
+
     public function show(Request $request, int $id): JsonResponse
     {
         $quiz = Quiz::with('qcms')->find($id);
@@ -55,5 +66,6 @@ class QuizController extends Controller
         } else {
             return response()->json(['error' => 'Resource not found'], 404);
         }
+
     }
 }

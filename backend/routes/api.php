@@ -46,4 +46,8 @@ Route::delete('/qcms/{id}', [QcmController::class, 'destroy']);
 // Quiz routes
 Route::post('/quizzes', [QuizController::class, 'store']);
 
+Route::delete('/quizzes/{id}', [QuizController::class, 'destroy']);
+
+
 Route::get('/quizzes/{id}', [QuizController::class, 'show']);
+

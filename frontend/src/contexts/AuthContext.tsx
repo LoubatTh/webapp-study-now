@@ -2,6 +2,7 @@ import { createContext, useState, ReactNode, useContext, useEffect } from 'react
 import { deleteCookie, getCookie, setCookie } from '../utils/cookie';
 import { parseISODateToMilis } from '../utils/dateparser';
 import type { AuthContextType } from '../types/AuthContext.type';
+import { fetchApi } from '@/utils/api';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -18,7 +19,7 @@ export const useAuth = () => {
   return context;
 };
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+export const AuthProvider = ({ children }) => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [expiresAt, setExpiresAt] = useState<number | null>(null);
   const [isReady, setIsReady] = useState<boolean>(false);
@@ -28,27 +29,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   permettant d'authentifier l'utilisateur directement sans qu'il ait à se reconnecter 
   */
   useEffect(() => {
-    console.log("chargement initial de la page")
     refreshToken().finally(() => setIsReady(true));
   }, [])
 
   /*
   Méthode "officielle" pour enregistrer le token de l'utilisateur,
   */
-  const setToken = (accessToken: string, accessTokenExpiration: string, refreshToken: string, refreshTokenExpiration: string) => {
+  const setToken = (access_token: string, access_token_expiration: string, refresh_token: string, refresh_token_expiration: string) => {
     //Access token
-    updateToken(accessToken, accessTokenExpiration);
+    updateToken(access_token, access_token_expiration);
 
     //RefreshToken
-    setCookie('refreshToken', refreshToken, refreshTokenExpiration)
+    setCookie('refreshToken', refresh_token, refresh_token_expiration)
   };
 
   /*
   Méthode permettant d'update le token de l'utilisateur lorsqu'il est refresh
   */
-  const updateToken = (accessToken: string, accessTokenExpiration: string) => {
-    setAccessToken(accessToken)
-    setExpiresAt(parseISODateToMilis(accessTokenExpiration));
+  const updateToken = (access_token: string, access_token_expiration: string) => {
+    setAccessToken(access_token)
+    setExpiresAt(parseISODateToMilis(access_token_expiration));
     
   }
 
@@ -60,14 +60,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setAccessToken(null);
       setExpiresAt(null);
       deleteCookie('refreshToken')
-
-      // TODO: Utiliser l'utils api.ts lorsque la méthode pour fetch avec un bearer token sera prête
-      fetch("http://localhost:8000/api/logout", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${accessToken}`
-        }
-      })
+    
+      fetchApi("POST", "logout", null, accessToken);
   };
 
   /*
@@ -81,7 +75,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       if(expiresAt && now > expiresAt){
-        console.log("le token doit être rafraîchis")
         return await refreshToken();
       }
 
@@ -97,23 +90,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return false;
       }
 
-      // TODO: Utiliser l'utils api.ts lorsque la méthode pour fetch avec un bearer token sera prête
-      const response = await fetch("http://localhost:8000/api/refresh", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${refreshToken}`
-        },
-      });
+      const response = await fetchApi("GET", "refresh", null, refreshToken);
 
-      if (!response.ok){
-        return false;
-      }
-
-      const data = await response.json();
-      updateToken(data.accessToken, data.accessTokenExpiration);
-      console.log("le token a bien été rafraîchis")
-
+      const data = await response.data;
+      updateToken(data.access_token, data.access_token_expiration);
       return true;
     }
 

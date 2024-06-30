@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   adminer:
     container_name: adminer
@@ -34,13 +32,41 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports:
-      - "8000:8000"
+      - "8000:80"
     depends_on:
       - database
     volumes:
       - ./backend:/app
+    command: sh -c "composer install && php artisan migrate && php artisan serve --host=0.0.0.0 --port=80"
     env_file:
       - ./backend/.env
+    networks:
+      - network
+
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - network
+
+  stripe:
+    container_name: stripe
+    build:
+      context: ./backend/stripe
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+    volumes:
+      - stripe-gpg://root/.gnupg/
+      - stripe-pass://root/.password-store/
     networks:
       - network
 
@@ -50,3 +76,5 @@ networks:
 
 volumes:
   database_data:
+  stripe-gpg:
+  stripe-pass:

@@ -44,5 +44,14 @@ class QuizController extends Controller
 
     public function destroy(Request $request, string $id): JsonResponse
     {
+
+        $quiz = Quiz::find($id);
+
+        if (!$quiz) {
+            return response()->json(['error' => 'Resource not found'], 404);
+        }
+
+        Quiz::destroy($id);
+        return response()->json(null, 204);
     }
 }

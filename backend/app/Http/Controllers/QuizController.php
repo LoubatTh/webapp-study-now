@@ -18,6 +18,7 @@ class QuizController extends Controller
 
         $data = $request->validate([
             'name' => 'required|string',
+            'is_public' => 'required|boolean',
             'qcms' => 'required|array',
             'qcms.*.question' => 'required|string',
             'qcms.*.answers' => 'required|array|size:4',
@@ -28,7 +29,7 @@ class QuizController extends Controller
         $quiz = Quiz::create([
             'name' => $data['name'],
             'owner' => $user->id,
-            'visibility' => 'public',
+            'is_public' => $data['is_public'],
             'likes' => 0
         ]);
 
@@ -79,6 +80,7 @@ class QuizController extends Controller
 
         $data = $request->validate([
             'name' => 'required|string',
+            'is_public' => 'required|boolean',
             'qcms' => 'required|array',
             'qcms.*.question' => 'required|string',
             'qcms.*.answers' => 'required|array|size:4',
@@ -94,6 +96,7 @@ class QuizController extends Controller
         }
         
         $quiz->name = $data["name"];
+        $quiz->is_public = $data["is_public"];
         $quiz->save();
 
 

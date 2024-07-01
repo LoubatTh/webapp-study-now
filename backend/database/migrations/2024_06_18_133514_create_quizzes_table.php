@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('name');
-            $table->string('visibility');
+            $table->boolean('is_public');
             $table->integer('likes');
             $table->foreignId('user_id');
         });

@@ -24,8 +24,8 @@ class StoreDeckRequest extends FormRequest
     {
         return [
             "name" => "required|string|max:255",
-            "visibility" => "string",
-            Rule::in(["Public", "Private", "Limited"]),
+            "isPublic" => "boolean",
+            "isOrganization" => "boolean",
             "flashcards" => "required|array",
             "flashcards.*.question" => "required|string|max:255",
             "flashcards.*.answer" => "required|string|max:255",

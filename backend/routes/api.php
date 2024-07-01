@@ -36,9 +36,11 @@ Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->valu
   Route::post('stripe/cancel', [StripeController::class, 'cancel']);
   Route::post('stripe/resume', [StripeController::class, 'resume']);
 
+  // Quiz routes
   Route::post('/quizzes', [QuizController::class, 'store']);
   Route::get('/quizzes', [QuizController::class, 'myQuizzes']);
   Route::put('/quizzes/{id}', [QuizController::class, 'update']);
+  Route::delete('/quizzes/{id}', [QuizController::class, 'destroy']);
 });
 
 // Qcm routes
@@ -48,7 +50,5 @@ Route::put('/qcms/{id}', [QcmController::class, 'update']);
 Route::delete('/qcms/{id}', [QcmController::class, 'destroy']);
 
 // Quiz routes
-
-Route::delete('/quizzes/{id}', [QuizController::class, 'destroy']);
 Route::get('/quizzes/{id}', [QuizController::class, 'show']);
 

@@ -3,65 +3,82 @@ import { Button } from "../components/ui/button";
 import { Separator } from "../components/ui/separator";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import CreateQCM from "../components/quizz/CreateQCM";
+import { Switch } from "@/components/ui/switch";
+import { PostDeck } from "@/types/deck.type";
+import { fetchApi } from "@/utils/api";
+import { useAuth } from "@/contexts/AuthContext";
 import useDeckStore from "../lib/stores/deckStore";
+import CreateFlashcard from "@/components/deck/CreateFlashcard";
+
+const postDeck = async (deck: PostDeck, accessToken: string) => {
+  const response = await fetchApi("POST", "deck", deck, accessToken);
+  console.log(response);
+};
 
 const CreateDeckPage = () => {
-  //Use the useDeckStore store to get the Decks
-  const { decks } = useDeckStore();
-  //State to manage the name of the quizz
-  const [name, setName] = useState("");
+  //Get the access token from the AuthContext
+  const { accessToken } = useAuth();
+  //Use the useDeckStore store to get the decks
+  const { deck } = useDeckStore();
+  //State to manage the name of the deck
+  const [name, setName] = useState<string>("");
+  //State to manage the visibility of the deck
+  const [isPublic, setIsPublic] = useState<boolean>(false);
   //State to manage the error message
-  const [errorMessage, setErrorMessage] = useState("");
-  //State to manage the list of QCMs
-  const [qcmList, setQcmList] = useState([{ id: 0, collapsed: false }]);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  //State to manage the list of decks
+  const [deckList, setFlashcardList] = useState([{ id: 0, collapsed: false }]);
 
-  //Function to add a new QCM to the list
-  const addNewQCM = (): void => {
-    setQcmList([...qcmList, { id: qcmList.length, collapsed: false }]);
+  //Function to add a new flashcard to the list
+  const addNewFlashcard = (): void => {
+    setFlashcardList([...deckList, { id: deckList.length, collapsed: false }]);
   };
 
-  //Function to delete a QCM from the list
-  const deleteQCM = (id: number): void => {
-    setQcmList(qcmList.filter((qcm) => qcm.id !== id));
+  //Function to delete a flashcard from the list
+  const deleteFlashcard = (id: number): void => {
+    setFlashcardList(deckList.filter((flashcard) => flashcard.id !== id));
   };
 
-  //Function to toggle the collapse of a QCM
+  //Function to toggle the collapse of a deck
   const toggleCollapse = (id: number): void => {
-    setQcmList(
-      qcmList.map((qcm) =>
-        qcm.id === id ? { ...qcm, collapsed: !qcm.collapsed } : qcm
+    setFlashcardList(
+      deckList.map((flashcard) =>
+        flashcard.id === id
+          ? { ...flashcard, collapsed: !flashcard.collapsed }
+          : flashcard
       )
     );
   };
 
-  //Function to create the quizz with the QCMs and send it to the backend
+  //Function to create the flashcard with the decks and send it to the backend
   function createQuizzHandler(): void {
     if (name.length < 1) {
       setErrorMessage("The name field is required.");
       return;
-    } else if (qcms.length < 1) {
-      setErrorMessage("You need to add at least one QCM.");
+    } else if (deck.length < 1) {
+      setErrorMessage("You need to add at least one Flashcard.");
       return;
     } else {
       setErrorMessage("");
-      const quizz = {
+      const createdDeck = {
         name,
-        qcms: qcms,
+        isPublic,
+        flashcards: deck,
       };
-      console.log(quizz);
+      console.log(createdDeck);
+      postDeck(createdDeck, accessToken);
     }
   }
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <h1 className="mx-auto my-4">Create Quizz</h1>
+      <h1 className="mx-auto my-4">Create Deck</h1>
       <div className="flex flex-col gap-2 p-2 max-w-3xl min-w-full md:min-w-[768px]">
-        <Label htmlFor="name">Quizz name</Label>
+        <Label htmlFor="name">Deck name</Label>
         <Input
           id="name"
           type="text"
-          placeholder="My Quizz name"
+          placeholder="My Deck name"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
@@ -71,29 +88,39 @@ const CreateDeckPage = () => {
           </div>
         )}
       </div>
+      <div className="flex flex-col gap-3 p-2 max-w-3xl min-w-full md:min-w-[768px]">
+        <Label htmlFor="name">Visibility</Label>
+        <div className="flex gap-2">
+          <Switch
+            checked={isPublic}
+            onCheckedChange={() => setIsPublic(!isPublic)}
+          />
+          <div>{isPublic ? "Public" : "Private"}</div>
+        </div>
+      </div>
       <div className="flex flex-col gap-2 p-2 max-w-3xl min-w-full md:min-w-[768px]">
-        {qcmList.map((qcm, i) => (
-          <React.Fragment key={qcm.id}>
+        {deckList.map((flashcard, i) => (
+          <React.Fragment key={flashcard.id}>
             <Separator className="my-2" />
             <div className="text-center">
-              QCM {i + 1} of {qcmList.length}
+              Flashcard {i + 1} of {deckList.length}
             </div>
-            <CreateQCM
-              id={qcm.id}
+            <CreateFlashcard
+              id={flashcard.id}
               index={i + 1}
-              qcmsSize={qcmList.length}
-              collapsed={qcm.collapsed}
-              onToggleCollapse={() => toggleCollapse(qcm.id)}
-              onDelete={() => deleteQCM(qcm.id)}
+              flashcardsSize={deckList.length}
+              collapsed={flashcard.collapsed}
+              onToggleCollapse={() => toggleCollapse(flashcard.id)}
+              onDelete={() => deleteFlashcard(flashcard.id)}
             />
           </React.Fragment>
         ))}
-        <Button onClick={addNewQCM} variant="default" className="mt-2">
-          Add New QCM
+        <Button onClick={addNewFlashcard} variant="default" className="mt-2">
+          Add New Flashcard
         </Button>
         <Separator className="my-2" />
         <Button onClick={createQuizzHandler} variant="default">
-          Create Quizz
+          Create Deck
         </Button>
       </div>
     </div>

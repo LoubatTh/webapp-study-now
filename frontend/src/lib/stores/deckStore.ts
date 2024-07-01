@@ -1,35 +1,37 @@
 import { create } from "zustand";
-import type { Deck } from "../../types/deck.type";
+import type { Flashcard } from "../../types/deck.type";
 
 type DeckState = {
-  decks: Deck[];
-  saveDeck: (deck: Deck) => void;
-  removeDeck: (id: number) => void;
-  resetDecks: () => void;
+  deck: Flashcard[];
+  saveFlashcard: (flashcard: Flashcard) => void;
+  removeFlashcard: (id: number) => void;
+  resetDeck: () => void;
 };
 
 const useDeckStore = create<DeckState>((set) => ({
-  // Array of Decks
-  decks: [],
-  //Function to save the Deck in the store
-  saveDeck: (deck: Deck) =>
+  // Array of flashcards
+  deck: [],
+  //Function to save the flashcard in the deck
+  saveFlashcard: (flashcard: Flashcard) =>
     set((state) => {
-      const existingDeckIndex = state.decks.findIndex(
-        (item) => item.id === deck.id
+      const existingDeckIndex = state.deck.findIndex(
+        (item) => item.id === flashcard.id
       );
       if (existingDeckIndex > -1) {
-        const updatedDecks = [...state.decks];
-        updatedDecks[existingDeckIndex] = deck;
-        return { decks: updatedDecks };
+        const updateddeck = [...state.deck];
+        updateddeck[existingDeckIndex] = flashcard;
+        return { deck: updateddeck };
       } else {
-        return { decks: [...state.decks, deck] };
+        return { deck: [...state.deck, flashcard] };
       }
     }),
-  //Function to remove the Deck from the store
-  removeDeck: (id) =>
-    set((state) => ({ decks: state.decks.filter((deck) => deck.id !== id) })),
-  //Function to reset the Decks
-  resetDecks: () => set({ decks: [] }),
+  //Function to remove the flashcard from the deck
+  removeFlashcard: (id) =>
+    set((state) => ({
+      deck: state.deck.filter((deck) => deck.id !== id),
+    })),
+  //Function to reset the deck
+  resetDeck: () => set({ deck: [] }),
 }));
 
 export default useDeckStore;

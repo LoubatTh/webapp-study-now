@@ -16,7 +16,7 @@ const postQuizz = async (quizz: PostQuizz, accessToken: string) => {
 };
 
 const CreateQuizzPage = () => {
-  //Use the useQCMStore store to get the QCMs
+  //Get the access token from the AuthContext
   const { accessToken } = useAuth();
   //Use the useQCMStore store to get the QCMs
   const { qcms } = useQCMStore();
@@ -94,11 +94,6 @@ const CreateQuizzPage = () => {
             onCheckedChange={() => setIsPublic(!isPublic)}
           />
           <div>{isPublic ? "Public" : "Private"}</div>
-          {errorMessage && (
-            <div className="text-sm font-medium text-destructive">
-              {errorMessage}
-            </div>
-          )}
         </div>
       </div>
       <div className="flex flex-col gap-2 p-2 max-w-3xl min-w-full md:min-w-[768px]">

@@ -3,16 +3,32 @@ import { Button } from "../components/ui/button";
 import { Separator } from "../components/ui/separator";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
+import { Switch } from "../components/ui/switch";
+import { useAuth } from "@/contexts/AuthContext";
+import { PostQuizz } from "@/types/quizz.type";
+import { fetchApi } from "@/utils/api";
 import CreateQCM from "../components/quizz/CreateQCM";
 import useQCMStore from "../lib/stores/quizzStore";
+import { toast } from "@/components/ui/use-toast";
+import { redirect } from "react-router-dom";
+
+const postQuizz = async (quizz: PostQuizz, accessToken: string) => {
+  const response = await fetchApi("POST", "quizz", quizz, accessToken);
+  console.log(response);
+  return response;
+};
 
 const CreateQuizzPage = () => {
+  //Get the access token from the AuthContext
+  const { accessToken } = useAuth();
   //Use the useQCMStore store to get the QCMs
-  const { qcms } = useQCMStore();
+  const { qcms, resetQCMs } = useQCMStore();
   //State to manage the name of the quizz
-  const [name, setName] = useState("");
+  const [name, setName] = useState<string>("");
+  //State to manage the visibility of the quizz
+  const [isPublic, setIsPublic] = useState<boolean>(false);
   //State to manage the error message
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
   //State to manage the list of QCMs
   const [qcmList, setQcmList] = useState([{ id: 0, collapsed: false }]);
 
@@ -36,7 +52,7 @@ const CreateQuizzPage = () => {
   };
 
   //Function to create the quizz with the QCMs and send it to the backend
-  function createQuizzHandler(): void {
+  async function createQuizzHandler(): Promise<void> {
     if (name.length < 1) {
       setErrorMessage("The name field is required.");
       return;
@@ -47,16 +63,30 @@ const CreateQuizzPage = () => {
       setErrorMessage("");
       const quizz = {
         name,
+        isPublic,
         qcms: qcms,
       };
       console.log(quizz);
+      const response = await postQuizz(quizz, accessToken);
+      if (response.status === 201) {
+        setName("");
+        setQcmList([{ id: 0, collapsed: false }]);
+        resetQCMs();
+        toast({
+          description: "Quizz created successfully",
+        });
+        redirect("/homepage");
+      } else {
+        const data = await response.data.json();
+        toast({ description: data.message });
+      }
     }
   }
 
   return (
     <div className="flex flex-col items-center gap-4">
       <h1 className="mx-auto my-4">Create Quizz</h1>
-      <div className="flex flex-col gap-2 p-2 max-w-3xl min-w-full md:min-w-[768px]">
+      <div className="flex flex-col gap-3 p-2 max-w-3xl min-w-full md:min-w-[768px]">
         <Label htmlFor="name">Quizz name</Label>
         <Input
           id="name"
@@ -70,6 +100,16 @@ const CreateQuizzPage = () => {
             {errorMessage}
           </div>
         )}
+      </div>
+      <div className="flex flex-col gap-3 p-2 max-w-3xl min-w-full md:min-w-[768px]">
+        <Label htmlFor="name">Visibility</Label>
+        <div className="flex gap-2">
+          <Switch
+            checked={isPublic}
+            onCheckedChange={() => setIsPublic(!isPublic)}
+          />
+          <div>{isPublic ? "Public" : "Private"}</div>
+        </div>
       </div>
       <div className="flex flex-col gap-2 p-2 max-w-3xl min-w-full md:min-w-[768px]">
         {qcmList.map((qcm, i) => (

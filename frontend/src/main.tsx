@@ -9,6 +9,7 @@ import ProfilePage from "./pages/ProfilePage";
 import LoginPage from "./pages/LoginPage";
 import CreateQuizzPage from "./pages/CreateQuizzPage";
 import { Toaster } from "./components/ui/toaster";
+import CreateDeckPage from "./pages/CreateDeckPage";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
@@ -21,7 +22,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/create-quizz" element={<CreateQuizzPage />} />
-          <Route path="/create-quizz" element={<CreateQuizzPage />} />
+          <Route path="/create-deck" element={<CreateDeckPage />} />
         </Routes>
       </UserProvider>
     </AuthProvider>

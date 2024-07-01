@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { formSchema } from "../../lib/form/deck.form";
+import { formSchema } from "../../lib/form/quizz.form";
 import {
   Dialog,
   DialogContent,

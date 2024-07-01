@@ -26,6 +26,7 @@ import { Separator } from "../ui/separator";
 import useQCMStore from "../../lib/stores/quizzStore";
 import type { QCM } from "../../types/quizz.type";
 import { DialogClose, DialogFooter } from "../ui/dialog";
+import { toast } from "../ui/use-toast";
 
 type CreateQCMProps = {
   id: number;
@@ -88,6 +89,9 @@ const CreateQCM = ({
     console.log(body);
     saveQCM(body);
     onToggleCollapse();
+    toast({
+      description: "QCM created successfully",
+    });
   }
 
   return (

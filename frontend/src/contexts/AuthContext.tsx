@@ -1,4 +1,4 @@
-import { createContext, useState, ReactNode, useContext, useEffect } from 'react';
+import { createContext, useState, useContext, useEffect } from 'react';
 import { deleteCookie, getCookie, setCookie } from '../utils/cookie';
 import { parseISODateToMilis } from '../utils/dateparser';
 import type { AuthContextType } from '../types/AuthContext.type';
@@ -16,6 +16,14 @@ export const useAuth = () => {
   if (context === undefined) {
     throw new Error('useAuth doit être utilisé dans un AuthProvider');
   }
+
+  useEffect(() => {
+    const verifyToken = async () => {
+      await context.checkToken();
+    };
+    verifyToken();
+  }, [context]);
+
   return context;
 };
 

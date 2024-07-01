@@ -40,6 +40,9 @@ const CreateQuizzPage = () => {
   //Function to delete a QCM from the list
   const deleteQCM = (id: number): void => {
     setQcmList(qcmList.filter((qcm) => qcm.id !== id));
+    toast({
+      description: "QCM deleted successfully",
+    });
   };
 
   //Function to toggle the collapse of a QCM

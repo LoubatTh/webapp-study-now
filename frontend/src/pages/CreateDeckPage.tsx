@@ -13,7 +13,7 @@ import { toast } from "@/components/ui/use-toast";
 import { redirect } from "react-router-dom";
 
 const postDeck = async (deck: PostDeck, accessToken: string) => {
-  const response = await fetchApi("POST", "deck", deck, accessToken);
+  const response = await fetchApi("POST", "decks", deck, accessToken);
   console.log(response);
   return response;
 };
@@ -40,6 +40,9 @@ const CreateDeckPage = () => {
   //Function to delete a flashcard from the list
   const deleteFlashcard = (id: number): void => {
     setFlashcardList(deckList.filter((flashcard) => flashcard.id !== id));
+    toast({
+      description: "Flashcard deleted successfully",
+    });
   };
 
   //Function to toggle the collapse of a deck
@@ -77,7 +80,7 @@ const CreateDeckPage = () => {
         toast({
           description: "Deck created successfully",
         });
-        redirect("/homepage");
+        redirect("/");
       } else {
         const data = await response.data.json();
         toast({ description: data.message });

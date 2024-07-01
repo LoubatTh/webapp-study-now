@@ -25,6 +25,7 @@ import { Separator } from "../ui/separator";
 import { DialogClose, DialogFooter } from "../ui/dialog";
 import { Flashcard } from "@/types/deck.type";
 import useDeckStore from "@/lib/stores/deckStore";
+import { toast } from "../ui/use-toast";
 
 type CreateFlashcardProps = {
   id: number;
@@ -65,6 +66,9 @@ const CreateFlashcard = ({
     console.log(body);
     saveFlashcard(body);
     onToggleCollapse();
+    toast({
+      description: "Flashcard created successfully",
+    });
   }
 
   return (

@@ -102,4 +102,15 @@ class QuizController extends Controller
 
         return response()->json($quiz->load("qcms"), 200);
     }
+
+    public function myQuizzes(): JsonResponse
+    {
+        $quizzes = Quiz::where("user_id", $user->id)->get();
+
+        if (!$quizzes) {
+            return response()->json(['message' => "You haven't yet created any quiz"]);
+        }
+
+        return response()->json($quizzes, 201);
+    }
 }

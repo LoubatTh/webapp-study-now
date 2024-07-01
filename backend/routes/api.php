@@ -38,6 +38,7 @@ Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->valu
 
   Route::post('/quizzes', [QuizController::class, 'store']);
   Route::get('/quizzes', [QuizController::class, 'myQuizzes']);
+  Route::put('/quizzes/{id}', [QuizController::class, 'update']);
 });
 
 // Qcm routes
@@ -50,5 +51,4 @@ Route::delete('/qcms/{id}', [QcmController::class, 'destroy']);
 
 Route::delete('/quizzes/{id}', [QuizController::class, 'destroy']);
 Route::get('/quizzes/{id}', [QuizController::class, 'show']);
-Route::put('/quizzes/{id}', [QuizController::class, 'update']);
 

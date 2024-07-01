@@ -34,7 +34,7 @@ class QcmController extends Controller
     {
         $qcm = Qcm::findOrFail($id);
 
-        return response()->json($qcm);
+        return response()->json($qcm, 200);
     }
 
     public function update(Request $request, string $id): JsonResponse
@@ -58,7 +58,7 @@ class QcmController extends Controller
 
         $qcm->save();
 
-        return response()->json($qcm);
+        return response()->json($qcm, 200);
     }
 
     public function destroy(Request $request, string $id): JsonResponse

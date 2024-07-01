@@ -72,6 +72,9 @@ class QuizController extends Controller
 
     public function update(Request $request, string $id): JsonResponse
     {
+
+        $user = $request->user();
+
         $data = $request->validate([
             'name' => 'required|string',
             'qcms' => 'required|array',
@@ -81,12 +84,13 @@ class QuizController extends Controller
             'qcms.*.answers.*.isValid' => 'required|boolean',
         ]);
 
-        $quiz = Quiz::find($id);
+        $quiz = Quiz::where("id", $id)->where("owner", $user->id)->first();
+
 
         if (!$quiz) {
             return response()->json(['error' => 'Resource not found'], 404);
         }
-
+        
         $quiz->name = $data["name"];
         $quiz->save();
 
@@ -109,7 +113,7 @@ class QuizController extends Controller
         $user = $request->user();
         $quizzes = Quiz::where("owner", $user->id)->get();
 
-        if (!$quizzes) {
+        if ($quizzes->isEmpty()) {
             return response()->json(['message' => "You haven't yet created any quiz"]);
         }
 

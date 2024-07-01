@@ -40,7 +40,7 @@ class QuizController extends Controller
             ]);
         }
 
-        return response()->json($quiz);
+        return response()->json($quiz, 201);
     }
 
 
@@ -69,7 +69,7 @@ class QuizController extends Controller
 
         }
 
-        return response()->json($quiz);
+        return response()->json($quiz, 200);
     }
 
 
@@ -119,9 +119,9 @@ class QuizController extends Controller
         $quizzes = Quiz::where("owner", $user->id)->get();
 
         if ($quizzes->isEmpty()) {
-            return response()->json(['message' => "You haven't yet created any quiz"]);
+            return response()->json(['message' => "You haven't yet created any quiz"], 200);
         }
 
-        return response()->json($quizzes, 201);
+        return response()->json($quizzes, 200);
     }
 }

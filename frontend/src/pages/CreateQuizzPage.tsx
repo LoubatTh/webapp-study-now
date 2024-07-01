@@ -9,17 +9,20 @@ import { PostQuizz } from "@/types/quizz.type";
 import { fetchApi } from "@/utils/api";
 import CreateQCM from "../components/quizz/CreateQCM";
 import useQCMStore from "../lib/stores/quizzStore";
+import { toast } from "@/components/ui/use-toast";
+import { redirect } from "react-router-dom";
 
 const postQuizz = async (quizz: PostQuizz, accessToken: string) => {
   const response = await fetchApi("POST", "quizz", quizz, accessToken);
   console.log(response);
+  return response;
 };
 
 const CreateQuizzPage = () => {
   //Get the access token from the AuthContext
   const { accessToken } = useAuth();
   //Use the useQCMStore store to get the QCMs
-  const { qcms } = useQCMStore();
+  const { qcms, resetQCMs } = useQCMStore();
   //State to manage the name of the quizz
   const [name, setName] = useState<string>("");
   //State to manage the visibility of the quizz
@@ -49,7 +52,7 @@ const CreateQuizzPage = () => {
   };
 
   //Function to create the quizz with the QCMs and send it to the backend
-  function createQuizzHandler(): void {
+  async function createQuizzHandler(): Promise<void> {
     if (name.length < 1) {
       setErrorMessage("The name field is required.");
       return;
@@ -64,7 +67,19 @@ const CreateQuizzPage = () => {
         qcms: qcms,
       };
       console.log(quizz);
-      postQuizz(quizz, accessToken);
+      const response = await postQuizz(quizz, accessToken);
+      if (response.status === 201) {
+        setName("");
+        setQcmList([{ id: 0, collapsed: false }]);
+        resetQCMs();
+        toast({
+          description: "Quizz created successfully",
+        });
+        redirect("/homepage");
+      } else {
+        const data = await response.data.json();
+        toast({ description: data.message });
+      }
     }
   }
 

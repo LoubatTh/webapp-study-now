@@ -9,17 +9,20 @@ import { fetchApi } from "@/utils/api";
 import { useAuth } from "@/contexts/AuthContext";
 import useDeckStore from "../lib/stores/deckStore";
 import CreateFlashcard from "@/components/deck/CreateFlashcard";
+import { toast } from "@/components/ui/use-toast";
+import { redirect } from "react-router-dom";
 
 const postDeck = async (deck: PostDeck, accessToken: string) => {
   const response = await fetchApi("POST", "deck", deck, accessToken);
   console.log(response);
+  return response;
 };
 
 const CreateDeckPage = () => {
   //Get the access token from the AuthContext
   const { accessToken } = useAuth();
   //Use the useDeckStore store to get the decks
-  const { deck } = useDeckStore();
+  const { deck, resetDeck } = useDeckStore();
   //State to manage the name of the deck
   const [name, setName] = useState<string>("");
   //State to manage the visibility of the deck
@@ -51,7 +54,7 @@ const CreateDeckPage = () => {
   };
 
   //Function to create the flashcard with the decks and send it to the backend
-  function createQuizzHandler(): void {
+  async function createQuizzHandler(): Promise<void> {
     if (name.length < 1) {
       setErrorMessage("The name field is required.");
       return;
@@ -66,7 +69,19 @@ const CreateDeckPage = () => {
         flashcards: deck,
       };
       console.log(createdDeck);
-      postDeck(createdDeck, accessToken);
+      const response = await postDeck(createdDeck, accessToken);
+      if (response.status === 201) {
+        setName("");
+        setFlashcardList([{ id: 0, collapsed: false }]);
+        resetDeck;
+        toast({
+          description: "Deck created successfully",
+        });
+        redirect("/homepage");
+      } else {
+        const data = await response.data.json();
+        toast({ description: data.message });
+      }
     }
   }
 

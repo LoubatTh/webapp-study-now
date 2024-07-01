@@ -21,12 +21,14 @@ class DeckFactory extends Factory
     public function definition(): array
     {
         $name = $this->faker->name();
-        $visibility = $this->faker->randomElement(["Public", "Private", "Limited"]);
+        $isPublic = $this->faker->boolean();
+        $isOrganization = $this->faker->boolean();
         $likes = $this->faker->numberBetween(0, 1000);
 
         return [
             "name" => $name,
-            "visibility" => $visibility,
+            "isPublic" => $isPublic,
+            "isOrganization" => $isOrganization,
             "likes" => $likes,
             "user_id" => User::factory(),
         ];

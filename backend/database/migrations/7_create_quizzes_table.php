@@ -16,6 +16,8 @@ return new class extends Migration {
             $table->string('name');
             $table->string('visibility');
             $table->integer('likes');
+
+            $table->foreignId('owner')->constrained('users', 'id')->onDelete('cascade');
         });
     }
 

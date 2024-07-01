@@ -1,6 +1,5 @@
 <?php
 
-use App\Enums\DeckVisibility;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,7 +13,8 @@ return new class extends Migration {
         Schema::create('decks', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->enum('visibility', [DeckVisibility::PUBLIC ->value, DeckVisibility::PRIVATE ->value, DeckVisibility::LIMITED->value])->default(DeckVisibility::PUBLIC );
+            $table->boolean('isPublic');
+            $table->boolean('isOrganization');
             $table->integer('likes')->nullable();
             $table->foreignId('user_id');
             $table->timestamps();

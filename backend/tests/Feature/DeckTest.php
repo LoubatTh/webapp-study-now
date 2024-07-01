@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Enums\DeckVisibility;
 use App\Models\Deck;
 use App\Models\User;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -32,7 +31,8 @@ class DeckTest extends TestCase
             [
                 'id' => 1,
                 'name' => 'Test',
-                'visibility' => 'Public',
+                'isPublic' => true,
+                'isOrganization' => false,
                 'likes' => 2,
                 'user_id' => $this->user->id,
             ]
@@ -42,7 +42,8 @@ class DeckTest extends TestCase
             [
                 'id' => 2,
                 'name' => 'TestPrivate',
-                'visibility' => 'Private',
+                'isPublic' => false,
+                'isOrganization' => false,
                 'likes' => 20,
                 'user_id' => $this->userPrivate->id,
             ]
@@ -74,7 +75,8 @@ class DeckTest extends TestCase
                 '*' => [
                     'id',
                     'name',
-                    'visibility',
+                    'isPublic',
+                    'isOrganization',
                     'likes',
                     'flashcards' => [
                         '*' => [
@@ -88,7 +90,7 @@ class DeckTest extends TestCase
             'meta'
         ]);
 
-        $this->assertEquals($response['meta']['total'], Deck::where('visibility', DeckVisibility::PUBLIC ->value)->count());
+        $this->assertEquals($response['meta']['total'], Deck::where('isPublic', true)->count());
     }
 
     public function test_deck_get_my_decks(): void
@@ -105,7 +107,8 @@ class DeckTest extends TestCase
                 '*' => [
                     'id',
                     'name',
-                    'visibility',
+                    'isPublic',
+                    'isOrganization',
                     'likes',
                     'flashcards' => [
                         '*' => [
@@ -135,7 +138,7 @@ class DeckTest extends TestCase
 
         $response->assertStatus(200)->assertJson(
             fn(AssertableJson $json) =>
-            $json->hasAll(['id', 'name', 'visibility', 'likes', 'flashcards'])
+            $json->hasAll(['id', 'name', 'isPublic', 'isOrganization', 'likes', 'flashcards'])
                 ->has(
                     'flashcards',
                     fn($json) =>
@@ -148,7 +151,8 @@ class DeckTest extends TestCase
         );
 
         $this->assertTrue($response['name'] == 'Test');
-        $this->assertTrue($response['visibility'] == 'Public');
+        $this->assertTrue($response['isPublic'] == true);
+        $this->assertTrue($response['isOrganization'] == false);
         $this->assertTrue($response['likes'] == 2);
         $this->assertTrue(count($response['flashcards']) == 10);
 
@@ -166,7 +170,7 @@ class DeckTest extends TestCase
 
         $response->assertStatus(200)->assertJson(
             fn(AssertableJson $json) =>
-            $json->hasAll(['id', 'name', 'visibility', 'likes', 'flashcards'])
+            $json->hasAll(['id', 'name', 'isPublic', 'isOrganization', 'likes', 'flashcards'])
                 ->has(
                     'flashcards',
                     fn($json) =>
@@ -179,7 +183,8 @@ class DeckTest extends TestCase
         );
 
         $this->assertTrue($response['name'] == 'TestPrivate');
-        $this->assertTrue($response['visibility'] == 'Private');
+        $this->assertTrue($response['isPublic'] == false);
+        $this->assertTrue($response['isOrganization'] == false);
         $this->assertTrue($response['likes'] == 20);
         $this->assertTrue(count($response['flashcards']) == 3);
 
@@ -224,7 +229,8 @@ class DeckTest extends TestCase
 
         $deckData = [
             'name' => 'Test2',
-            'visibility' => 'Private',
+            'isPublic' => false,
+            'isOrganization' => false,
             'flashcards' => [
                 [
                     'question' => 'Question1',
@@ -248,7 +254,8 @@ class DeckTest extends TestCase
 
         $this->assertDatabaseHas('decks', [
             'name' => $deckData['name'],
-            'visibility' => $deckData['visibility']
+            'isPublic' => $deckData['isPublic'],
+            'isOrganization' => $deckData['isOrganization'],
         ]);
 
         $deckId = Deck::where('name', $deckData['name'])->first()->id;
@@ -266,7 +273,8 @@ class DeckTest extends TestCase
     {
         $deckData = [
             'name' => 'Test2',
-            'visibility' => 'Private',
+            'isPublic' => true,
+            'isOrganization' => false,
             'flashcards' => [
                 [
                     'question' => 'Question1',
@@ -295,7 +303,8 @@ class DeckTest extends TestCase
 
         $deckData = [
             'name' => 'Test3',
-            'visibility' => 'Limited',
+            'isPublic' => false,
+            'isOrganization' => true,
             'likes' => 14,
             'flashcards' => [
                 [
@@ -320,7 +329,8 @@ class DeckTest extends TestCase
 
         $this->assertDatabaseHas('decks', [
             'name' => $deckData['name'],
-            'visibility' => $deckData['visibility']
+            'isPublic' => $deckData['isPublic'],
+            'isOrganization' => $deckData['isOrganization'],
         ]);
 
         $this->assertEquals(Deck::where('name', $deckData['name'])->first()->id, 1);
@@ -338,7 +348,8 @@ class DeckTest extends TestCase
     {
         $deckData = [
             'name' => 'Test3',
-            'visibility' => 'Limited',
+            'isPublic' => false,
+            'isOrganization' => true,
             'likes' => 14,
             'flashcards' => [
                 [
@@ -368,7 +379,8 @@ class DeckTest extends TestCase
 
         $deckData = [
             'name' => 'Test3',
-            'visibility' => 'Limited',
+            'isPublic' => false,
+            'isOrganization' => true,
             'likes' => 14,
             'flashcards' => [
                 [

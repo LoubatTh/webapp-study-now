@@ -21,6 +21,9 @@ export const mockTagsData: TagsType[] = [
   {
     name: "english"
   },
+  {
+    name: "geography"
+  },
 ]
 
 // mock user data
@@ -80,6 +83,22 @@ export const mockQuizzData: QuizzType[] = [
     owner: mockUsersData[1],
     type: "quizz"
   },
+  {
+    name: "english grammar",
+    visibility: "public",
+    likes: 21,
+    tags: mockTagsData[4],
+    owner: mockUsersData[0],
+    type: "quizz"
+  },
+  {
+    name: "Capital city",
+    visibility: "public",
+    likes: 21,
+    tags: mockTagsData[5],
+    owner: mockUsersData[2],
+    type: "quizz"
+  },
 ]
 
 // mock quizz data
@@ -106,6 +125,22 @@ export const mockDeckData: DeckType[] = [
     likes: 34,
     tags: mockTagsData[2],
     owner: mockUsersData[1],
+    type: "deck"
+  },
+  {
+    name: "Conjugation",
+    visibility: "public",
+    likes: 34,
+    tags: mockTagsData[4],
+    owner: mockUsersData[0],
+    type: "deck"
+  },
+  {
+    name: "demopraphy",
+    visibility: "public",
+    likes: 34,
+    tags: mockTagsData[5],
+    owner: mockUsersData[2],
     type: "deck"
   },
 ]

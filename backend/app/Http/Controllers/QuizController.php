@@ -68,4 +68,49 @@ class QuizController extends Controller
 
         return response()->json($quiz);
     }
+
+
+    public function update(Request $request, string $id): JsonResponse
+    {
+        $data = $request->validate([
+            'name' => 'required|string',
+            'qcms' => 'required|array',
+            'qcms.*.question' => 'required|string',
+            'qcms.*.answers' => 'required|array|size:4',
+            'qcms.*.answers.*.response' => 'required|string',
+            'qcms.*.answers.*.isValid' => 'required|boolean',
+        ]);
+
+        $quiz = Quiz::find($id);
+
+        if (!$quiz) {
+            return response()->json(['error' => 'Resource not found'], 404);
+        }
+
+        $quiz->name = $data["name"];
+        $quiz->save();
+
+
+        $quiz->qcms()->delete();
+
+        foreach ($data["qcms"] as $qcmData) {
+            $qcm = $quiz->qcms()->create([
+                'question' => $qcmData['question'],
+                'answers' => $qcmData['answers']
+            ]);      
+        }
+
+        return response()->json($quiz->load("qcms"), 200);
+    }
+
+    public function myQuizzes(): JsonResponse
+    {
+        $quizzes = Quiz::where("user_id", $user->id)->get();
+
+        if (!$quizzes) {
+            return response()->json(['message' => "You haven't yet created any quiz"]);
+        }
+
+        return response()->json($quizzes, 201);
+    }
 }

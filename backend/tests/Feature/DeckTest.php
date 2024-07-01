@@ -22,7 +22,10 @@ class DeckTest extends TestCase
     {
         parent::setUp();
 
+        $this->user = User::factory()->hasDecks(2)->create();
+        $this->user->delete();
         $this->user = User::factory()->create();
+
         $this->userPrivate = User::factory()->create();
 
         $this->deck = Deck::factory()->hasFlashcards(10)->create(

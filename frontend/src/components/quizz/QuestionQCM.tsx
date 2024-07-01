@@ -1,17 +1,17 @@
 import { useState } from "react";
-import type { Answer } from "@/types/quizz.type";
+import type { Answer, Questions } from "@/types/quizz.type";
 
-const QuestionQCM = ({ question }) => {
+
+const QuestionQCM = ({ question, onAnswerSelect }: Questions) => {
   const [selectedAnswers, setSelectedAnswers] = useState<Answer[]>([]);
 
-  const handleAnswerClick = (answer) => {
+  const handleAnswerClick = (answer: Answer) => {
+    const newSelectedAnswers = selectedAnswers.includes(answer)
+      ? selectedAnswers.filter((a) => a !== answer)
+      : [...selectedAnswers, answer];
 
-    if (selectedAnswers.includes(answer)) {
-      setSelectedAnswers(selectedAnswers.filter((a) => a !== answer));
-      return;
-    }
-
-    setSelectedAnswers([...selectedAnswers, answer]);
+    setSelectedAnswers(newSelectedAnswers);
+    onAnswerSelect(newSelectedAnswers);
   };
 
   return (
@@ -23,7 +23,9 @@ const QuestionQCM = ({ question }) => {
           onClick={() => handleAnswerClick(answer)}
           style={{
             cursor: "pointer",
-            backgroundColor: selectedAnswers.includes(answer) ? "lightblue" : "white",
+            backgroundColor: selectedAnswers.includes(answer)
+              ? "lightblue"
+              : "white",
           }}
         >
           {answer.response}

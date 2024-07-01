@@ -21,3 +21,12 @@ export type PostQuizz = {
   isPublic: boolean;
   qcms: QCM[];
 };
+
+export type Questions = {
+  question: {
+    id: number;
+    question: string;
+    answers: Answer[];
+  };
+  onAnswerSelect: (answers: Answer[]) => void;
+};

@@ -7,14 +7,20 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "jsdom",
-    include: ["./tests/vitest/*.test.js"],
+    setupFiles: "./tests/vitest/setupTests.ts",
+    include: [
+      "./tests/vitest/**/*.test.js",
+      "./tests/vitest/**/*.test.jsx",
+      "./tests/vitest/**/*.test.ts",
+      "./tests/vitest/**/*.test.tsx",
+    ],
     exclude: ["./tests/playwright/**"],
   },
   server: {
     host: true,
     port: 3000,
     proxy: {
-      "/api": "http://backend:8000",
+      "/api": "http://backend",
     },
     watch: {
       usePolling: true,

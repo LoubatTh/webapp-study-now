@@ -10,7 +10,7 @@ class Quiz extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'visibility', 'likes'];
+    protected $fillable = ['name', 'visibility', 'likes', 'owner'];
 
     public function qcms(): HasMany
     {

@@ -68,7 +68,7 @@ const LoginPage = () => {
         toast({
           title: "Connexion réussie",
         });
-        setToken(data.accessToken, data.accessTokenExpiration, data.refreshToken, data.refreshTokenExpiration);
+        setToken(data.access_token, data.access_token_expiration, data.refresh_token, data.refresh_token_expiration);
 
     };
 

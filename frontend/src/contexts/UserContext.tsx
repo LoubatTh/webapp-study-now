@@ -1,6 +1,7 @@
 import { ReactNode, createContext, useContext, useEffect, useState } from "react";
 import { useAuth } from "./AuthContext";
 import type { UserContextType } from "../types/UserContext.type";
+import { fetchApi } from "@/utils/api";
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
@@ -44,16 +45,11 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
         const fetchUser = async () => {
             if (accessToken) {
-                const response = await fetch("http://localhost:8000/api/user", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${accessToken}`
-                    }
-                });
 
-                const data = await response.json();
-                handleSetUser(data);
+                const response = await fetchApi("GET", "user", null, accessToken);
+
+                const data= await response.data;
+                handleSetUser(data as UserContextType);
             }
         }
 

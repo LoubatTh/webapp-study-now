@@ -10,7 +10,7 @@ class Qcm extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['question', 'answers'];
+    protected $fillable = ['question', 'answers', 'quiz_id'];
     protected $casts = ['answers' => 'array'];
 
     public function quiz(): BelongsTo

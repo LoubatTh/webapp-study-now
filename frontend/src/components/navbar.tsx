@@ -56,7 +56,7 @@ const Navbar = () => {
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()} href="">
+              <NavigationMenuLink className={navigationMenuTriggerStyle()} href="/board">
                 Board
               </NavigationMenuLink>
             </NavigationMenuItem>

@@ -1,25 +1,18 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Heart } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { Heart } from "lucide-react";
 
-const FilterBtnsBar = () => {
-  const [activeButton, setActiveButton] = useState('All');
-  const [isFavActive, setIsFavActive] = useState(false);
-
-  const handleButtonClick = (buttonName) => {
-    setActiveButton(buttonName);
-  };
-
-  const toggleHeartButton = () => {
-    setIsFavActive(prevState => !prevState);
-  };
-
+const FilterBtnsBar = ({
+  activeButton,
+  isFavActive,
+  onButtonClick,
+  onToggleHeart,
+}) => {
   return (
     <div className="flex border border-black rounded-sm bg-black text-white">
       <div className="p-1">
         <Button
-          variant={isFavActive ? 'secondary' : 'ghost'}
-          onClick={toggleHeartButton}
+          variant={isFavActive ? "secondary" : "ghost"}
+          onClick={onToggleHeart}
         >
           <Heart />
         </Button>
@@ -27,24 +20,24 @@ const FilterBtnsBar = () => {
       <div className="flex">
         <div className="p-1">
           <Button
-            variant={activeButton === 'All' ? 'secondary' : 'ghost'}
-            onClick={() => handleButtonClick('All')}
+            variant={activeButton === "All" ? "secondary" : "ghost"}
+            onClick={() => onButtonClick("All")}
           >
             All
           </Button>
         </div>
         <div className="p-1">
           <Button
-            variant={activeButton === 'QCM' ? 'secondary' : 'ghost'}
-            onClick={() => handleButtonClick('QCM')}
+            variant={activeButton === "Quizz" ? "secondary" : "ghost"}
+            onClick={() => onButtonClick("Quizz")}
           >
-            QCM
+            Quizz
           </Button>
         </div>
         <div className="p-1">
           <Button
-            variant={activeButton === 'Deck' ? 'secondary' : 'ghost'}
-            onClick={() => handleButtonClick('Deck')}
+            variant={activeButton === "Deck" ? "secondary" : "ghost"}
+            onClick={() => onButtonClick("Deck")}
           >
             Deck
           </Button>

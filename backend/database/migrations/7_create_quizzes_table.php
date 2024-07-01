@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->string('name');
             $table->boolean('is_public');
             $table->integer('likes');
-
+            $table->boolean('is_organization');
             $table->foreignId('owner')->constrained('users', 'id')->onDelete('cascade');
         });
     }

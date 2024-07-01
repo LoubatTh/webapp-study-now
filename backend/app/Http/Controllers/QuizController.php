@@ -46,7 +46,9 @@ class QuizController extends Controller
     public function destroy(Request $request, string $id): JsonResponse
     {
 
-        $quiz = Quiz::find($id);
+        $user = $request->user();
+
+        $quiz = Quiz::where("id", $id)->where("owner", $user->id)->first();
 
         if (!$quiz) {
             return response()->json(['error' => 'Resource not found'], 404);

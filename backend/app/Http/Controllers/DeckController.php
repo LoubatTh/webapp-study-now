@@ -56,7 +56,7 @@ class DeckController
 
             if ($deck->visibility == "Private") {
                 if (!$user) {
-                    return response()->json(["message" => $user->id], 401);
+                    return response()->json(["message" => "Unauthorized"], 401);
                 }
 
                 if ($user->id != $deck->user_id) {

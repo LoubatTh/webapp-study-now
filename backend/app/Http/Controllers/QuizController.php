@@ -14,7 +14,7 @@ class QuizController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        // $user = $request->user();
+        $user = $request->user();
 
         $data = $request->validate([
             'name' => 'required|string',
@@ -27,7 +27,7 @@ class QuizController extends Controller
 
         $quiz = Quiz::create([
             'name' => $data['name'],
-            // 'user' => $user->id,
+            'owner' => $user->id,
             'visibility' => 'public',
             'likes' => 0
         ]);
@@ -103,9 +103,11 @@ class QuizController extends Controller
         return response()->json($quiz->load("qcms"), 200);
     }
 
-    public function myQuizzes(): JsonResponse
+    public function myQuizzes(Request $request): JsonResponse
     {
-        $quizzes = Quiz::where("user_id", $user->id)->get();
+
+        $user = $request->user();
+        $quizzes = Quiz::where("owner", $user->id)->get();
 
         if (!$quizzes) {
             return response()->json(['message' => "You haven't yet created any quiz"]);

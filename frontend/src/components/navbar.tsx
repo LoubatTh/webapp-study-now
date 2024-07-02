@@ -33,7 +33,7 @@ import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu"
 import * as React from "react"
 import { cn } from "@/lib/utils"
 import ImageLink from "./imageLink"
-import logo from "../assets/Logo-T-YEP.png"
+import logo from "../assets/images/Logo-T-YEP.png"
 
 const Navbar = () => {
   return (

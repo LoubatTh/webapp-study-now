@@ -2,6 +2,7 @@ import { TagsType } from "./TagsContext.type"
 import { UserContextType } from "./UserContext.type"
 
 export type DeckType = {
+  id: number,
   name: string,
   visibility: string,
   likes: number,

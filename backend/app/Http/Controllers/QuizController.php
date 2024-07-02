@@ -30,8 +30,8 @@ class QuizController extends Controller
         $quiz = Quiz::create([
             'name' => $data['name'],
             'owner' => $user->id,
-            'isPublic' => $data->has('isPublic') ? $data['isPublic'] : false,
-            'isOrganization' => $data->has('isOrganization') ? $data['isOrganization'] : false,
+            'isPublic' => $request->has("isPublic") ? $request->isPublic : false,
+            'isOrganization' => $request->has("isOrganization") ? $request->isOrganization : false,
             'likes' => 0
         ]);
 
@@ -99,8 +99,8 @@ class QuizController extends Controller
         }
         
         $quiz->name = $data["name"];
-        $quiz->isPublic = $data->has('isPublic') ? $data['isPublic'] : false;
-        $quiz->isOrganization = $data->has('isOrganization') ? $data['isOrganization'] : false;
+        $quiz->isPublic = $data['isPublic'] ? $data['isPublic'] : false;
+        $quiz->isOrganization = $data['isOrganization'] ? $data['isOrganization'] : false;
         $quiz->save();
 
 

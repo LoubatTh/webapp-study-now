@@ -11,14 +11,18 @@ class Deck extends Model
 
     protected $fillable = [
         'name',
-        'visibility',
+        'isPublic',
+        'isOrganization',
         'likes',
+        'user_id'
     ];
 
     protected $casts = [
         'name' => 'string',
-        'visibility' => 'string',
+        'isPublic' => 'boolean',
+        'isOrganization' => 'boolean',
         'likes' => 'integer',
+        'user_id' => 'integer',
     ];
 
     // public function tag()
@@ -26,10 +30,10 @@ class Deck extends Model
     //     return $this->belongsTo(Tag::class);
     // }
 
-    // public function user()
-    // {
-    //     return $this->belongsTo(User::class);
-    // }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function flashcards()
     {

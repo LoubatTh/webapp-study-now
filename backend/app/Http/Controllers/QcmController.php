@@ -18,7 +18,7 @@ class QcmController extends Controller
         $request->validate([
             'question' => 'required|string',
             'answers' => 'required|array|size:4',
-            'answers.*.response' => 'required|string',
+            'answers.*.answer' => 'required|string',
             'answers.*.isValid' => 'required|boolean',
         ]);
 
@@ -34,7 +34,7 @@ class QcmController extends Controller
     {
         $qcm = Qcm::findOrFail($id);
 
-        return response()->json($qcm);
+        return response()->json($qcm, 200);
     }
 
     public function update(Request $request, string $id): JsonResponse
@@ -42,7 +42,7 @@ class QcmController extends Controller
         $request->validate([
             'question' => 'sometimes|required|string',
             'answers' => 'sometimes|required|array|size:4',
-            'answers.*.response' => 'required|string',
+            'answers.*.answer' => 'required|string',
             'answers.*.isValid' => 'required|boolean',
         ]);
 
@@ -58,7 +58,7 @@ class QcmController extends Controller
 
         $qcm->save();
 
-        return response()->json($qcm);
+        return response()->json($qcm, 200);
     }
 
     public function destroy(Request $request, string $id): JsonResponse

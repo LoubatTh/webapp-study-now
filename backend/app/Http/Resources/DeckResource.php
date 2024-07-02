@@ -17,7 +17,8 @@ class DeckResource extends JsonResource
         return [
             "id" => $this->id,
             "name" => $this->name,
-            "visibility" => $this->visibility,
+            "isPublic" => $this->isPublic,
+            "isOrganization" => $this->isOrganization,
             "likes" => $this->likes,
             "flashcards" => FlashcardResource::collection($this->whenLoaded("flashcards"))
         ];

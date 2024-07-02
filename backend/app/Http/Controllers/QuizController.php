@@ -18,18 +18,21 @@ class QuizController extends Controller
 
         $data = $request->validate([
             'name' => 'required|string',
-            'is_public' => 'required|boolean',
+            'isPublic' => 'boolean',
+            'isOrganization' => 'boolean',
             'qcms' => 'required|array',
             'qcms.*.question' => 'required|string',
             'qcms.*.answers' => 'required|array|size:4',
-            'qcms.*.answers.*.response' => 'required|string',
+            'qcms.*.answers.*.id' => 'required|integer',
+            'qcms.*.answers.*.answer' => 'required|string',
             'qcms.*.answers.*.isValid' => 'required|boolean',
         ]);
 
         $quiz = Quiz::create([
             'name' => $data['name'],
             'owner' => $user->id,
-            'is_public' => $data['is_public'],
+            'isPublic' => $request->has("isPublic") ? $request->isPublic : false,
+            'isOrganization' => $request->has("isOrganization") ? $request->isOrganization : false,
             'likes' => 0
         ]);
 
@@ -40,7 +43,7 @@ class QuizController extends Controller
             ]);
         }
 
-        return response()->json($quiz);
+        return response()->json($quiz, 201);
     }
 
 
@@ -69,7 +72,7 @@ class QuizController extends Controller
 
         }
 
-        return response()->json($quiz);
+        return response()->json($quiz, 200);
     }
 
 
@@ -80,11 +83,13 @@ class QuizController extends Controller
 
         $data = $request->validate([
             'name' => 'required|string',
-            'is_public' => 'required|boolean',
+            'isPublic' => 'boolean',
+            'isOrganization' => 'boolean',
             'qcms' => 'required|array',
             'qcms.*.question' => 'required|string',
             'qcms.*.answers' => 'required|array|size:4',
-            'qcms.*.answers.*.response' => 'required|string',
+            'qcms.*.answers.*.id' => 'required|integer',
+            'qcms.*.answers.*.answer' => 'required|string',
             'qcms.*.answers.*.isValid' => 'required|boolean',
         ]);
 
@@ -96,7 +101,8 @@ class QuizController extends Controller
         }
         
         $quiz->name = $data["name"];
-        $quiz->is_public = $data["is_public"];
+        $quiz->isPublic = $data['isPublic'] ? $data['isPublic'] : false;
+        $quiz->isOrganization = $data['isOrganization'] ? $data['isOrganization'] : false;
         $quiz->save();
 
 
@@ -119,9 +125,9 @@ class QuizController extends Controller
         $quizzes = Quiz::where("owner", $user->id)->get();
 
         if ($quizzes->isEmpty()) {
-            return response()->json(['message' => "You haven't yet created any quiz"]);
+            return response()->json(['message' => "You haven't yet created any quiz"], 200);
         }
 
-        return response()->json($quizzes, 201);
+        return response()->json($quizzes, 200);
     }
 }

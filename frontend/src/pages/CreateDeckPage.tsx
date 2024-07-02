@@ -13,7 +13,7 @@ import { toast } from "@/components/ui/use-toast";
 import { redirect } from "react-router-dom";
 
 const postDeck = async (deck: PostDeck, accessToken: string) => {
-  const response = await fetchApi("POST", "deck", deck, accessToken);
+  const response = await fetchApi("POST", "decks", deck, accessToken);
   console.log(response);
   return response;
 };

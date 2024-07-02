@@ -10,6 +10,7 @@ import LoginPage from "./pages/LoginPage";
 import CreateQuizzPage from "./pages/CreateQuizzPage";
 import { Toaster } from "./components/ui/toaster";
 import CreateDeckPage from "./pages/CreateDeckPage";
+import DeckPlayPage from "./pages/DeckPlayPage";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
@@ -23,6 +24,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route path="/login" element={<LoginPage />} />
           <Route path="/create-quizz" element={<CreateQuizzPage />} />
           <Route path="/create-deck" element={<CreateDeckPage />} />
+          <Route path="/deck/:deckId" element={<DeckPlayPage />} />
         </Routes>
       </UserProvider>
     </AuthProvider>

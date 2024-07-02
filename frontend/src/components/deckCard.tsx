@@ -19,6 +19,8 @@ const colorPalette: { [key: string]: string } = {
   maths: "bg-red-100 text-red-800",
   french: "bg-blue-100 text-blue-800",
   english: "bg-violet-100 text-violet-800",
+  technology: "bg-rose-100 text-rose-800",
+  art: "bg-indigo-100 text-indigo-800",
 };
 
 const getColorClass = (tagName: string) => {

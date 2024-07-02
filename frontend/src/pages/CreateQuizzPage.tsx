@@ -67,7 +67,7 @@ const CreateQuizzPage = () => {
       setErrorMessage("");
       const quizz = {
         name,
-        isPublic: isPublic,
+        isPublic,
         qcms: [
           ...qcms.map((qcm) => ({
             question: qcm.question,

@@ -130,7 +130,11 @@ const CreateDeckPage = () => {
             />
           </React.Fragment>
         ))}
-        <Button onClick={addNewFlashcard} variant="default" className="mt-2">
+        <Button
+          onClick={addNewFlashcard}
+          variant="secondary"
+          className="mt-2 border shadow-sm"
+        >
           Add New Flashcard
         </Button>
         <Separator className="my-2" />

@@ -54,4 +54,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Organization::class, 'users_organizations', 'user_id', 'organization_id');
     }
+
+    public function decks()
+    {
+        return $this->hasMany(Deck::class);
+    }
 }

@@ -5,16 +5,17 @@ use App\Http\Middleware\VerifyUserIsPremium;
 use Illuminate\Support\Facades\Route;
 use App\Enums\TokenAbility;
 use App\Http\Controllers\StripeController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DeckController;
-use App\Http\Controllers\FlashcardController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\QcmController;
 use App\Http\Controllers\QuizController;
 
-Route::group(["namespace" => "App\Http\Controllers"], function () {
-  Route::get("decks", [DeckController::class, "getDecksByUser"]);
-  Route::get("decks/{id}", [DeckController::class, "getDeckById"]);
+// Deck routes
+Route::get("decks", [DeckController::class, "getDecksByPage"]);
+Route::get("decks/{id}", [DeckController::class, "getDeckById"]);
+
+Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->value])->group(function () {
   Route::post("decks", [DeckController::class, "createDeck"]);
   Route::put("decks/{id}", [DeckController::class, "updateDeckById"]);
   Route::delete("decks/{id}", [DeckController::class, "deleteDeckById"]);
@@ -50,6 +51,12 @@ Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->valu
     Route::delete('organizations/{id}', [OrganizationController::class, 'destroy']);
     Route::delete('organizations/{id}/users', [OrganizationController::class, 'destroyUsers']);
   });
+
+  // Quiz routes
+  Route::post('/quizzes', [QuizController::class, 'store']);
+  Route::get('/quizzes', [QuizController::class, 'myQuizzes']);
+  Route::put('/quizzes/{id}', [QuizController::class, 'update']);
+  Route::delete('/quizzes/{id}', [QuizController::class, 'destroy']);
 });
 
 // Qcm routes
@@ -59,4 +66,5 @@ Route::put('/qcms/{id}', [QcmController::class, 'update']);
 Route::delete('/qcms/{id}', [QcmController::class, 'destroy']);
 
 // Quiz routes
-Route::post('/quizzes', [QuizController::class, 'store']);
+Route::get('/quizzes/{id}', [QuizController::class, 'show']);
+

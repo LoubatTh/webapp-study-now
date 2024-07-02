@@ -1,19 +1,25 @@
 export async function fetchApi<T>(
   method: "GET" | "POST" | "PUT" | "DELETE",
   endpoint: string,
-  body?: T
+  body?: T,
+  token?: string | null
 ): Promise<{ data?: unknown; status: number; error?: string }> {
+
   const headers = new Headers({
     "Content-Type": "application/json",
   });
 
+  if (token) {
+    headers.set("Authorization", `Bearer ${token}`);
+  }
+
   const config: RequestInit = {
     method,
     headers,
-    body: body ? JSON.stringify(body) : null,
+    body: body ? JSON.stringify(body) : undefined
   };
 
-  if (method === "GET") {
+  if (method === "GET" || method == "DELETE") {
     delete config.body;
   }
 

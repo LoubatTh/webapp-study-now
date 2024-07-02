@@ -24,9 +24,9 @@ class UpdateDeckRequest extends FormRequest
     {
         return [
             "name" => "string|max:255",
-            "visibility" => "string",
+            "isPublic" => "boolean",
+            "isOrganization" => "boolean",
             "likes" => "integer",
-            Rule::in(["Public", "Private", "Limited"]),
             "flashcards" => "array",
             "flashcards.*.question" => "string|max:255",
             "flashcards.*.answer" => "string|max:255",

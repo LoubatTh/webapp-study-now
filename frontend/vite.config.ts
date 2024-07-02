@@ -7,7 +7,13 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "jsdom",
-    include: ["./tests/vitest/*.test.js"],
+    setupFiles: "./tests/vitest/setupTests.ts",
+    include: [
+      "./tests/vitest/**/*.test.js",
+      "./tests/vitest/**/*.test.jsx",
+      "./tests/vitest/**/*.test.ts",
+      "./tests/vitest/**/*.test.tsx",
+    ],
     exclude: ["./tests/playwright/**"],
   },
   server: {

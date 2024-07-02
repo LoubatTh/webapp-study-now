@@ -26,19 +26,19 @@ class QuizTest extends TestCase
                     'question' => 'question 1',
                     'answers' => [
                         [
-                            "response" => "A",
+                            "answer" => "A",
                             "isValid" => true
                         ],
                         [
-                            "response" => "B",
+                            "answer" => "B",
                             "isValid" => true
                         ],
                         [
-                            "response" => "C",
+                            "answer" => "C",
                             "isValid" => false
                         ],
                         [
-                            "response" => "D",
+                            "answer" => "D",
                             "isValid" => false
                         ]
                     ]
@@ -47,19 +47,19 @@ class QuizTest extends TestCase
                     'question' => 'question 2',
                     'answers' => [
                         [
-                            "response" => "1",
+                            "answer" => "1",
                             "isValid" => true
                         ],
                         [
-                            "response" => "2",
+                            "answer" => "2",
                             "isValid" => true
                         ],
                         [
-                            "response" => "3",
+                            "answer" => "3",
                             "isValid" => false
                         ],
                         [
-                            "response" => "4",
+                            "answer" => "4",
                             "isValid" => false
                         ]
                     ]
@@ -67,9 +67,24 @@ class QuizTest extends TestCase
             ]
         ];
 
-        $response = $this->post('/quizzes', $quizData);
+        $quizDetails = [
+            "name" => 'quiz 1',
+            'isPublic' => true,
+            'isOrganization' => false
+        ];
 
-        $response->assertStatus(201);
+        $response = $this->post('/api/quizzes', $quizData);
+
+        $response->assertStatus(201)->assertJson($quizDetails);
         $this->assertDatabaseHas('quizzes', ['name' => 'quiz 1']);
+
+        $qcms = $quizData["qcms"];
+
+        foreach ($qcms as $qcm) {
+            $this->assertDatabaseHas('qcms', [
+                'question' => $qcm['question'], 
+                'answers' => $qcm['answers']
+            ]);
+        }
     }
 }

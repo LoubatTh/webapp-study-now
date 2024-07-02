@@ -5,15 +5,14 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Switch } from "../components/ui/switch";
 import { useAuth } from "@/contexts/AuthContext";
-import { PostQuizz } from "@/types/quizz.type";
 import { fetchApi } from "@/utils/api";
 import CreateQCM from "../components/quizz/CreateQCM";
 import useQCMStore from "../lib/stores/quizzStore";
 import { toast } from "@/components/ui/use-toast";
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const postQuizz = async (quizz: PostQuizz, accessToken: string) => {
-  const response = await fetchApi("POST", "quizz", quizz, accessToken);
+const postQuizz = async (quizz: any, accessToken: string) => {
+  const response = await fetchApi("POST", "quizzes", quizz, accessToken);
   console.log(response);
   return response;
 };
@@ -21,6 +20,8 @@ const postQuizz = async (quizz: PostQuizz, accessToken: string) => {
 const CreateQuizzPage = () => {
   //Get the access token from the AuthContext
   const { accessToken } = useAuth();
+  //Get the access token from the AuthContext
+  const navigate = useNavigate();
   //Use the useQCMStore store to get the QCMs
   const { qcms, resetQCMs } = useQCMStore();
   //State to manage the name of the quizz
@@ -40,6 +41,9 @@ const CreateQuizzPage = () => {
   //Function to delete a QCM from the list
   const deleteQCM = (id: number): void => {
     setQcmList(qcmList.filter((qcm) => qcm.id !== id));
+    toast({
+      description: "QCM deleted successfully",
+    });
   };
 
   //Function to toggle the collapse of a QCM
@@ -64,7 +68,12 @@ const CreateQuizzPage = () => {
       const quizz = {
         name,
         isPublic,
-        qcms: qcms,
+        qcms: [
+          ...qcms.map((qcm) => ({
+            question: qcm.question,
+            answers: qcm.answers,
+          })),
+        ],
       };
       console.log(quizz);
       const response = await postQuizz(quizz, accessToken);
@@ -75,10 +84,10 @@ const CreateQuizzPage = () => {
         toast({
           description: "Quizz created successfully",
         });
-        redirect("/homepage");
+        navigate("/homepage");
       } else {
-        const data = await response.data.json();
-        toast({ description: data.message });
+        const message = response.error;
+        toast({ description: message });
       }
     }
   }

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\OrganizationController;
+use App\Http\Middleware\VerifyUserIsPremium;
 use Illuminate\Support\Facades\Route;
 use App\Enums\TokenAbility;
 use App\Http\Controllers\StripeController;
@@ -11,13 +13,12 @@ use App\Http\Controllers\QcmController;
 use App\Http\Controllers\QuizController;
 
 Route::group(["namespace" => "App\Http\Controllers"], function () {
-    Route::get("decks", [DeckController::class, "getDecksByUser"]);
-    Route::get("decks/{id}", [DeckController::class, "getDeckById"]);
-    Route::post("decks", [DeckController::class, "createDeck"]);
-    Route::put("decks/{id}", [DeckController::class, "updateDeckById"]);
-    Route::delete("decks/{id}", [DeckController::class, "deleteDeckById"]);
+  Route::get("decks", [DeckController::class, "getDecksByUser"]);
+  Route::get("decks/{id}", [DeckController::class, "getDeckById"]);
+  Route::post("decks", [DeckController::class, "createDeck"]);
+  Route::put("decks/{id}", [DeckController::class, "updateDeckById"]);
+  Route::delete("decks/{id}", [DeckController::class, "deleteDeckById"]);
 });
-
 
 // Auth routes
 Route::post('register', [AuthController::class, 'register']);
@@ -28,6 +29,7 @@ Route::post('logout', [AuthController::class, 'logout'])->middleware(['auth:sanc
 Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->value])->group(function () {
   // User routes
   Route::get('user', [UserController::class, 'show']);
+  Route::get('user/organizations', [UserController::class, 'showOrganizations']);
   Route::put('user', [UserController::class, 'update']);
   Route::delete('user', [UserController::class, 'destroy']);
 
@@ -35,6 +37,19 @@ Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->valu
   Route::post('stripe/checkout', [StripeController::class, 'subcriptionCheckout']);
   Route::post('stripe/cancel', [StripeController::class, 'cancel']);
   Route::post('stripe/resume', [StripeController::class, 'resume']);
+
+  // Organization routes
+  Route::get('organizations/{id}', [OrganizationController::class, 'show']);
+  Route::get('organizations/{id}/users', [OrganizationController::class, 'showUsers']);
+  // Route::get('organizations/{id}/decks', [OrganizationController::class, 'showDecks']);
+  // Route::get('organizations/{id}/quizzes', [OrganizationController::class, 'showQuizzes']);
+  Route::middleware([VerifyUserIsPremium::class])->group(function () {
+    Route::post('organizations', [OrganizationController::class, 'store']);
+    Route::post('organizations/{id}/users', [OrganizationController::class, 'storeUsers']);
+    Route::put('organizations/{id}', [OrganizationController::class, 'update']);
+    Route::delete('organizations/{id}', [OrganizationController::class, 'destroy']);
+    Route::delete('organizations/{id}/users', [OrganizationController::class, 'destroyUsers']);
+  });
 });
 
 // Qcm routes

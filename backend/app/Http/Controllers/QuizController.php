@@ -23,7 +23,6 @@ class QuizController extends Controller
             'qcms' => 'required|array',
             'qcms.*.question' => 'required|string',
             'qcms.*.answers' => 'required|array|size:4',
-            'qcms.*.answers.*.id' => 'required|integer',
             'qcms.*.answers.*.answer' => 'required|string',
             'qcms.*.answers.*.isValid' => 'required|boolean',
         ]);
@@ -88,7 +87,6 @@ class QuizController extends Controller
             'qcms' => 'required|array',
             'qcms.*.question' => 'required|string',
             'qcms.*.answers' => 'required|array|size:4',
-            'qcms.*.answers.*.id' => 'required|integer',
             'qcms.*.answers.*.answer' => 'required|string',
             'qcms.*.answers.*.isValid' => 'required|boolean',
         ]);

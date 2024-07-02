@@ -1,20 +1,25 @@
-import React, { useState } from 'react'
-import CreateSetBtn from '@/components/createSetBtn'
-import FilterBtnsBar from '@/components/filterBtnsBar'
-import QuizzCard from '@/components/quizzCard'
-import DeckCard from '@/components/deckCard'
-import { mockDeckData, mockQuizzData } from '@/lib/mockData'
+import React, { useState } from "react";
+import CreateSetBtn from "@/components/createSetBtn";
+import FilterBtnsBar from "@/components/filterBtnsBar";
+import QuizzCard from "@/components/quizzCard";
+import DeckCard from "@/components/deckCard";
+import { mockDeckData, mockQuizzData } from "@/lib/mockData";
+import Pagin from "@/components/pagination";
 
 const BoardPage: React.FC = () => {
   const [activeButton, setActiveButton] = useState("All");
   const [isFavActive, setIsFavActive] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 9;
 
   const handleButtonClick = (buttonName: string) => {
     setActiveButton(buttonName);
+    setCurrentPage(1); // Reset to first page on filter change
   };
 
   const toggleHeartButton = () => {
     setIsFavActive((prevState) => !prevState);
+    setCurrentPage(1); // Reset to first page on heart toggle
   };
 
   const combinedData = [...mockQuizzData, ...mockDeckData];
@@ -35,6 +40,16 @@ const BoardPage: React.FC = () => {
 
     return true;
   });
+
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const displayedItems = filteredData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   return (
     <>
@@ -71,7 +86,7 @@ const BoardPage: React.FC = () => {
         </div>
       </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4">
-        {filteredData.map((item, index) =>
+        {displayedItems.map((item, index) =>
           item.type === "quizz" ? (
             <QuizzCard key={index} quizz={item} />
           ) : (
@@ -79,8 +94,15 @@ const BoardPage: React.FC = () => {
           )
         )}
       </div>
+      <div className="flex justify-center my-4">
+        <Pagin
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      </div>
     </>
   );
 };
 
- export default BoardPage
+export default BoardPage;

@@ -38,10 +38,9 @@ const ResponseQuizzPage = () => {
     if (!quizz) return;
 
     const correctAnswers = quizz.qcms.map((qcm) => {
+
       const userAnswers = selectedAnswers[qcm.id] || [];
-
       const correctAnswers = qcm.answers.filter((answer) => answer.isValid).map((answer) => answer.response);
-
       const isCorrect = userAnswers.every((answer) => correctAnswers.includes(answer.response)) && userAnswers.length === correctAnswers.length;
 
       return {
@@ -61,28 +60,29 @@ const ResponseQuizzPage = () => {
 
   return (
     <>
-      <div>Salut la team</div>
-      {quizz ? (
-        <div>
-          <h1>{quizz.name}</h1>
-          {quizz.qcms.map((qcm) => (
-            <div key={qcm.id}>
-              <br />
-              <QuestionQCM
-                question={qcm}
-                onAnswerSelect={(answers) =>
-                  handleAnswerSelect(qcm.id, answers)
-                }
-              />
-            </div>
-          ))}
-          <br />
-          <button onClick={handleSubmit}>Valider</button>
-          <p>Vous avez eu {correctPercentage}% de bonnes réponses</p>
-        </div>
-      ) : (
-        <p>No quiz data available</p>
-      )}
+      <div className="flex flex-col items-center gap-4">
+        {quizz ? (
+          <div>
+            <h1 className="mx-auto my-4">{quizz.name}</h1>
+
+            {quizz.qcms.map((qcm) => (
+              <div key={qcm.id} className=" bg-white drop-shadow-2xl m-3 mb-10 p-3 rounded-lg">
+                <QuestionQCM
+                  question={qcm}
+                  onAnswerSelect={(answers) =>
+                    handleAnswerSelect(qcm.id, answers)
+                  }
+                />
+              </div>
+            ))}
+
+            <button onClick={handleSubmit}>Valider</button>
+            <p>Vous avez eu {correctPercentage}% de bonnes réponses</p>
+          </div>
+        ) : (
+          <p>Chargement...</p>
+        )}
+      </div>
     </>
   );
 };

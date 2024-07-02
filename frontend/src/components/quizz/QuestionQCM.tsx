@@ -1,8 +1,9 @@
 import { useState } from "react";
 import type { Answer, Questions } from "@/types/quizz.type";
-
+import { getLetterById } from "@/utils/bytetoletter";
 
 const QuestionQCM = ({ question, onAnswerSelect }: Questions) => {
+  
   const [selectedAnswers, setSelectedAnswers] = useState<Answer[]>([]);
 
   const handleAnswerClick = (answer: Answer) => {
@@ -16,19 +17,20 @@ const QuestionQCM = ({ question, onAnswerSelect }: Questions) => {
 
   return (
     <div>
-      <h2>{question.question}</h2>
-      {question.answers.map((answer) => (
+      <h2 className="font-medium mb-3">{question.question}</h2>
+      {question.answers.map((answer, index) => (
         <p
+          className=""
           key={answer.response}
           onClick={() => handleAnswerClick(answer)}
           style={{
             cursor: "pointer",
             backgroundColor: selectedAnswers.includes(answer)
               ? "lightblue"
-              : "white",
+              : "transparent",
           }}
         >
-          {answer.response}
+          {getLetterById(index)}. {answer.response}
         </p>
       ))}
     </div>

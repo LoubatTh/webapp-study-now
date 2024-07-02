@@ -9,7 +9,7 @@ import { fetchApi } from "@/utils/api";
 import CreateQCM from "../components/quizz/CreateQCM";
 import useQCMStore from "../lib/stores/quizzStore";
 import { toast } from "@/components/ui/use-toast";
-import { redirect } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 
 const postQuizz = async (quizz: any, accessToken: string) => {
   const response = await fetchApi("POST", "quizzes", quizz, accessToken);
@@ -20,6 +20,8 @@ const postQuizz = async (quizz: any, accessToken: string) => {
 const CreateQuizzPage = () => {
   //Get the access token from the AuthContext
   const { accessToken } = useAuth();
+  //Get the access token from the AuthContext
+  const navigate = useNavigate();
   //Use the useQCMStore store to get the QCMs
   const { qcms, resetQCMs } = useQCMStore();
   //State to manage the name of the quizz
@@ -82,10 +84,10 @@ const CreateQuizzPage = () => {
         toast({
           description: "Quizz created successfully",
         });
-        redirect("/homepage");
+        navigate("/homepage");
       } else {
-        const data = await response.data.json();
-        toast({ description: data.message });
+        const message = response.error;
+        toast({ description: message });
       }
     }
   }

@@ -29,4 +29,6 @@ export type Questions = {
     answers: Answer[];
   };
   onAnswerSelect: (answers: Answer[]) => void;
+  answeredCorrectly?: boolean;
+  isSubmitting?: boolean;
 };

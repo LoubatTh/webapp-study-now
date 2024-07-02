@@ -32,12 +32,12 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports:
-      - "8000:8000"
+      - "8000:80"
     depends_on:
       - database
     volumes:
       - ./backend:/app
-    command: sh -c "composer install && php artisan migrate && php artisan serve --host=0.0.0.0 --port=8000"
+    command: sh -c "composer install && php artisan migrate && php artisan serve --host=0.0.0.0 --port=80"
     env_file:
       - ./backend/.env
     networks:
@@ -54,8 +54,19 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
-    env_file:
-      - ./frontend/.env
+    networks:
+      - network
+
+  stripe:
+    container_name: stripe
+    build:
+      context: ./backend/stripe
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+    volumes:
+      - stripe-gpg://root/.gnupg/
+      - stripe-pass://root/.password-store/
     networks:
       - network
 
@@ -65,3 +76,5 @@ networks:
 
 volumes:
   database_data:
+  stripe-gpg:
+  stripe-pass:

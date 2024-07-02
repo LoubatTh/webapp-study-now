@@ -14,8 +14,20 @@ class UserController extends Controller
     public function show(Request $request)
     {
         $user = $request->user();
+        $subscribedToProduct = $user->subscribed();
 
-        return response()->json($user);
+        $response = [
+            'id' => $user['id'],
+            'name' => $user['name'],
+            'email' => $user['email'],
+            'role' => $user['role'],
+            'email_verified_at' => $user['email_verified_at'],
+            'created_at' => $user['created_at'],
+            'updated_at' => $user['updated_at'],
+            'is_subscribed' => $subscribedToProduct,
+        ];
+
+        return response()->json($response);
     }
 
     /**

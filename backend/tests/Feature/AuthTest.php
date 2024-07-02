@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Carbon;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Tests\TestCase;
+use Illuminate\Foundation\Testing\TestCase;
 
 class AuthTest extends TestCase
 {
@@ -25,8 +25,8 @@ class AuthTest extends TestCase
                 'password' => Hash::make('testPassword'),
             ]
         );
-        $this->accessToken = $this->user->createToken('accessToken', [TokenAbility::ACCESS_API->value], Carbon::now()->addMinutes(config('sanctum.ac_expiration')))->plainTextToken;
-        $this->refreshToken = $this->user->createToken('refreshToken', [TokenAbility::ISSUE_ACCESS_TOKEN->value], Carbon::now()->addMinutes(config('sanctum.rt_expiration')))->plainTextToken;
+        $this->accessToken = $this->user->createToken('access_token', [TokenAbility::ACCESS_API->value], Carbon::now()->addMinutes(config('sanctum.ac_expiration')))->plainTextToken;
+        $this->refreshToken = $this->user->createToken('refresh_token', [TokenAbility::ISSUE_ACCESS_TOKEN->value], Carbon::now()->addMinutes(config('sanctum.rt_expiration')))->plainTextToken;
     }
 
     protected function tearDown(): void
@@ -54,7 +54,7 @@ class AuthTest extends TestCase
 
         $response->assertStatus(201)->assertJson(
             fn(AssertableJson $json) =>
-            $json->hasAll(['accessToken', 'accessTokenExpiration', 'refreshToken', 'refreshTokenExpiration'])
+            $json->hasAll(['access_token', 'access_token_expiration', 'refresh_token', 'refresh_token_expiration'])
         );
 
     }
@@ -96,10 +96,10 @@ class AuthTest extends TestCase
 
         $response->assertStatus(200)->assertJson(
             fn(AssertableJson $json) =>
-            $json->hasAll(['accessToken', 'accessTokenExpiration', 'refreshToken', 'refreshTokenExpiration'])
+            $json->hasAll(['access_token', 'access_token_expiration', 'refresh_token', 'refresh_token_expiration'])
         );
 
-        $token = $response['accessToken'];
+        $token = $response['access_token'];
         $deleteResponse = $this->deleteJson(
             '/api/user',
             [],
@@ -128,7 +128,7 @@ class AuthTest extends TestCase
 
         $response->assertStatus(200)->assertJson(
             fn(AssertableJson $json) =>
-            $json->hasAll(['accessToken', 'accessTokenExpiration'])
+            $json->hasAll(['access_token', 'access_token_expiration'])
         );
     }
 

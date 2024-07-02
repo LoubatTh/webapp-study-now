@@ -38,7 +38,7 @@ const BoardPage: React.FC = () => {
 
   return (
     <>
-      <div className="flex justify-around p-10 items-center">
+      <div className="hidden md:flex justify-around p-10 items-center">
         <div>
           <CreateSetBtn />
         </div>
@@ -46,6 +46,22 @@ const BoardPage: React.FC = () => {
           <h3>My board</h3>
         </div>
         <div>
+          <FilterBtnsBar
+            activeButton={activeButton}
+            isFavActive={isFavActive}
+            onButtonClick={handleButtonClick}
+            onToggleHeart={toggleHeartButton}
+          />
+        </div>
+      </div>
+      <div className="md:hidden flex flex-col items-center p-10">
+        <div className="mb-4">
+          <h3>My board</h3>
+        </div>
+        <div className="mb-4">
+          <CreateSetBtn />
+        </div>
+        <div className="">
           <FilterBtnsBar
             activeButton={activeButton}
             isFavActive={isFavActive}

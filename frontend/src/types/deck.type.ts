@@ -8,6 +8,8 @@ export type Deck = {
   id: number;
   name: string;
   isPublic: boolean;
+  isOrganization?: boolean;
+  likes?: number;
   flashcards: Flashcard[];
 };
 

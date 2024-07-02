@@ -8,6 +8,7 @@ const ResponseQuizzPage = () => {
   const { isReady } = useAuth();
   const { quizzId } = useParams();
   const [ quizz, setQuizz ] = useState<any>(null); 
+  const [ correctPercentage, setCorrectPercentage ] = useState<number>(0); 
   const [ selectedAnswers, setSelectedAnswers ] = useState<{
       [key: number]: any[];
     }>({});
@@ -52,7 +53,7 @@ const ResponseQuizzPage = () => {
 
     const totalQuestions = correctAnswers.length;
     const correctCount = correctAnswers.filter((answer) => answer.isCorrect).length;
-    const correctPercentage = (correctCount / totalQuestions) * 100;
+    setCorrectPercentage((correctCount / totalQuestions) * 100);
 
     console.log(correctAnswers);
     console.log(`You got ${correctPercentage}% correct answers.`);
@@ -77,6 +78,7 @@ const ResponseQuizzPage = () => {
           ))}
           <br />
           <button onClick={handleSubmit}>Valider</button>
+          <p>Vous avez eu {correctPercentage}% de bonnes réponses</p>
         </div>
       ) : (
         <p>No quiz data available</p>

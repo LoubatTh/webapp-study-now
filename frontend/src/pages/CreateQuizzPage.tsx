@@ -137,10 +137,13 @@ const CreateQuizzPage = () => {
             />
           </React.Fragment>
         ))}
-        <Button onClick={addNewQCM} variant="default" className="mt-2">
+        <Button
+          onClick={addNewQCM}
+          variant="secondary"
+          className="mt-2 border shadow-sm"
+        >
           Add New QCM
         </Button>
-        <Separator className="my-2" />
         <Button onClick={createQuizzHandler} variant="default">
           Create Quizz
         </Button>

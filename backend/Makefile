@@ -11,7 +11,7 @@ init: ## Init application
 	make webhook;
 
 migrate: ## Run migration
-	docker exec -it backend php artisan migrate;
+	docker exec -it backend php artisan migrate:refresh;
 
 cache: ## Clear cache
 	docker exec -it backend php artisan optimize:clear;
@@ -24,3 +24,6 @@ test: ## Run tests
 
 webhook: ## Create Stripe webhook
 	docker exec -it backend php artisan cashier:webhook --url="http://backend/stripe/webhook";
+
+routes: ## List API routes
+	docker exec -it backend php artisan route:list;

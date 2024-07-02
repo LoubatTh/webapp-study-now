@@ -5,15 +5,14 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Switch } from "../components/ui/switch";
 import { useAuth } from "@/contexts/AuthContext";
-import { PostQuizz } from "@/types/quizz.type";
 import { fetchApi } from "@/utils/api";
 import CreateQCM from "../components/quizz/CreateQCM";
 import useQCMStore from "../lib/stores/quizzStore";
 import { toast } from "@/components/ui/use-toast";
 import { redirect } from "react-router-dom";
 
-const postQuizz = async (quizz: PostQuizz, accessToken: string) => {
-  const response = await fetchApi("POST", "quizz", quizz, accessToken);
+const postQuizz = async (quizz: any, accessToken: string) => {
+  const response = await fetchApi("POST", "quizzes", quizz, accessToken);
   console.log(response);
   return response;
 };
@@ -67,7 +66,12 @@ const CreateQuizzPage = () => {
       const quizz = {
         name,
         isPublic,
-        qcms: qcms,
+        qcms: [
+          ...qcms.map((qcm) => ({
+            question: qcm.question,
+            answers: qcm.answers,
+          })),
+        ],
       };
       console.log(quizz);
       const response = await postQuizz(quizz, accessToken);

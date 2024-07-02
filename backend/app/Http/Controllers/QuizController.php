@@ -18,20 +18,20 @@ class QuizController extends Controller
 
         $data = $request->validate([
             'name' => 'required|string',
-            'is_public' => 'boolean',
-            'is_organization' => 'boolean',
+            'isPublic' => 'boolean',
+            'isOrganization' => 'boolean',
             'qcms' => 'required|array',
             'qcms.*.question' => 'required|string',
             'qcms.*.answers' => 'required|array|size:4',
-            'qcms.*.answers.*.response' => 'required|string',
+            'qcms.*.answers.*.answer' => 'required|string',
             'qcms.*.answers.*.isValid' => 'required|boolean',
         ]);
 
         $quiz = Quiz::create([
             'name' => $data['name'],
             'owner' => $user->id,
-            'is_public' => $data->has('is_public') ? $data['is_public'] : false,
-            'is_organization' => $data->has('is_organization') ? $data['is_organization'] : false,
+            'isPublic' => $data->has('isPublic') ? $data['isPublic'] : false,
+            'isOrganization' => $data->has('isOrganization') ? $data['isOrganization'] : false,
             'likes' => 0
         ]);
 
@@ -82,12 +82,12 @@ class QuizController extends Controller
 
         $data = $request->validate([
             'name' => 'required|string',
-            'is_public' => 'boolean',
-            'is_organization' => 'boolean',
+            'isPublic' => 'boolean',
+            'isOrganization' => 'boolean',
             'qcms' => 'required|array',
             'qcms.*.question' => 'required|string',
             'qcms.*.answers' => 'required|array|size:4',
-            'qcms.*.answers.*.response' => 'required|string',
+            'qcms.*.answers.*.answer' => 'required|string',
             'qcms.*.answers.*.isValid' => 'required|boolean',
         ]);
 
@@ -99,8 +99,8 @@ class QuizController extends Controller
         }
         
         $quiz->name = $data["name"];
-        $quiz->is_public = $data->has('is_public') ? $data['is_public'] : false;
-        $quiz->is_organization = $data->has('is_organization') ? $data['is_organization'] : false;
+        $quiz->isPublic = $data->has('isPublic') ? $data['isPublic'] : false;
+        $quiz->isOrganization = $data->has('isOrganization') ? $data['isOrganization'] : false;
         $quiz->save();
 
 

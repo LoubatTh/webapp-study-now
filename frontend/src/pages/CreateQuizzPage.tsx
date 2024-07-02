@@ -5,14 +5,15 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Switch } from "../components/ui/switch";
 import { useAuth } from "@/contexts/AuthContext";
+import { PostQuizz } from "@/types/quizz.type";
 import { fetchApi } from "@/utils/api";
 import CreateQCM from "../components/quizz/CreateQCM";
 import useQCMStore from "../lib/stores/quizzStore";
 import { toast } from "@/components/ui/use-toast";
-import { useNavigate } from "react-router-dom";
+import { redirect } from "react-router-dom";
 
-const postQuizz = async (quizz: any, accessToken: string) => {
-  const response = await fetchApi("POST", "quizzes", quizz, accessToken);
+const postQuizz = async (quizz: PostQuizz, accessToken: string) => {
+  const response = await fetchApi("POST", "quizz", quizz, accessToken);
   console.log(response);
   return response;
 };
@@ -20,8 +21,6 @@ const postQuizz = async (quizz: any, accessToken: string) => {
 const CreateQuizzPage = () => {
   //Get the access token from the AuthContext
   const { accessToken } = useAuth();
-  //Get the access token from the AuthContext
-  const navigate = useNavigate();
   //Use the useQCMStore store to get the QCMs
   const { qcms, resetQCMs } = useQCMStore();
   //State to manage the name of the quizz
@@ -41,9 +40,6 @@ const CreateQuizzPage = () => {
   //Function to delete a QCM from the list
   const deleteQCM = (id: number): void => {
     setQcmList(qcmList.filter((qcm) => qcm.id !== id));
-    toast({
-      description: "QCM deleted successfully",
-    });
   };
 
   //Function to toggle the collapse of a QCM
@@ -68,12 +64,7 @@ const CreateQuizzPage = () => {
       const quizz = {
         name,
         isPublic,
-        qcms: [
-          ...qcms.map((qcm) => ({
-            question: qcm.question,
-            answers: qcm.answers,
-          })),
-        ],
+        qcms: qcms,
       };
       console.log(quizz);
       const response = await postQuizz(quizz, accessToken);
@@ -84,10 +75,10 @@ const CreateQuizzPage = () => {
         toast({
           description: "Quizz created successfully",
         });
-        navigate("/homepage");
+        redirect("/homepage");
       } else {
-        const message = response.error;
-        toast({ description: message });
+        const data = await response.data.json();
+        toast({ description: data.message });
       }
     }
   }
@@ -137,13 +128,10 @@ const CreateQuizzPage = () => {
             />
           </React.Fragment>
         ))}
-        <Button
-          onClick={addNewQCM}
-          variant="secondary"
-          className="mt-2 border shadow-sm"
-        >
+        <Button onClick={addNewQCM} variant="default" className="mt-2">
           Add New QCM
         </Button>
+        <Separator className="my-2" />
         <Button onClick={createQuizzHandler} variant="default">
           Create Quizz
         </Button>

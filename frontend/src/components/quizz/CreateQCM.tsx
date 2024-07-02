@@ -22,6 +22,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
+import { Separator } from "../ui/separator";
 import useQCMStore from "../../lib/stores/quizzStore";
 import type { QCM } from "../../types/quizz.type";
 import { DialogClose, DialogFooter } from "../ui/dialog";
@@ -90,23 +91,18 @@ const CreateQCM = ({
   }
 
   return (
-    <div className="flex flex-col border shadow-sm rounded-md p-2">
+    <div className="flex flex-col border rounded-md p-2">
       {collapsed ? (
         <div className="flex flex-col gap-2">
+          <Label className=" text-md">
+            Question: {form.getValues().question}
+          </Label>
+          <Label className="text-md">
+            Valid answers: {numberOfValidAnswers()}/4
+          </Label>
+          <Separator />
           <div className="flex gap-2">
-            <Label className=" text-md">Question:</Label>
-            <div> {form.getValues().question}</div>
-          </div>
-          <div className="flex gap-2">
-            <Label className="text-md">Valid answers:</Label>
-            <div>{numberOfValidAnswers()}/4</div>
-          </div>
-          <div className="flex gap-2 mt-4">
-            <Button
-              onClick={onToggleCollapse}
-              className="w-1/2"
-              variant="default"
-            >
+            <Button onClick={onToggleCollapse} className="w-1/2">
               <div className="ml-2">Edit</div>
             </Button>
             <Dialog>
@@ -308,8 +304,9 @@ const CreateQCM = ({
                 </FormItem>
               )}
             />
+            <Separator />
             <div className="flex gap-2 pb-2">
-              <Button type="submit" className="w-1/2" variant="default">
+              <Button type="submit" className="w-1/2">
                 Validate QCM
               </Button>
               <Dialog>

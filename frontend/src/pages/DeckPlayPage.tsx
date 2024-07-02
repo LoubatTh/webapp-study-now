@@ -1,6 +1,7 @@
 import DeckComponent from "@/components/deck/DeckComponent";
+import { Deck } from "@/types/deck.type";
 import { fetchApi } from "@/utils/api";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 
 const getDeck = async (deckId: string | undefined) => {
@@ -10,26 +11,25 @@ const getDeck = async (deckId: string | undefined) => {
 
 const DeckPlayPage = () => {
   const { deckId } = useParams();
-  const [deck, setDeck] = useState({});
+  const [deck, setDeck] = useState<Deck | undefined>(undefined);
 
   const fetchDeck = async () => {
     const response = await getDeck(deckId);
     if (response.status === 200) {
-      const data = response.data;
-      setDeck(data);
-      console.log(data);
+      if (response.data !== null) {
+        const data: Deck = response.data;
+        console;
+        setDeck(data);
+      }
     }
   };
 
   useEffect(() => {
     fetchDeck();
-  });
+    console.log(deck);
+  }, []);
 
-  return (
-    <div>
-      <DeckComponent flashcards={} />
-    </div>
-  );
+  return <div>{/* <DeckComponent /> */}</div>;
 };
 
 export default DeckPlayPage;

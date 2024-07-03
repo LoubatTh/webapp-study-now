@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\Deck;
 use App\Models\User;
-use Artisan;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Illuminate\Foundation\Testing\TestCase;
 

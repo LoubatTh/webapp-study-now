@@ -14,6 +14,32 @@ class UserSeeder extends Seeder
     {
         User::factory()
             ->count(10)
+            ->hasDecks(10) // 100 decks
+            ->hasQuizzes(10) //100 quizzes
+            ->create();
+
+        User::factory()
+            ->count(5)
+            ->hasDecks(3) // 15 decks
+            ->hasQuizzes(6) //30 quizzes
+            ->create();
+
+        User::factory()
+            ->count(6)
+            ->hasDecks(20)  // 120 decks
+            ->hasQuizzes(10) //60 quizzes
+            ->create();
+
+        User::factory()
+            ->count(20)
+            ->hasDecks(5) // 100 decks
+            ->hasQuizzes(3) //60 quizzes
+            ->create();
+
+        User::factory()
+            ->count(30)
+            ->hasDecks(1) // 30 decks
+            ->hasQuizzes(2) //60 quizzes
             ->create();
     }
 }

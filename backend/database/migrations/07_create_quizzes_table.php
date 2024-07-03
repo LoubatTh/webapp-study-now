@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->timestamps();
             $table->string('name');
+            $table->string('type');
             $table->boolean('isPublic');
             $table->integer('likes');
             $table->boolean('isOrganization');

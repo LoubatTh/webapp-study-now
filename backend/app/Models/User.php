@@ -53,4 +53,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Deck::class);
     }
+
+    public function quizzes()
+    {
+        return $this->hasMany(Quiz::class, 'owner');
+    }
 }

@@ -13,8 +13,9 @@ return new class extends Migration {
         Schema::create('decks', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->boolean('isPublic');
-            $table->boolean('isOrganization');
+            $table->boolean('is_public');
+            $table->boolean('is_organization');
+            $table->string('type');
             $table->integer('likes')->nullable();
             $table->foreignId('user_id');
             $table->timestamps();

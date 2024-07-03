@@ -1,10 +1,9 @@
-import { access } from "fs";
 import { useAuth } from "../contexts/AuthContext";
 import { getCookie } from "../utils/cookie";
 
 const Homepage = () => {
 
-  const { accessToken } = useAuth();
+  const { accessToken, logout } = useAuth();
   const refreshToken = getCookie('refreshToken');
 
 return (
@@ -12,6 +11,7 @@ return (
       <p>HomePage</p>
       <p>Token : {accessToken}</p>
       <p>RefreshToken : {refreshToken} </p>
+      <button onClick={logout}>Logout</button>
     </>
   )
 };

@@ -13,7 +13,8 @@ class Quiz extends Model
 
     protected $fillable = [
         'name',
-        'is_public',
+        'isPublic',
+        'isOrganization',
         'likes',
         'owner',
         'type'

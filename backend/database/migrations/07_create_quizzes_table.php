@@ -14,10 +14,10 @@ return new class extends Migration {
             $table->id();
             $table->timestamps();
             $table->string('name');
-            $table->boolean('is_public');
             $table->string('type');
+            $table->boolean('isPublic');
             $table->integer('likes');
-
+            $table->boolean('isOrganization');
             $table->foreignId('owner')->constrained('users', 'id')->onDelete('cascade');
         });
     }

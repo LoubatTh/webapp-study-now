@@ -18,7 +18,7 @@ class QcmController extends Controller
         $request->validate([
             'question' => 'required|string',
             'answers' => 'required|array|size:4',
-            'answers.*.response' => 'required|string',
+            'answers.*.answer' => 'required|string',
             'answers.*.isValid' => 'required|boolean',
         ]);
 
@@ -42,7 +42,7 @@ class QcmController extends Controller
         $request->validate([
             'question' => 'sometimes|required|string',
             'answers' => 'sometimes|required|array|size:4',
-            'answers.*.response' => 'required|string',
+            'answers.*.answer' => 'required|string',
             'answers.*.isValid' => 'required|boolean',
         ]);
 

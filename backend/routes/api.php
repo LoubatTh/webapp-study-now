@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\UserDeckController;
+use App\Http\Controllers\UserQuizController;
 use Illuminate\Support\Facades\Route;
 use App\Enums\TokenAbility;
 use App\Http\Controllers\StripeController;
@@ -9,16 +11,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\QcmController;
 use App\Http\Controllers\QuizController;
 
-// Deck routes
-Route::get("decks", [DeckController::class, "getDecksByPage"]);
-Route::get("decks/{id}", [DeckController::class, "getDeckById"]);
-
-Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->value])->group(function () {
-  Route::post("decks", [DeckController::class, "createDeck"]);
-  Route::put("decks/{id}", [DeckController::class, "updateDeckById"]);
-  Route::delete("decks/{id}", [DeckController::class, "deleteDeckById"]);
-});
-
+// Deck Get routes
+Route::get('decks', [DeckController::class, 'getDecksByPage']);
+Route::get('decks/{id}', [DeckController::class, 'getDeckById']);
 
 // Auth routes
 Route::post('register', [AuthController::class, 'register']);
@@ -37,11 +32,20 @@ Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->valu
   Route::post('stripe/cancel', [StripeController::class, 'cancel']);
   Route::post('stripe/resume', [StripeController::class, 'resume']);
 
+  // Deck routes
+  Route::post('decks', [DeckController::class, "createDeck"]);
+  Route::put('decks/{id}', [DeckController::class, "updateDeckById"]);
+  Route::delete('decks/{id}', [DeckController::class, "deleteDeckById"]);
+  Route::put('decks/{id}/like', [UserDeckController::class, 'likeOrDislikeDeckById']);
+  Route::put('decks/{id}/grade', [UserDeckController::class, 'saveGradeDeckById']);
+
   // Quiz routes
   Route::post('/quizzes', [QuizController::class, 'store']);
   Route::get('/quizzes', [QuizController::class, 'myQuizzes']);
   Route::put('/quizzes/{id}', [QuizController::class, 'update']);
   Route::delete('/quizzes/{id}', [QuizController::class, 'destroy']);
+  Route::put('quizzes/{id}/like', [UserQuizController::class, 'likeOrDislikeQuizById']);
+  Route::put('quizzes/{id}/grade', [UserQuizController::class, 'saveGradeQuizById']);
 });
 
 // Qcm routes

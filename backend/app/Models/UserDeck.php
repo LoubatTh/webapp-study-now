@@ -12,25 +12,25 @@ class UserDeck extends Model
     protected $fillable = [
         'user_id',
         'deck_id',
-        'easinessFactor',
+        'easiness_factor',
         'repetition',
         'interval',
         'date',
-        'userGrade',
-        'prevUserGrade',
-        'like',
+        'user_grade',
+        'prev_user_grade',
+        'is_liked',
     ];
 
     protected $casts = [
         'user_id' => 'integer',
         'deck_id' => 'integer',
-        'easinessFactor' => 'float',
+        'easiness_factor' => 'float',
         'repetition' => 'integer',
         'interval' => 'integer',
         'date' => 'date',
-        'userGrade' => 'float',
-        'prevUserGrade' => 'float',
-        'isLiked' => 'boolean',
+        'user_grade' => 'float',
+        'prev_user_grade' => 'float',
+        'is_liked' => 'boolean',
     ];
 
     public function user()

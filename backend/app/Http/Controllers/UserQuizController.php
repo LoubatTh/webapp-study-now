@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreUserQuizzesRequest;
-use App\Http\Requests\UpdateLikesQuizRequest;
+use App\Http\Controllers\StatsController;
+use App\Http\Requests\SaveGradeRequest;
 use App\Models\Quiz;
 use App\Models\UserQuiz;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 
-class UserQuizController
+class UserQuizController extends Controller
 {
-    public function likeOrDislikeDeckById(UpdateLikesQuizRequest $request, int $id)
+    public function likeOrDislikeQuizById(Request $request, int $id)
     {
         try {
             $user = $request->user();
@@ -19,31 +21,29 @@ class UserQuizController
                 return response()->json(["message" => "Quiz not found"], 404);
             }
 
-            $userQuiz = UserQuiz::where("deck_id", $id)->where("user_id", $user->id);
-            if (!$userQuiz) {
-                $userQuiz = UserQuiz::create([
-                    "user_id" => $user->id,
-                    "quiz_id" => $quiz->id,
-                    "easinessFactor" => 2.5,
+            $userQuiz = UserQuiz::firstOrCreate(
+                ["quiz_id" => $id, "user_id" => $user->id],
+                [
+                    "easiness_factor" => 2.5,
                     "repetition" => 0,
                     "interval" => 0,
-                    "date" => date_create("now"),
-                    "userGrade" => null,
-                    "prevUserGrade" => null,
-                    "isLiked" => false,
-                ]);
-            }
+                    "date" => now(),
+                    "user_grade" => null,
+                    "prev_user_grade" => null,
+                    "is_liked" => false,
+                ]
+            );
 
             $userQuiz->update([
-                "isLiked" => !$userQuiz->isLiked,
+                "is_liked" => !$userQuiz->is_liked,
             ]);
 
             $quiz->update([
-                "likes" => $userQuiz->isLiked ?
+                "likes" => $userQuiz->is_liked ?
                     $quiz->likes + 1 :
-                    $quiz->likes > 0 ?
-                    $quiz->likes - 1 :
-                    0,
+                    ($quiz->likes > 0 ?
+                        $quiz->likes - 1 :
+                        0),
             ]);
 
             return response()->noContent();
@@ -52,43 +52,45 @@ class UserQuizController
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function saveGradeQuizById(SaveGradeRequest $request, int $id, StatsController $statsController)
     {
-        //
-    }
+        try {
+            $user = $request->user();
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreUserQuizzesRequest $request)
-    {
-        //
-    }
+            $quiz = Quiz::find($id);
+            if (!$quiz) {
+                return response()->json(["message" => "Quiz not found"], 404);
+            }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(UserQuiz $userQuizzes)
-    {
-        //
-    }
+            $userQuiz = UserQuiz::firstOrCreate(
+                ["quiz_id" => $id, "user_id" => $user->id],
+                [
+                    "easiness_factor" => 2.5,
+                    "repetition" => 0,
+                    "interval" => 0,
+                    "date" => now(),
+                    "user_grade" => null,
+                    "prev_user_grade" => null,
+                    "is_liked" => false,
+                ]
+            );
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(UserQuiz $userQuizzes)
-    {
-        //
-    }
+            [$repetition, $easiness, $interval] = $statsController->updateStatsUser($request->grade, $userQuiz->repetition, $userQuiz->easiness_factor, $userQuiz->interval);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(UserQuiz $userQuizzes)
-    {
-        //
+            $prev_user_grade = $userQuiz->user_grade;
+
+            $userQuiz->update([
+                "easiness_factor" => $easiness,
+                "repetition" => $repetition,
+                "interval" => $interval,
+                "date" => now(),
+                "user_grade" => $request->grade,
+                "prev_user_grade" => $prev_user_grade,
+            ]);
+
+            return response()->noContent();
+        } catch (\Exception $e) {
+            return response()->json(["error" => $e->getMessage()], 400);
+        }
     }
 }

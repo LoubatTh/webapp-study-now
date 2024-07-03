@@ -18,24 +18,24 @@ class UserDeckFactory extends Factory
      */
     public function definition(): array
     {
-        $easinessFactor = $this->faker->randomFloat(2, 0, 5);
+        $easiness_factor = $this->faker->randomFloat(2, 0, 5);
         $repetition = $this->faker->numberBetween(0, 5);
         $interval = $this->faker->numberBetween(0, 5);
         $date = $this->faker->dateTimeBetween('-2 years', 'now');
-        $userGrade = $this->faker->randomFloat(2, 0, 5);
-        $prevUserGrade = $this->faker->randomFloat(2, 0, 5);
-        $isLiked = $this->faker->boolean();
+        $user_grade = $this->faker->randomFloat(2, 0, 5);
+        $prev_user_grade = $this->faker->randomFloat(2, 0, 5);
+        $is_liked = $this->faker->boolean();
 
         return [
             'user_id' => User::factory(),
             'deck_id' => Deck::factory(),
-            'easinessFactor' => $easinessFactor,
+            'easiness_factor' => $easiness_factor,
             'repetition' => $repetition,
             'interval' => $interval,
             'date' => $date,
-            'userGrade' => $userGrade,
-            'prevUserGrade' => $prevUserGrade,
-            'isLiked' => $isLiked,
+            'user_grade' => $user_grade,
+            'prev_user_grade' => $prev_user_grade,
+            'is_liked' => $is_liked,
         ];
     }
 }

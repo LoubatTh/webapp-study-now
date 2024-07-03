@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use App\Models\Qcm;
 use App\Models\Quiz;
 use Illuminate\Routing\Controller;
 
@@ -30,10 +29,11 @@ class QuizController extends Controller
             'name' => $data['name'],
             'owner' => $user->id,
             'is_public' => $data['is_public'],
+            'type' => 'Quiz',
             'likes' => 0
         ]);
 
-        foreach($data['qcms'] as $qcmData) {
+        foreach ($data['qcms'] as $qcmData) {
             $qcm = $quiz->qcms()->create([
                 'question' => $qcmData['question'],
                 'answers' => $qcmData['answers']
@@ -94,7 +94,7 @@ class QuizController extends Controller
         if (!$quiz) {
             return response()->json(['error' => 'Resource not found'], 404);
         }
-        
+
         $quiz->name = $data["name"];
         $quiz->is_public = $data["is_public"];
         $quiz->save();
@@ -106,7 +106,7 @@ class QuizController extends Controller
             $qcm = $quiz->qcms()->create([
                 'question' => $qcmData['question'],
                 'answers' => $qcmData['answers']
-            ]);      
+            ]);
         }
 
         return response()->json($quiz->load("qcms"), 200);

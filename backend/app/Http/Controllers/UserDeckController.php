@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreUserDecksRequest;
-use App\Http\Requests\UpdateLikesDeckRequest;
+use App\Http\Controllers\StatsController;
+use App\Http\Requests\SaveGradeRequest;
 use App\Models\Deck;
 use App\Models\UserDeck;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 
-class UserDeckController
+class UserDeckController extends Controller
 {
-    public function likeOrDislikeDeckById(UpdateLikesDeckRequest $request, int $id)
+    public function likeOrDislikeDeckById(Request $request, int $id)
     {
         try {
             $user = $request->user();
@@ -19,31 +21,29 @@ class UserDeckController
                 return response()->json(["message" => "Deck not found"], 404);
             }
 
-            $userDeck = UserDeck::where("deck_id", $id)->where("user_id", $user->id);
-            if (!$userDeck) {
-                $userDeck = UserDeck::create([
-                    "user_id" => $user->id,
-                    "deck_id" => $deck->id,
-                    "easinessFactor" => 2.5,
+            $userDeck = UserDeck::firstOrCreate(
+                ["deck_id" => $id, "user_id" => $user->id],
+                [
+                    "easiness_factor" => 2.5,
                     "repetition" => 0,
                     "interval" => 0,
-                    "date" => date_create("now"),
-                    "userGrade" => null,
-                    "prevUserGrade" => null,
-                    "isLiked" => false,
-                ]);
-            }
+                    "date" => now(),
+                    "user_grade" => null,
+                    "prev_user_grade" => null,
+                    "is_liked" => false,
+                ]
+            );
 
             $userDeck->update([
-                "isLiked" => !$userDeck->isLiked,
+                "is_liked" => !$userDeck->is_liked,
             ]);
 
             $deck->update([
-                "likes" => $userDeck->isLiked ?
+                "likes" => $userDeck->is_liked ?
                     $deck->likes + 1 :
-                    $deck->likes > 0 ?
-                    $deck->likes - 1 :
-                    0,
+                    ($deck->likes > 0 ?
+                        $deck->likes - 1 :
+                        0),
             ]);
 
             return response()->noContent();
@@ -52,43 +52,45 @@ class UserDeckController
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function saveGradeDeckById(SaveGradeRequest $request, int $id, StatsController $statsController)
     {
-        //
-    }
+        try {
+            $user = $request->user();
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreUserDecksRequest $request)
-    {
-        //
-    }
+            $deck = Deck::find($id);
+            if (!$deck) {
+                return response()->json(["message" => "Deck not found"], 404);
+            }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(UserDeck $userDecks)
-    {
-        //
-    }
+            $userDeck = UserDeck::firstOrCreate(
+                ["deck_id" => $id, "user_id" => $user->id],
+                [
+                    "easiness_factor" => 2.5,
+                    "repetition" => 0,
+                    "interval" => 0,
+                    "date" => now(),
+                    "user_grade" => null,
+                    "prev_user_grade" => null,
+                    "is_liked" => false,
+                ]
+            );
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(UserDeck $userDecks)
-    {
-        //
-    }
+            [$repetition, $easiness, $interval] = $statsController->updateStatsUser($request->grade, $userDeck->repetition, $userDeck->easiness, $userDeck->interval);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(UserDeck $userDecks)
-    {
-        //
+            $prev_user_grade = $userDeck->user_grade;
+
+            $userDeck->update([
+                "easiness_factor" => $easiness,
+                "repetition" => $repetition,
+                "interval" => $interval,
+                "date" => now(),
+                "user_grade" => $request->grade,
+                "prev_user_grade" => $prev_user_grade,
+            ]);
+
+            return response()->noContent();
+        } catch (\Exception $e) {
+            return response()->json(["error" => $e->getMessage()], 400);
+        }
     }
 }

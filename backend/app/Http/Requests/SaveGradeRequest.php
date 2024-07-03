@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateLikesQuizRequest extends FormRequest
+class SaveGradeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,7 @@ class UpdateLikesQuizRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "grade" => "required|numeric",
         ];
     }
 }

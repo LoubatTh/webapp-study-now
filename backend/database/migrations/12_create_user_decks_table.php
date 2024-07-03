@@ -14,17 +14,19 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('user_id');
             $table->foreignId('deck_id');
-            $table->float('easinessFactor');
+            $table->float('easiness_factor');
             $table->integer('repetition');
             $table->integer('interval');
             $table->date('date');
-            $table->float('userGrade')->nullable();
-            $table->float('prevUserGrade')->nullable();
-            $table->boolean('isLiked');
+            $table->float('user_grade')->nullable();
+            $table->float('prev_user_grade')->nullable();
+            $table->boolean('is_liked');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('deck_id')->references('id')->on('decks')->onDelete('cascade');
+
+            $table->unique(['user_id', 'deck_id']);
         });
     }
 

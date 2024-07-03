@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Deck;
+use App\Models\Flashcard;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -21,16 +22,28 @@ class DeckFactory extends Factory
     public function definition(): array
     {
         $name = $this->faker->name();
-        $isPublic = $this->faker->boolean();
-        $isOrganization = $this->faker->boolean();
+        $is_public = $this->faker->boolean();
+        $is_organization = $this->faker->boolean();
         $likes = $this->faker->numberBetween(0, 1000);
 
         return [
             "name" => $name,
-            "isPublic" => $isPublic,
-            "isOrganization" => $isOrganization,
+            "is_public" => $is_public,
+            "is_organization" => $is_organization,
             "likes" => $likes,
+            "type" => "Deck",
             "user_id" => User::factory(),
         ];
+    }
+
+    public function configure()
+    {
+        return $this->afterCreating(function ($deck) {
+            if (count($deck['flashcards']) == 0) {
+                $flashcards = $this->faker->numberBetween(1, 10);
+
+                Flashcard::factory()->count($flashcards)->create(["deck_id" => $deck->id]);
+            }
+        });
     }
 }

@@ -9,9 +9,10 @@ use App\Http\Resources\DeckCollection;
 use App\Http\Resources\DeckResource;
 use App\Models\Deck;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 
-class DeckController
+class DeckController extends Controller
 {
     /**
      * Display a listing of the resource by page.
@@ -31,7 +32,7 @@ class DeckController
 
                 $decks = $decks->where("user_id", $user->id);
             } else {
-                $decks = $decks->where("isPublic", true);
+                $decks = $decks->where("is_public", true);
             }
 
             return response()->json(new DeckCollection($decks->paginate($numberPerPage)), 200);
@@ -53,7 +54,7 @@ class DeckController
 
             $user = Auth::guard('sanctum')->user();
 
-            if ($deck->isPublic == false) {
+            if ($deck->is_public == false) {
                 if (!$user) {
                     return response()->json(["message" => "Unauthorized"], 401);
                 }
@@ -79,8 +80,9 @@ class DeckController
 
             $deck = Deck::create([
                 "name" => $request->name,
-                "isPublic" => $request->has("isPublic") ? $request->isPublic : false,
-                "isOrganization" => $request->has("isOrganization") ? $request->isOrganization : false,
+                "is_public" => $request->has("is_public") ? $request->is_public : false,
+                "is_organization" => $request->has("is_organization") ? $request->is_organization : false,
+                "type" => "Deck",
                 "likes" => 0,
                 "user_id" => $user->id,
             ]);
@@ -113,8 +115,8 @@ class DeckController
 
             $deck->update([
                 "name" => $request->has("name") ? $request->name : $deck->name,
-                "isPublic" => $request->has("isPublic") ? $request->isPublic : $deck->isPublic,
-                "isOrganization" => $request->has("isOrganization") ? $request->isOrganization : $deck->isOrganization,
+                "is_public" => $request->has("is_public") ? $request->is_public : $deck->is_public,
+                "is_organization" => $request->has("is_organization") ? $request->is_organization : $deck->is_organization,
                 "likes" => $request->has("likes") ? $request->likes : $deck->likes,
             ]);
 

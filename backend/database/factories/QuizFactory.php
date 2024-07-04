@@ -27,7 +27,7 @@ class QuizFactory extends Factory
 
         return [
             "name" => $name,
-            "is_public" => $isPublic,
+            "isPublic" => $isPublic,
             "type" => "Quiz",
             "likes" => $likes,
             "owner" => User::factory(),

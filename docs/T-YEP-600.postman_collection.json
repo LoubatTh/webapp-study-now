@@ -1,0 +1,3217 @@
+{
+	"info": {
+		"_postman_id": "e6a56908-138f-4fb6-a934-be4a14c9fe9a",
+		"name": "T-YEP-600",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30297808",
+		"_collection_link": "https://t-yep-600.postman.co/workspace/T-YEP-600~329dd137-7a5c-4c5e-8e10-345c330b72d5/collection/36511455-e6a56908-138f-4fb6-a934-be4a14c9fe9a?action=share&source=collection_link&creator=30297808"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonResponse = pm.response.json();",
+									"pm.globals.set(\"access_token\", jsonResponse.access_token);",
+									"pm.globals.set(\"refresh_token\", jsonResponse.refresh_token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"johndoe\",\n    \"email\": \"john@doe.com\",\n    \"password\": \"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "201",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"{{$randomUserName}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"password\": \"password\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/register",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"register"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.7"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 24 Jun 2024 09:38:11 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"accessToken\": \"59|UlB2HYYy8EZHG8d7RzbG1X6pSa0sTcCM4cfq3ODF8c627669\",\n    \"accessTokenExpiration\": \"2024-06-24T10:38:11.654800Z\",\n    \"refreshToken\": \"60|KmJZTfwKoDJndEGKQ5UK1gj9CARZd7fQOszAhsil540b63a8\",\n    \"refreshTokenExpiration\": \"2024-07-01T09:38:11.656493Z\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonResponse = pm.response.json();",
+									"pm.globals.set(\"access_token\", jsonResponse.access_token);",
+									"pm.globals.set(\"refresh_token\", jsonResponse.refresh_token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"john@doe.com\",\n    \"password\": \"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"john@doe.com\",\n    \"password\": \"password\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/login",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.7"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 24 Jun 2024 09:39:46 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"accessToken\": \"61|oGVz18Wqx45LEVcktFpyn3ZU5ma4qJrYMlz3Y5q44ab4631c\",\n    \"accessTokenExpiration\": \"2024-06-24T10:39:46.344121Z\",\n    \"refreshToken\": \"62|M1sLzrUwrGuDEaqNCjOo9uvy9wqHRtwfPK7XckVF253a025a\",\n    \"refreshTokenExpiration\": \"2024-07-01T09:39:46.353634Z\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get current user Organizations",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user/organizations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"organizations"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "422: Validation error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/organizations",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"organizations"
+									]
+								}
+							},
+							"status": "Unprocessable Content",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.7"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 01 Jul 2024 13:11:02 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"The name field must be a string.\",\n    \"errors\": {\n        \"name\": [\n            \"The name field must be a string.\"\n        ]\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Refresh",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{refresh_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/refresh",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"refresh"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/refresh",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"refresh"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.7"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 24 Jun 2024 09:43:42 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"accessToken\": \"65|SbHaHoiGmVBv1cDsOcMjEDHqUJfVBzWcIfEAXvwB4ab523ba\",\n    \"accessTokenExpiration\": \"2024-06-24T10:43:42.447581Z\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get current user",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user"
+							]
+						},
+						"description": "### Logout\n\nThis endpoint is used to log the user out of the system.\n\n#### Request Body\n\nThis request does not require a request body.\n\n#### Response\n\n- `message` (string): A message indicating the status of the logout operation.\n    \n\nExample:\n\n``` json\n{\n    \"message\": \"\"\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "200",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/logout",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"logout"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.7"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 24 Jun 2024 09:45:39 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Logged out\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Update current user",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{$randomUserName}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/user",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user"
+							]
+						},
+						"description": "### Logout\n\nThis endpoint is used to log the user out of the system.\n\n#### Request Body\n\nThis request does not require a request body.\n\n#### Response\n\n- `message` (string): A message indicating the status of the logout operation.\n    \n\nExample:\n\n``` json\n{\n    \"message\": \"\"\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "200",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/logout",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"logout"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.7"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 24 Jun 2024 09:45:39 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Logged out\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete current user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/user",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user"
+							]
+						},
+						"description": "### Logout\n\nThis endpoint is used to log the user out of the system.\n\n#### Request Body\n\nThis request does not require a request body.\n\n#### Response\n\n- `message` (string): A message indicating the status of the logout operation.\n    \n\nExample:\n\n``` json\n{\n    \"message\": \"\"\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "200",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/logout",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"logout"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.7"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 24 Jun 2024 09:45:39 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Logged out\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"logout"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/logout",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"logout"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.7"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 24 Jun 2024 09:45:39 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Logged out\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Qcm",
+			"item": [
+				{
+					"name": "Post a qcm",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"question\": \"Who is the French president?\",\r\n    \"answers\": [\r\n        {\r\n            \"response\": \"Emmanuel Macron\",\r\n            \"isValid\": true\r\n        },\r\n        {\r\n            \"response\": \"Jordan Bardella\",\r\n            \"isValid\": false\r\n        },\r\n        {\r\n            \"response\": \"Marine Le Pen\",\r\n            \"isValid\": false\r\n        },\r\n        {\r\n            \"response\": \"Donald Trump\",\r\n            \"isValid\": false\r\n        }\r\n    ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/quizzes/52/qcms",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"quizzes",
+								"52",
+								"qcms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update a qcm",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"question\": \"Who's not centrist?\",\r\n    \"answers\": [\r\n        {\r\n            \"response\": \"Macron\",\r\n            \"isValid\": false\r\n        },\r\n        {\r\n            \"response\": \"Jordan\",\r\n            \"isValid\": true\r\n        },\r\n        {\r\n            \"response\": \"Marine\",\r\n            \"isValid\": true\r\n        },\r\n        {\r\n            \"response\": \"Trump\",\r\n            \"isValid\": true\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/qcms/57",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"qcms",
+								"57"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a qcm",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/qcms/57",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"qcms",
+								"57"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a qcm",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8000/api/qcms/88",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"qcms",
+								"88"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Quiz",
+			"item": [
+				{
+					"name": "Post a quiz",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"French Politics try\",\r\n    \"qcms\": [\r\n    {\r\n    \"question\": \"Who is the French president?\",\r\n    \"answers\": [\r\n        {\r\n            \"id\": 0,\r\n            \"answer\": \"Emmanuel Macron\",\r\n            \"isValid\": true\r\n        },\r\n        {\r\n            \"id\": 1,\r\n            \"answer\": \"Jordan Bardella\",\r\n            \"isValid\": false\r\n        },\r\n        {\r\n            \"id\": 2,\r\n            \"answer\": \"Marine Le Pen\",\r\n            \"isValid\": false\r\n        },\r\n        {\r\n            \"id\": 3,\r\n            \"answer\": \"Donald Trump\",\r\n            \"isValid\": false\r\n        }\r\n    ]\r\n    },\r\n    {\r\n    \"question\": \"Who is Sarkozy?\",\r\n    \"answers\": [\r\n        {\r\n            \"id\": 0,\r\n            \"answer\": \"Former french president\",\r\n            \"isValid\": true\r\n        },\r\n        {\r\n            \"id\": 1,\r\n            \"answer\": \"Nobody\",\r\n            \"isValid\": false\r\n        },\r\n        {\r\n            \"id\": 2,\r\n            \"answer\": \"Married to Carla Bruni\",\r\n            \"isValid\": true\r\n        },\r\n        {\r\n            \"id\": 3,\r\n            \"answer\": \"Whatever\",\r\n            \"isValid\": false\r\n        }\r\n    ]\r\n    }\r\n    ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/quizzes",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"quizzes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a quiz",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8000/api/quizzes/125",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"quizzes",
+								"125"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a quiz",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8000/api/quizzes/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"quizzes",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update a quiz",
+					"request": {
+						"method": "PUT",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Get quizzes",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/quizzes",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"quizzes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Like quiz",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/quizzes/1/like",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"quizzes",
+								"1",
+								"like"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save grade on quiz",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"grade\": 2.1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/quizzes/1/grade",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"quizzes",
+								"1",
+								"grade"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Deck",
+			"item": [
+				{
+					"name": "Get all decks by page",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/decks",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"decks"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "At page 4",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/decks?page=4",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"decks"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "4"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.8"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 02 Jul 2024 09:29:32 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"decks\": [\n        {\n            \"id\": 51,\n            \"name\": \"Ernesto Durgan\",\n            \"isPublic\": true,\n            \"isOrganization\": false,\n            \"likes\": 483,\n            \"flashcards\": [\n                {\n                    \"question\": \"Sequi alias est quae sed praesentium sed rem.\",\n                    \"answer\": \"nihil\"\n                },\n                {\n                    \"question\": \"Accusamus error optio saepe provident.\",\n                    \"answer\": \"rerum\"\n                },\n                {\n                    \"question\": \"Illum eos neque et ipsa perspiciatis neque odit.\",\n                    \"answer\": \"in\"\n                },\n                {\n                    \"question\": \"Quia qui atque omnis veritatis cum.\",\n                    \"answer\": \"beatae\"\n                },\n                {\n                    \"question\": \"Qui velit enim error id accusantium ea sequi minima explicabo dignissimos.\",\n                    \"answer\": \"dolor\"\n                },\n                {\n                    \"question\": \"Mollitia eos aperiam et voluptas similique eum.\",\n                    \"answer\": \"possimus\"\n                },\n                {\n                    \"question\": \"Reiciendis et nihil incidunt dolor earum mollitia omnis voluptatem.\",\n                    \"answer\": \"velit\"\n                },\n                {\n                    \"question\": \"Voluptas inventore voluptates commodi velit.\",\n                    \"answer\": \"non\"\n                },\n                {\n                    \"question\": \"Nam labore est tenetur officiis sed.\",\n                    \"answer\": \"incidunt\"\n                },\n                {\n                    \"question\": \"Eligendi et dolorem enim fugit consequatur deserunt.\",\n                    \"answer\": \"distinctio\"\n                },\n                {\n                    \"question\": \"Ex sit aperiam recusandae.\",\n                    \"answer\": \"nobis\"\n                },\n                {\n                    \"question\": \"Ut quos et et consequatur maxime maxime non perferendis.\",\n                    \"answer\": \"quasi\"\n                },\n                {\n                    \"question\": \"Minima voluptatibus eaque laborum dolorem minus veritatis aperiam non doloremque ducimus vitae.\",\n                    \"answer\": \"sequi\"\n                },\n                {\n                    \"question\": \"Et occaecati voluptates blanditiis velit odit asperiores ut possimus.\",\n                    \"answer\": \"error\"\n                },\n                {\n                    \"question\": \"Tenetur voluptatem neque sit facere delectus voluptas.\",\n                    \"answer\": \"vel\"\n                },\n                {\n                    \"question\": \"Molestias quo animi enim sed vitae laborum aperiam ab ullam et explicabo aliquam nihil.\",\n                    \"answer\": \"accusantium\"\n                },\n                {\n                    \"question\": \"Sit non nihil deleniti.\",\n                    \"answer\": \"iusto\"\n                },\n                {\n                    \"question\": \"Voluptatem ut hic ut deleniti aliquam minus architecto quia.\",\n                    \"answer\": \"dicta\"\n                },\n                {\n                    \"question\": \"Debitis qui non odio dolores neque.\",\n                    \"answer\": \"perferendis\"\n                },\n                {\n                    \"question\": \"Nihil nam totam fugiat est quia.\",\n                    \"answer\": \"nihil\"\n                }\n            ]\n        },\n        {\n            \"id\": 54,\n            \"name\": \"Peyton Jaskolski\",\n            \"isPublic\": true,\n            \"isOrganization\": false,\n            \"likes\": 748,\n            \"flashcards\": [\n                {\n                    \"question\": \"Debitis consequatur magnam qui aut tenetur suscipit dolores.\",\n                    \"answer\": \"quidem\"\n                },\n                {\n                    \"question\": \"Magni non excepturi blanditiis est ad dolorum.\",\n                    \"answer\": \"officiis\"\n                },\n                {\n                    \"question\": \"Eos velit eius aut facilis et.\",\n                    \"answer\": \"ea\"\n                },\n                {\n                    \"question\": \"Quis minus quia laborum possimus.\",\n                    \"answer\": \"sint\"\n                },\n                {\n                    \"question\": \"Omnis omnis non nisi iure qui nostrum ducimus.\",\n                    \"answer\": \"eos\"\n                },\n                {\n                    \"question\": \"Sit quia laboriosam expedita sit ipsum a.\",\n                    \"answer\": \"quo\"\n                },\n                {\n                    \"question\": \"Tempora consequuntur ut quia qui beatae eaque.\",\n                    \"answer\": \"dolor\"\n                },\n                {\n                    \"question\": \"Rerum sapiente est et in adipisci commodi distinctio iure ut.\",\n                    \"answer\": \"id\"\n                },\n                {\n                    \"question\": \"Dicta eum quasi veritatis hic odit aperiam tenetur quasi repellendus enim rerum.\",\n                    \"answer\": \"id\"\n                },\n                {\n                    \"question\": \"Eum sed dolorem nisi assumenda facilis expedita et.\",\n                    \"answer\": \"eligendi\"\n                },\n                {\n                    \"question\": \"Sequi velit ad eligendi dolorem ab voluptatum optio.\",\n                    \"answer\": \"qui\"\n                },\n                {\n                    \"question\": \"Est officia nemo odit accusantium molestias est quidem neque excepturi enim sit nulla.\",\n                    \"answer\": \"iusto\"\n                },\n                {\n                    \"question\": \"Enim accusamus fuga eveniet perspiciatis beatae quos.\",\n                    \"answer\": \"ut\"\n                },\n                {\n                    \"question\": \"Soluta omnis esse numquam temporibus voluptatem.\",\n                    \"answer\": \"id\"\n                },\n                {\n                    \"question\": \"Provident dolore quo natus optio delectus qui autem.\",\n                    \"answer\": \"et\"\n                },\n                {\n                    \"question\": \"Cumque laboriosam necessitatibus pariatur cum ullam quidem aut odio libero autem.\",\n                    \"answer\": \"ad\"\n                },\n                {\n                    \"question\": \"Qui atque possimus quibusdam tempora dolores fugiat.\",\n                    \"answer\": \"accusamus\"\n                },\n                {\n                    \"question\": \"Temporibus consequatur velit mollitia ipsam.\",\n                    \"answer\": \"soluta\"\n                },\n                {\n                    \"question\": \"Perferendis eos nulla sed.\",\n                    \"answer\": \"minus\"\n                },\n                {\n                    \"question\": \"Illo aut earum et voluptatem et et.\",\n                    \"answer\": \"veritatis\"\n                }\n            ]\n        },\n        {\n            \"id\": 56,\n            \"name\": \"Garett Kautzer\",\n            \"isPublic\": true,\n            \"isOrganization\": false,\n            \"likes\": 775,\n            \"flashcards\": [\n                {\n                    \"question\": \"Qui qui natus inventore laboriosam qui corporis.\",\n                    \"answer\": \"sint\"\n                },\n                {\n                    \"question\": \"Est magnam non est totam minus.\",\n                    \"answer\": \"nihil\"\n                },\n                {\n                    \"question\": \"Sit incidunt consequatur voluptatem error corporis maiores similique aperiam.\",\n                    \"answer\": \"porro\"\n                },\n                {\n                    \"question\": \"Omnis esse perspiciatis aspernatur voluptas atque id.\",\n                    \"answer\": \"assumenda\"\n                },\n                {\n                    \"question\": \"Corporis et et aut inventore sed sit.\",\n                    \"answer\": \"qui\"\n                },\n                {\n                    \"question\": \"Neque ut adipisci laudantium delectus laboriosam eos molestiae esse velit et voluptates.\",\n                    \"answer\": \"dolore\"\n                },\n                {\n                    \"question\": \"Iusto amet repellendus corporis atque vel labore eum.\",\n                    \"answer\": \"ut\"\n                },\n                {\n                    \"question\": \"Hic qui dolores qui quia sunt consequatur.\",\n                    \"answer\": \"dolores\"\n                },\n                {\n                    \"question\": \"Sunt quia vel itaque nihil.\",\n                    \"answer\": \"iste\"\n                },\n                {\n                    \"question\": \"Et in voluptatem error nobis doloremque dolorem ullam quo.\",\n                    \"answer\": \"blanditiis\"\n                },\n                {\n                    \"question\": \"Accusantium laboriosam enim sit provident.\",\n                    \"answer\": \"similique\"\n                },\n                {\n                    \"question\": \"Architecto quae laboriosam quia numquam voluptas eos odit quae a ut repellendus et deleniti.\",\n                    \"answer\": \"quos\"\n                },\n                {\n                    \"question\": \"Sint illum animi iste nesciunt.\",\n                    \"answer\": \"harum\"\n                },\n                {\n                    \"question\": \"Exercitationem impedit consequuntur quod quia ut velit.\",\n                    \"answer\": \"ab\"\n                },\n                {\n                    \"question\": \"Quo expedita et officia quod.\",\n                    \"answer\": \"omnis\"\n                },\n                {\n                    \"question\": \"Dignissimos corporis provident velit.\",\n                    \"answer\": \"nostrum\"\n                },\n                {\n                    \"question\": \"Non iure similique modi impedit exercitationem cum voluptatibus vel.\",\n                    \"answer\": \"error\"\n                },\n                {\n                    \"question\": \"Eum ut corporis commodi non est consequuntur blanditiis nisi omnis fugit occaecati placeat.\",\n                    \"answer\": \"sed\"\n                },\n                {\n                    \"question\": \"Est sit tempore est consequuntur at dolor eum perspiciatis tempora dolorem.\",\n                    \"answer\": \"aliquid\"\n                },\n                {\n                    \"question\": \"Deserunt minus laborum et quisquam est rerum laudantium.\",\n                    \"answer\": \"et\"\n                }\n            ]\n        },\n        {\n            \"id\": 58,\n            \"name\": \"Mrs. Malinda Lubowitz Sr.\",\n            \"isPublic\": true,\n            \"isOrganization\": true,\n            \"likes\": 738,\n            \"flashcards\": [\n                {\n                    \"question\": \"Iure id doloribus itaque est.\",\n                    \"answer\": \"non\"\n                },\n                {\n                    \"question\": \"Quos praesentium consequuntur doloribus inventore.\",\n                    \"answer\": \"maxime\"\n                },\n                {\n                    \"question\": \"Repudiandae quidem temporibus dolorem provident.\",\n                    \"answer\": \"dolores\"\n                },\n                {\n                    \"question\": \"Iusto optio quia dignissimos maxime.\",\n                    \"answer\": \"corporis\"\n                },\n                {\n                    \"question\": \"Optio voluptates autem fuga rerum est mollitia ut voluptatum velit.\",\n                    \"answer\": \"velit\"\n                },\n                {\n                    \"question\": \"Dolorum vitae dolorem facilis at est molestiae dignissimos voluptas.\",\n                    \"answer\": \"incidunt\"\n                },\n                {\n                    \"question\": \"Mollitia rem nulla quo fuga molestiae nemo earum rerum.\",\n                    \"answer\": \"et\"\n                },\n                {\n                    \"question\": \"Nihil similique laudantium reiciendis eius autem sint maiores nulla.\",\n                    \"answer\": \"accusamus\"\n                },\n                {\n                    \"question\": \"Nam similique enim iure.\",\n                    \"answer\": \"et\"\n                },\n                {\n                    \"question\": \"Id et tenetur aut error aperiam sint sunt fugiat commodi.\",\n                    \"answer\": \"nam\"\n                },\n                {\n                    \"question\": \"Id quia laborum pariatur dolor.\",\n                    \"answer\": \"sed\"\n                },\n                {\n                    \"question\": \"Vel voluptate odit numquam sint ut aliquid explicabo dolorem laudantium.\",\n                    \"answer\": \"dolorem\"\n                },\n                {\n                    \"question\": \"Sed qui quia autem ad quaerat qui aperiam et adipisci earum.\",\n                    \"answer\": \"quia\"\n                },\n                {\n                    \"question\": \"Temporibus explicabo eius error cupiditate sapiente sed qui maiores maiores officiis.\",\n                    \"answer\": \"quo\"\n                },\n                {\n                    \"question\": \"Totam voluptatum voluptas reprehenderit similique qui molestias non ut.\",\n                    \"answer\": \"explicabo\"\n                },\n                {\n                    \"question\": \"Esse non quas dolor minus velit.\",\n                    \"answer\": \"et\"\n                },\n                {\n                    \"question\": \"Iste ex eveniet rerum ut unde error nulla.\",\n                    \"answer\": \"quo\"\n                },\n                {\n                    \"question\": \"Ab tempore est et temporibus vero et provident vitae qui quia quia quod.\",\n                    \"answer\": \"dolor\"\n                },\n                {\n                    \"question\": \"Quae voluptate non eos omnis saepe asperiores.\",\n                    \"answer\": \"quis\"\n                },\n                {\n                    \"question\": \"Reiciendis nulla ad id similique id in doloribus.\",\n                    \"answer\": \"sit\"\n                }\n            ]\n        },\n        {\n            \"id\": 60,\n            \"name\": \"Prof. Saul Carroll\",\n            \"isPublic\": true,\n            \"isOrganization\": true,\n            \"likes\": 739,\n            \"flashcards\": [\n                {\n                    \"question\": \"Dicta voluptates dolor doloribus omnis eum incidunt quidem sunt molestiae incidunt.\",\n                    \"answer\": \"aliquid\"\n                },\n                {\n                    \"question\": \"Impedit illum ipsum voluptas nobis unde.\",\n                    \"answer\": \"ut\"\n                },\n                {\n                    \"question\": \"Magnam tempore nihil repellendus non beatae totam voluptatibus.\",\n                    \"answer\": \"cupiditate\"\n                },\n                {\n                    \"question\": \"Dicta aliquam similique ipsa quo hic repellat eum officiis minima consequuntur quas.\",\n                    \"answer\": \"consectetur\"\n                },\n                {\n                    \"question\": \"Delectus et ea repudiandae eius.\",\n                    \"answer\": \"animi\"\n                },\n                {\n                    \"question\": \"Cumque rerum ut aliquid doloremque ratione quo quia blanditiis dolorem.\",\n                    \"answer\": \"rerum\"\n                },\n                {\n                    \"question\": \"Quod totam voluptas non eveniet.\",\n                    \"answer\": \"laudantium\"\n                },\n                {\n                    \"question\": \"Incidunt praesentium amet asperiores ratione mollitia consequatur rerum voluptate quia molestias atque.\",\n                    \"answer\": \"ratione\"\n                },\n                {\n                    \"question\": \"Ipsa ut dolorem possimus minima error incidunt qui beatae placeat.\",\n                    \"answer\": \"deserunt\"\n                },\n                {\n                    \"question\": \"Quae quia non atque eos quam eos autem et.\",\n                    \"answer\": \"perspiciatis\"\n                },\n                {\n                    \"question\": \"Alias aperiam quae sit nobis molestias asperiores et.\",\n                    \"answer\": \"eum\"\n                },\n                {\n                    \"question\": \"Non voluptatem officiis facilis officiis ut voluptatibus asperiores necessitatibus recusandae dolorem nihil.\",\n                    \"answer\": \"molestias\"\n                },\n                {\n                    \"question\": \"Quaerat consequatur omnis harum.\",\n                    \"answer\": \"et\"\n                },\n                {\n                    \"question\": \"Praesentium distinctio voluptas illo dolorem quos.\",\n                    \"answer\": \"quas\"\n                },\n                {\n                    \"question\": \"Et est maiores vel impedit adipisci atque illo.\",\n                    \"answer\": \"sed\"\n                },\n                {\n                    \"question\": \"Exercitationem amet libero molestiae corporis unde.\",\n                    \"answer\": \"omnis\"\n                },\n                {\n                    \"question\": \"Similique odio exercitationem sapiente neque culpa aliquid ea.\",\n                    \"answer\": \"laudantium\"\n                },\n                {\n                    \"question\": \"Quaerat sit placeat modi quibusdam consequatur est.\",\n                    \"answer\": \"id\"\n                },\n                {\n                    \"question\": \"Aspernatur aut inventore esse vero temporibus.\",\n                    \"answer\": \"laborum\"\n                },\n                {\n                    \"question\": \"Veritatis ut omnis consectetur dolorum mollitia odit.\",\n                    \"answer\": \"id\"\n                }\n            ]\n        },\n        {\n            \"id\": 62,\n            \"name\": \"Taryn Gutmann\",\n            \"isPublic\": true,\n            \"isOrganization\": true,\n            \"likes\": 256,\n            \"flashcards\": [\n                {\n                    \"question\": \"Ab quo similique atque veritatis illum facilis et qui dolorem.\",\n                    \"answer\": \"mollitia\"\n                },\n                {\n                    \"question\": \"Iste temporibus ab esse alias minima est nisi error enim et unde eos dolor.\",\n                    \"answer\": \"voluptates\"\n                },\n                {\n                    \"question\": \"Tenetur quia doloribus aut voluptas molestias ut.\",\n                    \"answer\": \"iusto\"\n                },\n                {\n                    \"question\": \"Fugit temporibus nisi quisquam eum distinctio commodi quas libero.\",\n                    \"answer\": \"accusamus\"\n                },\n                {\n                    \"question\": \"Impedit nam laboriosam et est pariatur dicta iusto quisquam tempora aut.\",\n                    \"answer\": \"aliquid\"\n                },\n                {\n                    \"question\": \"Voluptas error vitae numquam et cupiditate sed ratione.\",\n                    \"answer\": \"consequuntur\"\n                },\n                {\n                    \"question\": \"Asperiores fuga rem ad non.\",\n                    \"answer\": \"quibusdam\"\n                },\n                {\n                    \"question\": \"Beatae minus odit dolorum aut.\",\n                    \"answer\": \"tempora\"\n                },\n                {\n                    \"question\": \"Molestiae modi nemo esse commodi incidunt aut occaecati odit quia accusantium.\",\n                    \"answer\": \"illum\"\n                },\n                {\n                    \"question\": \"Et atque aut perspiciatis nihil dicta consequatur ipsa.\",\n                    \"answer\": \"qui\"\n                },\n                {\n                    \"question\": \"Quibusdam voluptatum nihil dicta est cupiditate voluptatem rerum aut non.\",\n                    \"answer\": \"sunt\"\n                },\n                {\n                    \"question\": \"Officia doloremque magni ut consequatur.\",\n                    \"answer\": \"vitae\"\n                },\n                {\n                    \"question\": \"In sapiente maxime perferendis doloribus et aliquam natus quaerat quod omnis voluptas.\",\n                    \"answer\": \"dolores\"\n                },\n                {\n                    \"question\": \"Sunt sint ipsam tenetur quis corrupti asperiores iste nisi ratione.\",\n                    \"answer\": \"eius\"\n                },\n                {\n                    \"question\": \"Qui repudiandae officiis laborum rerum incidunt dolores non hic.\",\n                    \"answer\": \"sapiente\"\n                },\n                {\n                    \"question\": \"Amet et quam quas fuga ut in magnam voluptatem et exercitationem.\",\n                    \"answer\": \"laudantium\"\n                },\n                {\n                    \"question\": \"Et odit commodi voluptatum.\",\n                    \"answer\": \"autem\"\n                },\n                {\n                    \"question\": \"Et sint minus explicabo corporis sit reprehenderit.\",\n                    \"answer\": \"id\"\n                },\n                {\n                    \"question\": \"Ipsam rerum ut corrupti.\",\n                    \"answer\": \"enim\"\n                },\n                {\n                    \"question\": \"Neque inventore fuga molestiae unde eius unde dolores architecto.\",\n                    \"answer\": \"maxime\"\n                }\n            ]\n        },\n        {\n            \"id\": 63,\n            \"name\": \"Miss Leanne Schuster MD\",\n            \"isPublic\": true,\n            \"isOrganization\": true,\n            \"likes\": 603,\n            \"flashcards\": [\n                {\n                    \"question\": \"Quaerat autem et tempora sunt assumenda.\",\n                    \"answer\": \"perspiciatis\"\n                },\n                {\n                    \"question\": \"Soluta ad eligendi aut eum qui omnis fuga.\",\n                    \"answer\": \"tenetur\"\n                },\n                {\n                    \"question\": \"Officiis quia quisquam ut numquam consequuntur quos.\",\n                    \"answer\": \"quibusdam\"\n                },\n                {\n                    \"question\": \"Necessitatibus hic assumenda perferendis laborum natus maxime.\",\n                    \"answer\": \"unde\"\n                },\n                {\n                    \"question\": \"In cum reiciendis inventore eum deserunt earum sed.\",\n                    \"answer\": \"rem\"\n                },\n                {\n                    \"question\": \"Assumenda commodi voluptatum aut quae in beatae vel sequi iste voluptatum omnis.\",\n                    \"answer\": \"culpa\"\n                },\n                {\n                    \"question\": \"Quia eveniet accusantium qui eveniet dolores placeat consequatur quod autem quo.\",\n                    \"answer\": \"itaque\"\n                },\n                {\n                    \"question\": \"Hic saepe nihil facilis amet vel nesciunt.\",\n                    \"answer\": \"fugit\"\n                },\n                {\n                    \"question\": \"Animi qui iusto ducimus.\",\n                    \"answer\": \"qui\"\n                },\n                {\n                    \"question\": \"Et fuga beatae aut nobis.\",\n                    \"answer\": \"optio\"\n                },\n                {\n                    \"question\": \"Tempora voluptas quis autem ut consequatur quia laborum.\",\n                    \"answer\": \"sapiente\"\n                },\n                {\n                    \"question\": \"Optio sit eum molestias et in reprehenderit pariatur.\",\n                    \"answer\": \"occaecati\"\n                },\n                {\n                    \"question\": \"Voluptas facere labore est dolorem harum iste a architecto reprehenderit ut.\",\n                    \"answer\": \"nisi\"\n                },\n                {\n                    \"question\": \"Autem eum et laborum deserunt est eum.\",\n                    \"answer\": \"cumque\"\n                },\n                {\n                    \"question\": \"Consequatur voluptas error velit non delectus.\",\n                    \"answer\": \"ipsam\"\n                },\n                {\n                    \"question\": \"Quasi possimus rerum omnis magnam quos voluptatum quia.\",\n                    \"answer\": \"doloremque\"\n                },\n                {\n                    \"question\": \"Ex placeat rerum magnam unde.\",\n                    \"answer\": \"illo\"\n                },\n                {\n                    \"question\": \"Vel aut soluta cum ut perferendis.\",\n                    \"answer\": \"deleniti\"\n                },\n                {\n                    \"question\": \"Consectetur eius accusamus quam ducimus doloribus doloribus nobis.\",\n                    \"answer\": \"repudiandae\"\n                },\n                {\n                    \"question\": \"Voluptas cum consequatur corrupti eos iste.\",\n                    \"answer\": \"possimus\"\n                }\n            ]\n        },\n        {\n            \"id\": 65,\n            \"name\": \"Pearline Konopelski\",\n            \"isPublic\": true,\n            \"isOrganization\": false,\n            \"likes\": 796,\n            \"flashcards\": [\n                {\n                    \"question\": \"Ab doloribus ipsum sapiente dolorem blanditiis ut est.\",\n                    \"answer\": \"possimus\"\n                },\n                {\n                    \"question\": \"Exercitationem reiciendis et fuga praesentium necessitatibus voluptas quo omnis fugiat.\",\n                    \"answer\": \"id\"\n                },\n                {\n                    \"question\": \"Recusandae recusandae doloremque libero est voluptate consequatur voluptatibus officia voluptatem praesentium et.\",\n                    \"answer\": \"amet\"\n                },\n                {\n                    \"question\": \"Nam consequatur iste modi incidunt quasi ut debitis id rerum fuga.\",\n                    \"answer\": \"dignissimos\"\n                },\n                {\n                    \"question\": \"Vitae facere delectus laborum minus adipisci praesentium enim et.\",\n                    \"answer\": \"voluptatem\"\n                },\n                {\n                    \"question\": \"Aspernatur soluta quas excepturi rerum vero.\",\n                    \"answer\": \"expedita\"\n                },\n                {\n                    \"question\": \"Reiciendis dignissimos doloremque qui qui qui accusantium blanditiis soluta.\",\n                    \"answer\": \"harum\"\n                },\n                {\n                    \"question\": \"Rerum libero vel quo velit eum amet omnis et nihil.\",\n                    \"answer\": \"et\"\n                },\n                {\n                    \"question\": \"Voluptatem earum molestiae enim autem repellendus quo.\",\n                    \"answer\": \"non\"\n                },\n                {\n                    \"question\": \"Delectus earum blanditiis ut tenetur nesciunt et hic est et qui.\",\n                    \"answer\": \"harum\"\n                },\n                {\n                    \"question\": \"Et maiores enim facilis dolorem est.\",\n                    \"answer\": \"voluptatibus\"\n                },\n                {\n                    \"question\": \"Asperiores ipsam sint maiores et dolores quibusdam.\",\n                    \"answer\": \"enim\"\n                },\n                {\n                    \"question\": \"Atque qui sit ipsum ipsam eos.\",\n                    \"answer\": \"consequatur\"\n                },\n                {\n                    \"question\": \"Ratione ea blanditiis tempore aliquid aut enim voluptatem dignissimos voluptatem cumque quidem.\",\n                    \"answer\": \"excepturi\"\n                },\n                {\n                    \"question\": \"Qui ullam non vero sint dolore.\",\n                    \"answer\": \"mollitia\"\n                },\n                {\n                    \"question\": \"Iste dolores voluptas veniam a laboriosam autem.\",\n                    \"answer\": \"vel\"\n                },\n                {\n                    \"question\": \"Veniam magni deleniti perferendis velit et.\",\n                    \"answer\": \"blanditiis\"\n                },\n                {\n                    \"question\": \"Eum doloribus et architecto et minus tenetur.\",\n                    \"answer\": \"et\"\n                },\n                {\n                    \"question\": \"Quod corporis officia culpa itaque.\",\n                    \"answer\": \"sint\"\n                },\n                {\n                    \"question\": \"Exercitationem nihil porro dolorem aspernatur vitae impedit consectetur quis sed sunt animi in sint.\",\n                    \"answer\": \"atque\"\n                }\n            ]\n        },\n        {\n            \"id\": 66,\n            \"name\": \"Ada Senger\",\n            \"isPublic\": true,\n            \"isOrganization\": false,\n            \"likes\": 840,\n            \"flashcards\": [\n                {\n                    \"question\": \"Amet doloribus qui alias sit voluptatem.\",\n                    \"answer\": \"est\"\n                },\n                {\n                    \"question\": \"Ratione repudiandae qui minima delectus quod.\",\n                    \"answer\": \"cum\"\n                },\n                {\n                    \"question\": \"Accusamus excepturi iure quo optio dolores modi.\",\n                    \"answer\": \"quod\"\n                },\n                {\n                    \"question\": \"Impedit mollitia sed culpa eos quae dolorem distinctio iure iusto maiores.\",\n                    \"answer\": \"est\"\n                },\n                {\n                    \"question\": \"Temporibus voluptatum sunt quia animi explicabo omnis non.\",\n                    \"answer\": \"ducimus\"\n                },\n                {\n                    \"question\": \"Nobis assumenda ipsam aut voluptatem quia et eveniet aperiam rem vel veritatis non mollitia.\",\n                    \"answer\": \"perspiciatis\"\n                },\n                {\n                    \"question\": \"Sed nemo ea nam.\",\n                    \"answer\": \"in\"\n                },\n                {\n                    \"question\": \"Repudiandae aliquam animi sunt dicta esse enim.\",\n                    \"answer\": \"ipsa\"\n                },\n                {\n                    \"question\": \"Hic perferendis minus delectus provident aperiam vero fuga nemo dolore soluta qui voluptate.\",\n                    \"answer\": \"consectetur\"\n                },\n                {\n                    \"question\": \"Eum iusto voluptatem accusantium rem dolores nemo sunt cupiditate.\",\n                    \"answer\": \"ipsum\"\n                },\n                {\n                    \"question\": \"Facere nostrum ducimus consequatur officiis inventore est consequuntur omnis sit vel saepe cumque.\",\n                    \"answer\": \"distinctio\"\n                },\n                {\n                    \"question\": \"Sit voluptatibus necessitatibus possimus occaecati occaecati voluptatibus.\",\n                    \"answer\": \"amet\"\n                },\n                {\n                    \"question\": \"Placeat eius repellendus a sint aut enim nesciunt quod.\",\n                    \"answer\": \"cupiditate\"\n                },\n                {\n                    \"question\": \"Laudantium at aut ut unde nulla autem sapiente nostrum.\",\n                    \"answer\": \"quos\"\n                },\n                {\n                    \"question\": \"Eaque est doloremque et perspiciatis.\",\n                    \"answer\": \"labore\"\n                },\n                {\n                    \"question\": \"Et et et quo et ut.\",\n                    \"answer\": \"voluptatum\"\n                },\n                {\n                    \"question\": \"Culpa velit blanditiis illo laboriosam.\",\n                    \"answer\": \"dolor\"\n                },\n                {\n                    \"question\": \"Blanditiis magnam debitis nulla aut.\",\n                    \"answer\": \"harum\"\n                },\n                {\n                    \"question\": \"Error molestias aut quod rerum aut vitae ut.\",\n                    \"answer\": \"porro\"\n                },\n                {\n                    \"question\": \"Debitis rerum pariatur vitae et sequi ea numquam ut et doloremque.\",\n                    \"answer\": \"amet\"\n                }\n            ]\n        },\n        {\n            \"id\": 67,\n            \"name\": \"Alta Schimmel\",\n            \"isPublic\": true,\n            \"isOrganization\": false,\n            \"likes\": 948,\n            \"flashcards\": [\n                {\n                    \"question\": \"Quidem distinctio distinctio sunt qui consequatur nihil.\",\n                    \"answer\": \"veritatis\"\n                },\n                {\n                    \"question\": \"Velit reiciendis et animi accusantium soluta itaque eum voluptas nostrum hic.\",\n                    \"answer\": \"aut\"\n                },\n                {\n                    \"question\": \"Qui quos velit vitae molestiae.\",\n                    \"answer\": \"qui\"\n                },\n                {\n                    \"question\": \"Quo eum perferendis laudantium provident autem fuga non in.\",\n                    \"answer\": \"et\"\n                },\n                {\n                    \"question\": \"Consequatur fugiat odio expedita ut repellat earum.\",\n                    \"answer\": \"ea\"\n                },\n                {\n                    \"question\": \"Non repellat facilis eius at et ipsam quam et.\",\n                    \"answer\": \"et\"\n                },\n                {\n                    \"question\": \"Ipsam et rem aliquid sequi dolor.\",\n                    \"answer\": \"rerum\"\n                },\n                {\n                    \"question\": \"Ipsam esse quos soluta assumenda et ut ab.\",\n                    \"answer\": \"autem\"\n                },\n                {\n                    \"question\": \"Quisquam dolores ut dolores inventore voluptatibus.\",\n                    \"answer\": \"sequi\"\n                },\n                {\n                    \"question\": \"Nihil autem voluptatem sapiente neque consequatur ut.\",\n                    \"answer\": \"officiis\"\n                },\n                {\n                    \"question\": \"Corrupti quia iusto et animi alias labore optio.\",\n                    \"answer\": \"earum\"\n                },\n                {\n                    \"question\": \"Qui corporis eos magnam voluptatem numquam nihil dicta ut fugit.\",\n                    \"answer\": \"animi\"\n                },\n                {\n                    \"question\": \"Enim illo officiis delectus sed.\",\n                    \"answer\": \"dolorem\"\n                },\n                {\n                    \"question\": \"Nostrum reiciendis at cum in est tempora.\",\n                    \"answer\": \"inventore\"\n                },\n                {\n                    \"question\": \"Minima excepturi dolorem consequuntur eveniet necessitatibus debitis.\",\n                    \"answer\": \"assumenda\"\n                },\n                {\n                    \"question\": \"Atque tempore quia voluptas.\",\n                    \"answer\": \"quam\"\n                },\n                {\n                    \"question\": \"Officia iusto impedit placeat.\",\n                    \"answer\": \"accusamus\"\n                },\n                {\n                    \"question\": \"Nostrum soluta voluptatem consequatur fugit iure aut.\",\n                    \"answer\": \"sit\"\n                },\n                {\n                    \"question\": \"Asperiores incidunt repellendus amet neque voluptatem nemo odio ad.\",\n                    \"answer\": \"aut\"\n                },\n                {\n                    \"question\": \"Odit dolor alias cum aut voluptatem aut est autem.\",\n                    \"answer\": \"impedit\"\n                }\n            ]\n        }\n    ],\n    \"links\": {\n        \"first\": \"http://localhost:8000/api/decks?page=1\",\n        \"last\": \"http://localhost:8000/api/decks?page=19\",\n        \"prev\": \"http://localhost:8000/api/decks?page=3\",\n        \"next\": \"http://localhost:8000/api/decks?page=5\"\n    },\n    \"meta\": {\n        \"current_page\": 4,\n        \"from\": 31,\n        \"last_page\": 19,\n        \"path\": \"http://localhost:8000/api/decks\",\n        \"per_page\": 10,\n        \"to\": 40,\n        \"total\": 183\n    }\n}"
+						},
+						{
+							"name": "At last page",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/decks?page=19",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"decks"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "19"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.8"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 02 Jul 2024 09:32:02 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"decks\": [\n        {\n            \"id\": 338,\n            \"name\": \"Prof. Brock Bruen\",\n            \"isPublic\": true,\n            \"isOrganization\": false,\n            \"likes\": 275,\n            \"flashcards\": [\n                {\n                    \"question\": \"Fuga rerum exercitationem aut quia eligendi cumque et illum.\",\n                    \"answer\": \"ea\"\n                },\n                {\n                    \"question\": \"Vel rerum qui occaecati iusto impedit laudantium.\",\n                    \"answer\": \"odio\"\n                },\n                {\n                    \"question\": \"Voluptatum odio doloremque neque ut.\",\n                    \"answer\": \"tempore\"\n                },\n                {\n                    \"question\": \"Aut quo voluptas ut quae consequatur sed dolor.\",\n                    \"answer\": \"laboriosam\"\n                },\n                {\n                    \"question\": \"Aliquam atque consequatur dolor ut ipsa nesciunt culpa.\",\n                    \"answer\": \"soluta\"\n                },\n                {\n                    \"question\": \"Recusandae hic tempore eum expedita quia dolorem et et.\",\n                    \"answer\": \"sunt\"\n                },\n                {\n                    \"question\": \"Hic impedit inventore et accusamus.\",\n                    \"answer\": \"aut\"\n                },\n                {\n                    \"question\": \"Quia inventore facere perferendis autem sequi nobis doloremque facere.\",\n                    \"answer\": \"ut\"\n                },\n                {\n                    \"question\": \"Est tempora et blanditiis dolore a accusantium velit et temporibus a.\",\n                    \"answer\": \"ut\"\n                },\n                {\n                    \"question\": \"Est et vel quidem saepe tempora sint qui.\",\n                    \"answer\": \"voluptates\"\n                },\n                {\n                    \"question\": \"Et suscipit beatae mollitia voluptas.\",\n                    \"answer\": \"architecto\"\n                },\n                {\n                    \"question\": \"Velit ab excepturi ea est dolores esse et aut ut deleniti sunt incidunt ut.\",\n                    \"answer\": \"molestiae\"\n                },\n                {\n                    \"question\": \"Voluptas quis molestias dolorem eum molestiae et reprehenderit ratione.\",\n                    \"answer\": \"tempore\"\n                },\n                {\n                    \"question\": \"Dolorem molestiae veniam consequatur.\",\n                    \"answer\": \"molestiae\"\n                },\n                {\n                    \"question\": \"Voluptate omnis voluptatum assumenda aliquid deserunt quidem perferendis voluptatem nihil.\",\n                    \"answer\": \"exercitationem\"\n                }\n            ]\n        },\n        {\n            \"id\": 341,\n            \"name\": \"Devyn Schneider\",\n            \"isPublic\": true,\n            \"isOrganization\": true,\n            \"likes\": 872,\n            \"flashcards\": [\n                {\n                    \"question\": \"Vitae aspernatur pariatur ut odio nam.\",\n                    \"answer\": \"cumque\"\n                },\n                {\n                    \"question\": \"At perferendis ut rerum totam accusamus.\",\n                    \"answer\": \"ab\"\n                }\n            ]\n        },\n        {\n            \"id\": 342,\n            \"name\": \"Sarina Johns\",\n            \"isPublic\": true,\n            \"isOrganization\": false,\n            \"likes\": 814,\n            \"flashcards\": [\n                {\n                    \"question\": \"Omnis sed a in vel error doloremque aut ipsum ea sunt.\",\n                    \"answer\": \"animi\"\n                },\n                {\n                    \"question\": \"Ea voluptatem aut alias maiores aliquid dolores.\",\n                    \"answer\": \"accusamus\"\n                }\n            ]\n        }\n    ],\n    \"links\": {\n        \"first\": \"http://localhost:8000/api/decks?page=1\",\n        \"last\": \"http://localhost:8000/api/decks?page=19\",\n        \"prev\": \"http://localhost:8000/api/decks?page=18\",\n        \"next\": null\n    },\n    \"meta\": {\n        \"current_page\": 19,\n        \"from\": 181,\n        \"last_page\": 19,\n        \"path\": \"http://localhost:8000/api/decks\",\n        \"per_page\": 10,\n        \"to\": 183,\n        \"total\": 183\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get deck by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/decks/2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"decks",
+								"2"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Deck not found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/decks/1045",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"decks",
+										"1045"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.8"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 02 Jul 2024 09:37:39 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Deck not found\"\n}"
+						},
+						{
+							"name": "Public deck",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/decks/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"decks",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.8"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 02 Jul 2024 09:37:55 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 1,\n    \"name\": \"Prof. Gia Kub\",\n    \"is_public\": true,\n    \"is_organization\": false,\n    \"likes\": 986,\n    \"flashcards\": [\n        {\n            \"question\": \"Nobis ut non nam et omnis aspernatur at doloremque.\",\n            \"answer\": \"voluptate\"\n        },\n        {\n            \"question\": \"Molestiae ad nobis ipsum minus laborum soluta aspernatur odio.\",\n            \"answer\": \"ipsam\"\n        },\n        {\n            \"question\": \"Fuga corrupti ratione hic nulla velit ut nihil.\",\n            \"answer\": \"et\"\n        },\n        {\n            \"question\": \"Corrupti est officiis voluptas adipisci corrupti ut hic asperiores dolor voluptatem.\",\n            \"answer\": \"in\"\n        },\n        {\n            \"question\": \"Autem exercitationem eaque et reiciendis voluptates et voluptas suscipit consequatur fugiat nulla.\",\n            \"answer\": \"voluptatem\"\n        },\n        {\n            \"question\": \"Aut beatae qui fugit nostrum.\",\n            \"answer\": \"perferendis\"\n        },\n        {\n            \"question\": \"Dolor ut minima deleniti.\",\n            \"answer\": \"ipsum\"\n        },\n        {\n            \"question\": \"Quia nesciunt dolorem et maiores ducimus explicabo cum ducimus quae et aspernatur vero.\",\n            \"answer\": \"quam\"\n        },\n        {\n            \"question\": \"Facilis repellat sit magnam est omnis numquam labore aspernatur error.\",\n            \"answer\": \"nulla\"\n        },\n        {\n            \"question\": \"Ut sint iure dolorum qui aliquid cupiditate quaerat.\",\n            \"answer\": \"aut\"\n        }\n    ]\n}"
+						},
+						{
+							"name": "Private deck",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/decks/344",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"decks",
+										"344"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.8"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 02 Jul 2024 09:41:46 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 344,\n    \"name\": \"Test\",\n    \"is_public\": false,\n    \"is_organization\": false,\n    \"likes\": 0,\n    \"flashcards\": [\n        {\n            \"question\": \"Ques1\",\n            \"answer\": \"Rep1\"\n        },\n        {\n            \"question\": \"Ques2\",\n            \"answer\": \"Rep2\"\n        }\n    ]\n}"
+						},
+						{
+							"name": "Unauthorized on private deck",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/decks/2",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"decks",
+										"2"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.8"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 02 Jul 2024 09:40:14 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Unauthorized\"\n}"
+						},
+						{
+							"name": "Forbidden on private deck",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/decks/2",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"decks",
+										"2"
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.8"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 02 Jul 2024 09:40:54 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Forbidden\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Post create deck",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Test\",\r\n    \"flashcards\": [\r\n        {\r\n            \"question\": \"Ques1\",\r\n            \"answer\": \"Rep1\"\r\n        },\r\n        {\r\n            \"question\": \"Ques2\",\r\n            \"answer\": \"Rep2\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/decks",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"decks"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "",
+										"value": "",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Test\",\r\n    \"is_public\": true,\r\n    \"flashcards\": [\r\n        {\r\n            \"question\": \"Ques1\",\r\n            \"answer\": \"Rep1\"\r\n        },\r\n        {\r\n            \"question\": \"Ques2\",\r\n            \"answer\": \"Rep2\"\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/decks",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"decks"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.8"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 02 Jul 2024 09:34:37 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Deck created successfully\"\n}"
+						},
+						{
+							"name": "Success without is_public",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "",
+										"value": "",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Test\",\r\n    \"flashcards\": [\r\n        {\r\n            \"question\": \"Ques1\",\r\n            \"answer\": \"Rep1\"\r\n        },\r\n        {\r\n            \"question\": \"Ques2\",\r\n            \"answer\": \"Rep2\"\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/decks",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"decks"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.8"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 02 Jul 2024 09:35:26 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Deck created successfully\"\n}"
+						},
+						{
+							"name": "Name required",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "",
+										"value": "",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"flashcards\": [\r\n        {\r\n            \"question\": \"Ques1\",\r\n            \"answer\": \"Rep1\"\r\n        },\r\n        {\r\n            \"question\": \"Ques2\",\r\n            \"answer\": \"Rep2\"\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/decks",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"decks"
+									]
+								}
+							},
+							"status": "Unprocessable Content",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.8"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 02 Jul 2024 09:35:51 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"The name field is required.\",\n    \"errors\": {\n        \"name\": [\n            \"The name field is required.\"\n        ]\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete deck by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/decks/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"decks",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put update deck by id",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"222\",\r\n    \"is_public\": false,\r\n    \"flashcards\": [\r\n        {\r\n            \"question\": \"Ques1azazazazaz\",\r\n            \"answer\": \"Rep1\"\r\n        },\r\n        {\r\n            \"question\": \"Ques2\",\r\n            \"answer\": \"Rep2azazazazazaza\"\r\n        },\r\n        {\r\n            \"question\": \"Ques2\",\r\n            \"answer\": \"Rep2\"\r\n        },\r\n        {\r\n            \"question\": \"Ques2\",\r\n            \"answer\": \"Rep2\"\r\n        },\r\n        {\r\n            \"question\": \"Ques2\",\r\n            \"answer\": \"Rep2\"\r\n        },\r\n        {\r\n            \"question\": \"Ques2\",\r\n            \"answer\": \"Rep2\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/decks/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"decks",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get private decks of user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/decks?myDecks",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"decks"
+							],
+							"query": [
+								{
+									"key": "myDecks",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/decks?myDecks",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"decks"
+									],
+									"query": [
+										{
+											"key": "myDecks",
+											"value": null
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.8"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 02 Jul 2024 09:36:17 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"decks\": [\n        {\n            \"id\": 343,\n            \"name\": \"Test\",\n            \"isPublic\": true,\n            \"isOrganization\": false,\n            \"likes\": 0,\n            \"flashcards\": [\n                {\n                    \"question\": \"Ques1\",\n                    \"answer\": \"Rep1\"\n                },\n                {\n                    \"question\": \"Ques2\",\n                    \"answer\": \"Rep2\"\n                }\n            ]\n        },\n        {\n            \"id\": 344,\n            \"name\": \"Test\",\n            \"isPublic\": false,\n            \"isOrganization\": false,\n            \"likes\": 0,\n            \"flashcards\": [\n                {\n                    \"question\": \"Ques1\",\n                    \"answer\": \"Rep1\"\n                },\n                {\n                    \"question\": \"Ques2\",\n                    \"answer\": \"Rep2\"\n                }\n            ]\n        }\n    ],\n    \"links\": {\n        \"first\": \"http://localhost:8000/api/decks?page=1\",\n        \"last\": \"http://localhost:8000/api/decks?page=1\",\n        \"prev\": null,\n        \"next\": null\n    },\n    \"meta\": {\n        \"current_page\": 1,\n        \"from\": 1,\n        \"last_page\": 1,\n        \"path\": \"http://localhost:8000/api/decks\",\n        \"per_page\": 10,\n        \"to\": 2,\n        \"total\": 2\n    }\n}"
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/decks?myDecks",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"decks"
+									],
+									"query": [
+										{
+											"key": "myDecks",
+											"value": null
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.8"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 02 Jul 2024 09:32:40 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Unauthorized\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Put like deck",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/decks/2/like",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"decks",
+								"2",
+								"like"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save grade on deck",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept-encoding": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"grade\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/decks/661/grade",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"decks",
+								"661",
+								"grade"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Stripe",
+			"item": [
+				{
+					"name": "Checkout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/stripe/checkout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"stripe",
+								"checkout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel subscription",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Cache-Control",
+								"value": "no-cache",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/stripe/cancel",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"stripe",
+								"cancel"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Resume subscription",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Cache-Control",
+								"value": "no-cache",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/stripe/resume",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"stripe",
+								"resume"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Organization",
+			"item": [
+				{
+					"name": "Post an organization",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"org-{{$randomUUID}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/organizations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"organizations"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "422: Validation error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/organizations",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"organizations"
+									]
+								}
+							},
+							"status": "Unprocessable Content",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.7"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 01 Jul 2024 13:11:02 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"The name field must be a string.\",\n    \"errors\": {\n        \"name\": [\n            \"The name field must be a string.\"\n        ]\n    }\n}"
+						},
+						{
+							"name": "200",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"org-{{$randomUUID}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/organizations",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"organizations"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.7"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 02 Jul 2024 09:41:36 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Organization created\"\n}"
+						},
+						{
+							"name": "403: Not premium",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"org-{{$randomUUID}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/organizations",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"organizations"
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.7"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 02 Jul 2024 12:26:56 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"Route only available to premium users\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get an organization",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/organizations/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"organizations",
+								"1"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "403: not a member",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/organizations/2",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"organizations",
+										"2"
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.7"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 02 Jul 2024 09:41:54 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"Only members of an ogranization can interact with it\"\n}"
+						},
+						{
+							"name": "404: not found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/organizations/1234567",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"organizations",
+										"1234567"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.7"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 02 Jul 2024 09:45:45 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"Organization not found\"\n}"
+						},
+						{
+							"name": "200",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/organizations/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"organizations",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.7"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 02 Jul 2024 09:46:04 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 1,\n    \"created_at\": \"2024-07-01T15:07:06.000000Z\",\n    \"updated_at\": \"2024-07-02T09:45:07.000000Z\",\n    \"name\": \"org-03e07687-110c-4571-aeb8-afe529857598\",\n    \"owner_id\": 1\n}"
+						}
+					]
+				},
+				{
+					"name": "Get an organization users",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/organizations/1/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"organizations",
+								"1",
+								"users"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "403: not a member",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/organizations/2",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"organizations",
+										"2"
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.7"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 02 Jul 2024 09:41:54 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"Only members of an ogranization can interact with it\"\n}"
+						},
+						{
+							"name": "404: not found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/organizations/1234567",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"organizations",
+										"1234567"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.7"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 02 Jul 2024 09:45:45 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"Organization not found\"\n}"
+						},
+						{
+							"name": "200",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/organizations/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"organizations",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.7"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 02 Jul 2024 09:46:04 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 1,\n    \"created_at\": \"2024-07-01T15:07:06.000000Z\",\n    \"updated_at\": \"2024-07-02T09:45:07.000000Z\",\n    \"name\": \"org-03e07687-110c-4571-aeb8-afe529857598\",\n    \"owner_id\": 1\n}"
+						}
+					]
+				},
+				{
+					"name": "Add a user to the organization",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"john@doe.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/organizations/5/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"organizations",
+								"5",
+								"users"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "403: not a member",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/organizations/2",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"organizations",
+										"2"
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.7"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 02 Jul 2024 09:41:54 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"Only members of an ogranization can interact with it\"\n}"
+						},
+						{
+							"name": "404: not found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/organizations/1234567",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"organizations",
+										"1234567"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.7"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 02 Jul 2024 09:45:45 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"Organization not found\"\n}"
+						},
+						{
+							"name": "200",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/organizations/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"organizations",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.7"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 02 Jul 2024 09:46:04 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 1,\n    \"created_at\": \"2024-07-01T15:07:06.000000Z\",\n    \"updated_at\": \"2024-07-02T09:45:07.000000Z\",\n    \"name\": \"org-03e07687-110c-4571-aeb8-afe529857598\",\n    \"owner_id\": 1\n}"
+						}
+					]
+				},
+				{
+					"name": "Remove a user from the organization",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 2 \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/organizations/5/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"organizations",
+								"5",
+								"users"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "403: not a member",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/organizations/2",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"organizations",
+										"2"
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.7"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 02 Jul 2024 09:41:54 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"Only members of an ogranization can interact with it\"\n}"
+						},
+						{
+							"name": "404: not found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/organizations/1234567",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"organizations",
+										"1234567"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.7"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 02 Jul 2024 09:45:45 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"Organization not found\"\n}"
+						},
+						{
+							"name": "200",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/organizations/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"organizations",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.7"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 02 Jul 2024 09:46:04 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 1,\n    \"created_at\": \"2024-07-01T15:07:06.000000Z\",\n    \"updated_at\": \"2024-07-02T09:45:07.000000Z\",\n    \"name\": \"org-03e07687-110c-4571-aeb8-afe529857598\",\n    \"owner_id\": 1\n}"
+						}
+					]
+				},
+				{
+					"name": "Update organization",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"org-{{$randomUUID}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/organizations/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"organizations",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete organization",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/organizations/4",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"organizations",
+								"4"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get an organization Copy 2",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/organizations/4",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"organizations",
+										"4"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.7"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 02 Jul 2024 12:05:22 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Organization deleted\"\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

@@ -27,7 +27,7 @@ class UserDeck extends Model
         'easiness_factor' => 'float',
         'repetition' => 'integer',
         'interval' => 'integer',
-        'date' => 'date',
+        'date' => 'datetime',
         'user_grade' => 'float',
         'prev_user_grade' => 'float',
         'is_liked' => 'boolean',

@@ -75,7 +75,7 @@ class UserDeckController extends Controller
                 ]
             );
 
-            [$repetition, $easiness, $interval] = $statsController->updateStatsUser($request->grade, $userDeck->repetition, $userDeck->easiness, $userDeck->interval);
+            [$repetition, $easiness, $interval] = $statsController->updateStatsUser($request->grade, $userDeck->repetition, $userDeck->easiness_factor, $userDeck->interval);
 
             $prev_user_grade = $userDeck->user_grade;
 

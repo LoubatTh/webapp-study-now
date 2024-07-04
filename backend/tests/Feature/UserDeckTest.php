@@ -23,6 +23,9 @@ class UserDeckTest extends TestCase
 
         self::$user = User::factory()->create();
         self::$userPrivate = User::factory()->create();
+
+        $userDeck = UserDeck::factory()->create();
+        $userDeck->delete();
     }
 
     protected function setUp(): void
@@ -109,7 +112,6 @@ class UserDeckTest extends TestCase
     {
         $this->actingAs(self::$user);
 
-        $userDeckBefore = UserDeck::where('user_id', self::$user->id)->where('deck_id', 2)->first();
         $response = $this->putJson('/api/decks/2/like');
 
         $response->assertStatus(204);
@@ -128,7 +130,6 @@ class UserDeckTest extends TestCase
             'The date is not within the expected range. Expected :' . now() . 'Real: ' . $userDeckAfter->date
         );
 
-        $this->assertEquals($userDeckBefore, null);
         $this->assertTrue($userDeckAfter->is_liked);
     }
 

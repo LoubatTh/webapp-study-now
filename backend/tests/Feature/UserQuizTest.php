@@ -23,6 +23,9 @@ class UserQuizTest extends TestCase
 
         self::$user = User::factory()->create();
         self::$userPrivate = User::factory()->create();
+
+        $userQuiz = UserQuiz::factory()->create();
+        $userQuiz->delete();
     }
 
     protected function setUp(): void

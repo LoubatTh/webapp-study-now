@@ -28,6 +28,10 @@ class StatsController extends Controller
             $easiness = 1.3;
         }
 
+        if ($easiness > 3.9) {
+            $easiness = 3.9;
+        }
+
         return [$repetition, $easiness, $interval];
     }
 }

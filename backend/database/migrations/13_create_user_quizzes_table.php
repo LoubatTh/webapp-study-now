@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->float('easiness_factor');
             $table->integer('repetition');
             $table->integer('interval');
-            $table->date('date');
+            $table->datetime('date');
             $table->float('user_grade')->nullable();
             $table->float('prev_user_grade')->nullable();
             $table->boolean('is_liked');

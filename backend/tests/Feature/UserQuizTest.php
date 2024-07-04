@@ -23,16 +23,13 @@ class UserQuizTest extends TestCase
 
         self::$user = User::factory()->create();
         self::$userPrivate = User::factory()->create();
-
-        $userQuiz = UserQuiz::factory()->create();
-        $userQuiz->delete();
     }
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->quiz = Quiz::factory()->hasQcms(10)->create(
+        $this->quiz = Quiz::factory()->create(
             [
                 'id' => 1,
                 'name' => 'Test',
@@ -43,7 +40,7 @@ class UserQuizTest extends TestCase
             ]
         );
 
-        $this->privateQuiz = Quiz::factory()->hasQcms(3)->create(
+        $this->privateQuiz = Quiz::factory()->create(
             [
                 'id' => 2,
                 'name' => 'TestPrivate',
@@ -56,7 +53,6 @@ class UserQuizTest extends TestCase
 
         $this->userQuiz = UserQuiz::factory()->create(
             [
-                'id' => 1,
                 'user_id' => self::$user->id,
                 'quiz_id' => $this->quiz->id,
                 'easiness_factor' => 3,

@@ -23,11 +23,13 @@ class QuizFactory extends Factory
     {
         $name = $this->faker->name();
         $isPublic = $this->faker->boolean();
+        $isOrganization = $this->faker->boolean();
         $likes = $this->faker->numberBetween(0, 1000);
 
         return [
             "name" => $name,
             "isPublic" => $isPublic,
+            "isOrganization" => $isOrganization,
             "type" => "Quiz",
             "likes" => $likes,
             "owner" => User::factory(),

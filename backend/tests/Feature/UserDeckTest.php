@@ -23,9 +23,6 @@ class UserDeckTest extends TestCase
 
         self::$user = User::factory()->create();
         self::$userPrivate = User::factory()->create();
-
-        $userDeck = UserDeck::factory()->create();
-        $userDeck->delete();
     }
 
     protected function setUp(): void
@@ -53,10 +50,11 @@ class UserDeckTest extends TestCase
                 'user_id' => self::$userPrivate->id,
             ]
         );
+        $userDeck = UserDeck::factory()->create();
+        $userDeck->delete();
 
         $this->userDeck = UserDeck::factory()->create(
             [
-                'id' => 1,
                 'user_id' => self::$user->id,
                 'deck_id' => $this->deck->id,
                 'easiness_factor' => 3,

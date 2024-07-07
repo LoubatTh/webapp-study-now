@@ -145,7 +145,7 @@ const ResponseQuizzPage = () => {
             {quizz.qcms.map((qcm) => (
               <div
                 key={qcm.id}
-                className=" bg-white drop-shadow-2xl m-3 mb-10 p-3 rounded-xl"
+                className="border-gray-300 border-b-2 m-3 mb-5 p-3 pb-10"
               >
                 <QuestionQCM
                   question={qcm}
@@ -160,7 +160,7 @@ const ResponseQuizzPage = () => {
                 )}
               </div>
             ))}
-            <div className="flex items-center gap-2 m-3">
+            <div className="flex flex-col	items-center gap-2 m-3">
               <Button
                 className="w-1/2"
                 onClick={handleSubmit}

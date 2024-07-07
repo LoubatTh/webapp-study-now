@@ -6,7 +6,7 @@ const QuestionQCM = ({
   question,
   onAnswerSelect,
   answeredCorrectly,
-  isSubmitting
+  isSubmitting,
 }: Questions) => {
   const [selectedAnswers, setSelectedAnswers] = useState<Answer[]>([]);
 
@@ -23,24 +23,24 @@ const QuestionQCM = ({
     onAnswerSelect(newSelectedAnswers);
   };
 
-
-  /*
-  Cette fonction permet de déterminer la couleur du background de la réponse en fonction de la réponse sélectionnée
+  /* Cette fonction permet de déterminer la couleur du background de la réponse en fonction de la réponse sélectionnée
   Lorsque qu'on ne sait pas encore si la réponse est bonne ou pas, on affiche une fond bleu si la réponse est sélectionnée
   ou le fond par défaut si elle ne l'est pas.
   Lorsqu'on sait si la réponse est bonne ou pas, on affiche un fond vert si la réponse est bonne et un fond rouge sinon.
   Dans tous les cas si aucun de ces scénarios n'arrive, alors le fond est gris par défaut.
   */
   const getBorderColor = (answer: Answer) => {
-
     if (answeredCorrectly === undefined) {
-      return selectedAnswers.includes(answer) ? "bg-blue-400 text-white" : "bg-gray-100";
+      return selectedAnswers.includes(answer)
+        ? "bg-blue-400 text-white"
+        : "bg-gray-100";
     }
     const isAnswerCorrect = answer.isValid;
     if (selectedAnswers.includes(answer)) {
-      return isAnswerCorrect ? "bg-green-400 text-white" : "bg-red-400 text-white";
+      return isAnswerCorrect
+        ? "bg-green-400 text-white"
+        : "bg-red-400 text-white";
     }
-
   };
 
   /*
@@ -60,8 +60,10 @@ const QuestionQCM = ({
       <div className="grid grid-cols-2 grid-rows-2 gap-1">
         {question.answers.map((answer, index) => (
           <p
-            className={`bg-gray-100 rounded-lg p-1 m-0.5 ${getBorderColor(answer)}`}
-            key={answer.response}
+            className={`rounded-lg p-1 m-0.5 ${getBorderColor(
+              answer
+            )}`}
+            key={answer.answer}
             onClick={
               !isSubmitting ? () => handleAnswerClick(answer) : undefined
             }
@@ -69,7 +71,7 @@ const QuestionQCM = ({
               cursor: isSubmitting ? "not-allowed" : "pointer",
             }}
           >
-            {getLetterById(index)}. {answer.response}
+            {getLetterById(index)}. {answer.answer}
           </p>
         ))}
       </div>

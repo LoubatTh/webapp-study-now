@@ -134,7 +134,7 @@ class QuizController extends Controller
         $quizzes = Quiz::where("owner", $user->id)->get();
 
         if ($quizzes->isEmpty()) {
-            return response()->json(['message' => "You haven't yet created any quiz"], 200);
+            return response()->json(['message' => "You haven't created any quiz yet"], 200);
         }
 
         return response()->json($quizzes, 200);

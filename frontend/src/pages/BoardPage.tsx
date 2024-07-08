@@ -11,16 +11,19 @@ const BoardPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
 
+  // handle click for filter btn
   const handleButtonClick = (buttonName: string) => {
     setActiveButton(buttonName);
-    setCurrentPage(1); // Reset to first page on filter change
+    setCurrentPage(1);
   };
 
+  // handle click for fav button
   const toggleHeartButton = () => {
     setIsFavActive((prevState) => !prevState);
-    setCurrentPage(1); // Reset to first page on heart toggle
+    setCurrentPage(1);
   };
 
+  // combine quizz and deck data
   const combinedData = [...mockQuizzData, ...mockDeckData];
 
   // Function to filter combined data
@@ -32,12 +35,14 @@ const BoardPage: React.FC = () => {
     return activeButton === "All" || activeButton.toLowerCase() === item.type;
   });
 
+  // method to set the number of page for pagination
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const displayedItems = filteredData.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
+  // handle click for pagination button
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };

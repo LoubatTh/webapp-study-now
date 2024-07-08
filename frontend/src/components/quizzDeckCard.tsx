@@ -13,6 +13,7 @@ import { Heart } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useNavigate } from "react-router-dom";
 
+// colors for tags
 const colorPalette: { [key: string]: string } = {
   history: "bg-orange-100 text-orange-800",
   geography: "bg-green-100 text-green-800",
@@ -24,10 +25,12 @@ const colorPalette: { [key: string]: string } = {
   art: "bg-indigo-100 text-indigo-800",
 };
 
+// method to define tag color
 const getColorClass = (tagName: string) => {
   return colorPalette[tagName] || "bg-gray-100 text-gray-800";
 };
 
+// set type for quizz and deck
 type CardDataType = QuizzType | DeckType;
 
 type CommonCardProps = {
@@ -35,7 +38,7 @@ type CommonCardProps = {
   type: "quizz" | "deck";
 };
 
-const CommonCard: React.FC<CommonCardProps> = ({ data, type }) => {
+const QuizzDeckCard: React.FC<CommonCardProps> = ({ data, type }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -78,4 +81,4 @@ const CommonCard: React.FC<CommonCardProps> = ({ data, type }) => {
   );
 };
 
-export default CommonCard;
+export default QuizzDeckCard;

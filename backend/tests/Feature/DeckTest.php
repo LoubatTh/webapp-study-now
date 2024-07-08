@@ -72,7 +72,6 @@ class DeckTest extends TestCase
         self::$userPrivate->delete();
         self::$user1->delete();
         self::$user2->delete();
-        self::$tag1->delete();
 
         parent::tearDownAfterClass();
     }

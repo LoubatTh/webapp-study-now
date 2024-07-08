@@ -25,6 +25,7 @@ class DeckFactory extends Factory
         $is_public = $this->faker->boolean();
         $is_organization = $this->faker->boolean();
         $likes = $this->faker->numberBetween(0, 1000);
+        $tag_id = $this->faker->numberBetween(1, 21);
 
         return [
             "name" => $name,
@@ -32,6 +33,7 @@ class DeckFactory extends Factory
             "is_organization" => $is_organization,
             "likes" => $likes,
             "type" => "Deck",
+            "tag_id" => $tag_id,
             "user_id" => User::factory(),
         ];
     }

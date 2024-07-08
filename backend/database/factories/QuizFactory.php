@@ -25,6 +25,7 @@ class QuizFactory extends Factory
         $isPublic = $this->faker->boolean();
         $isOrganization = $this->faker->boolean();
         $likes = $this->faker->numberBetween(0, 1000);
+        $tag_id = $this->faker->numberBetween(1, 21);
 
         return [
             "name" => $name,
@@ -32,6 +33,7 @@ class QuizFactory extends Factory
             "isOrganization" => $isOrganization,
             "type" => "Quiz",
             "likes" => $likes,
+            "tag_id" => $tag_id,
             "owner" => User::factory(),
         ];
     }

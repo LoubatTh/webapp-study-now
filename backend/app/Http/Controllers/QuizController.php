@@ -19,6 +19,7 @@ class QuizController extends Controller
             'name' => 'required|string',
             'isPublic' => 'boolean',
             'isOrganization' => 'boolean',
+            'tag_id' => 'required|integer',
             'qcms' => 'required|array',
             'qcms.*.question' => 'required|string',
             'qcms.*.answers' => 'required|array|size:4',
@@ -33,7 +34,8 @@ class QuizController extends Controller
             'type' => 'Quiz',
             'isPublic' => $request->has("isPublic") ? $request->isPublic : false,
             'isOrganization' => $request->has("isOrganization") ? $request->isOrganization : false,
-            'likes' => 0
+            'likes' => 0,
+            'tag_id' => $request->tag_id
         ]);
 
         foreach ($data['qcms'] as $qcmData) {
@@ -85,6 +87,7 @@ class QuizController extends Controller
             'name' => 'required|string',
             'isPublic' => 'boolean',
             'isOrganization' => 'boolean',
+            'tag_id' => 'integer',
             'qcms' => 'required|array',
             'qcms.*.question' => 'required|string',
             'qcms.*.answers' => 'required|array|size:4',
@@ -103,6 +106,7 @@ class QuizController extends Controller
         $quiz->name = $data["name"];
         $quiz->isPublic = $data['isPublic'] ? $data['isPublic'] : false;
         $quiz->isOrganization = $data['isOrganization'] ? $data['isOrganization'] : false;
+        $quiz->tag_id = $data['tag_id'] ? $data['tag_id'] : $quiz->tag_id;
         $quiz->save();
 
 

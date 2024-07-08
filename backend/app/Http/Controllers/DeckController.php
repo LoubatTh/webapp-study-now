@@ -22,7 +22,7 @@ class DeckController extends Controller
         try {
             $numberPerPage = 10;
             $myDecks = $request->has("myDecks");
-            $decks = Deck::with("flashcards");
+            $decks = Deck::with("tag", "flashcards");
 
             if ($myDecks) {
                 $user = Auth::guard('sanctum')->user();
@@ -47,7 +47,7 @@ class DeckController extends Controller
     public function getDeckById(int $id, Request $request)
     {
         try {
-            $deck = Deck::with("flashcards")->find($id);
+            $deck = Deck::with("tag", "flashcards")->find($id);
             if (!$deck) {
                 return response()->json(["message" => "Deck not found"], 404);
             }
@@ -84,6 +84,7 @@ class DeckController extends Controller
                 "is_organization" => $request->has("is_organization") ? $request->is_organization : false,
                 "type" => "Deck",
                 "likes" => 0,
+                "tag_id" => $request->tag_id,
                 "user_id" => $user->id,
             ]);
 
@@ -118,6 +119,7 @@ class DeckController extends Controller
                 "is_public" => $request->has("is_public") ? $request->is_public : $deck->is_public,
                 "is_organization" => $request->has("is_organization") ? $request->is_organization : $deck->is_organization,
                 "likes" => $request->has("likes") ? $request->likes : $deck->likes,
+                "tag_id" => $request->has("tag_id") ? $request->tag_id : $deck->tag_id,
             ]);
 
             if (!$flashcardController->deleteFlashcardsByDeck($deck->id)) {

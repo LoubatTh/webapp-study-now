@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class UpdateDeckRequest extends FormRequest
+class StoreTagRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,14 +22,7 @@ class UpdateDeckRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name" => "string|max:255",
-            "is_public" => "boolean",
-            "is_organization" => "boolean",
-            "likes" => "integer",
-            "tag_id" => "integer",
-            "flashcards" => "array",
-            "flashcards.*.question" => "string|max:255",
-            "flashcards.*.answer" => "string|max:255",
+            "name" => "required|string|max:255|unique:tags",
         ];
     }
 }

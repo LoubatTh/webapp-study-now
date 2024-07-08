@@ -10,17 +10,18 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('decks', function (Blueprint $table) {
+        Schema::create('quizzes', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->boolean('is_public');
-            $table->boolean('is_organization');
-            $table->string('type');
-            $table->integer('likes')->nullable();
-            $table->foreignId('user_id');
             $table->timestamps();
+            $table->string('name');
+            $table->boolean('isPublic');
+            $table->boolean('isOrganization');
+            $table->integer('likes');
+            $table->string('type');
+            $table->foreignId('tag_id');
+            $table->foreignId('owner')->constrained('users', 'id')->onDelete('cascade');
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('tag_id')->references('id')->on('tags');
         });
     }
 
@@ -29,6 +30,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('decks');
+        Schema::dropIfExists('quizzes');
     }
 };

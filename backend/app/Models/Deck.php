@@ -15,6 +15,7 @@ class Deck extends Model
         'is_organization',
         'likes',
         'type',
+        'tag_id',
         'user_id'
     ];
 
@@ -24,13 +25,14 @@ class Deck extends Model
         'is_organization' => 'boolean',
         'likes' => 'integer',
         'type' => 'string',
+        'tag_id' => 'integer',
         'user_id' => 'integer'
     ];
 
-    // public function tag()
-    // {
-    //     return $this->belongsTo(Tag::class);
-    // }
+    public function tag()
+    {
+        return $this->belongsTo(Tag::class);
+    }
 
     public function user()
     {

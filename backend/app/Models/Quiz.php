@@ -16,13 +16,19 @@ class Quiz extends Model
         'isPublic',
         'isOrganization',
         'likes',
-        'owner',
-        'type'
+        'type',
+        'tag_id',
+        'owner'
     ];
 
     public function qcms(): HasMany
     {
         return $this->hasMany(Qcm::class);
+    }
+
+    public function tag()
+    {
+        return $this->belongsTo(Tag::class);
     }
 
     public function owner(): BelongsTo

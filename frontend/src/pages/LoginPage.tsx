@@ -27,11 +27,13 @@ import { RegisterFormSchema } from "@/lib/form/register.form";
 import { fetchApi } from "@/utils/api";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/components/ui/use-toast";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
 
      const { setToken } = useAuth();
      const { toast } = useToast();
+     const navigation = useNavigate();
 
     const loginForm = useForm({
         resolver: zodResolver(LoginFormSchema),
@@ -67,8 +69,11 @@ const LoginPage = () => {
         const data = response.data;
         toast({
           title: "Connexion réussie",
+          className: "bg-green-400",
         });
         setToken(data.access_token, data.access_token_expiration, data.refresh_token, data.refresh_token_expiration);
+
+        navigation('/board');
 
     };
 
@@ -83,6 +88,7 @@ const LoginPage = () => {
       const response = await fetchApi("POST", "register", body);
 
       console.log(response)
+      const data = response.data;
       if (response.status != 201) {
         toast({
           title: "Uh oh! Something went wrong.",
@@ -93,8 +99,18 @@ const LoginPage = () => {
       } 
 
       toast({
-        title: "Enregistrement effectué",
+        title: "Enregistrement effectué, connexion automatique...",
+        className: "bg-green-400",
       });
+
+      setToken(
+        data.access_token,
+        data.access_token_expiration,
+        data.refresh_token,
+        data.refresh_token_expiration
+      );
+
+      navigation('/board');
 
     };
 

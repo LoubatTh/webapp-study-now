@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Models\Quiz;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class QuizController extends Controller
 {
@@ -65,6 +66,8 @@ class QuizController extends Controller
 
     public function show(Request $request, string $id): JsonResponse
     {
+        $user = Auth::guard('sanctum')->user();
+
         $quiz = Quiz::with('qcms')->find($id);
 
         if (!$quiz) {
@@ -72,7 +75,7 @@ class QuizController extends Controller
 
         }
 
-        if ($quiz->is_public == false && $user != $quiz->owner) {
+        if ($quiz->is_public == false && $user->id != $quiz->owner) {
             return response()->json(['error' => 'Forbidden'], 403);
         }
 

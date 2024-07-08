@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 
 const ResponseQuizzPage = () => {
   // Permet de s'assurer que aucune action nécessitant l'authentification ne soit effectuée avant que le système soit initialisé
-  const { isReady } = useAuth();
+  const { isReady, accessToken } = useAuth();
   // Permet de récupérer l'identifiant du quizz passé en paramètre dans l'URL
   const { quizzId } = useParams();
   //  Permet de stocker le quizz récupéré depuis l'API
@@ -37,7 +37,7 @@ const ResponseQuizzPage = () => {
     if (!isReady || !quizzId) return;
 
     const fetchQuiz = async () => {
-      const response = await fetchApi("GET", `/quizzes/${quizzId}`);
+      const response = await fetchApi("GET", `/quizzes/${quizzId}`, null, accessToken);
       const data = await response.data;
       setQuizz(data);
     };

@@ -72,6 +72,10 @@ class QuizController extends Controller
 
         }
 
+        if ($quiz->is_public == false && $user != $quiz->owner) {
+            return response()->json(['error' => 'Forbidden'], 403);
+        }
+
         return response()->json($quiz, 200);
     }
 

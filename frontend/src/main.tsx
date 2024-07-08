@@ -7,10 +7,11 @@ import CreateQuizzPage from "./pages/CreateQuizzPage";
 import CreateDeckPage from "./pages/CreateDeckPage";
 import { Toaster } from "./components/ui/toaster";
 import BoardPage from "./pages/BoardPage";
-import { AuthProvider } from './contexts/AuthContext';
+import { AuthProvider } from "./contexts/AuthContext";
 import RouteChangeListener from "./listeners/routes/RouteChangeListener";
 import { UserProvider } from "./contexts/UserContext";
 import ProfilePage from "./pages/ProfilePage";
+import DeckPlayPage from "./pages/DeckPlayPage";
 import ResponseQuizzPage from "./pages/ResponseQuizzPage";
 import LayoutNavbarPage from "./pages/LayoutNavbarPage";
 
@@ -26,6 +27,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <Route path="/board" element={<BoardPage />} />
             <Route path="/create-quizz" element={<CreateQuizzPage />} />
             <Route path="/create-deck" element={<CreateDeckPage />} />
+            <Route path="/deck/:deckId" element={<DeckPlayPage />} />
             <Route path="/quizz/:quizzId" element={<ResponseQuizzPage />} />
           </Route>
           <Route path="/login" element={<LoginPage />} />

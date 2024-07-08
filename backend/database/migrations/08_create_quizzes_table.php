@@ -14,11 +14,14 @@ return new class extends Migration {
             $table->id();
             $table->timestamps();
             $table->string('name');
-            $table->string('type');
             $table->boolean('is_public');
             $table->integer('likes');
             $table->boolean('is_organization');
+            $table->string('type');
+            $table->foreignId('tag_id');
             $table->foreignId('owner')->constrained('users', 'id')->onDelete('cascade');
+
+            $table->foreign('tag_id')->references('id')->on('tags');
         });
     }
 

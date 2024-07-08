@@ -1,19 +1,36 @@
 <?php
 
+use App\Enums\TokenAbility;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DeckController;
+use App\Http\Controllers\QcmController;
+use App\Http\Controllers\QuizController;
+use App\Http\Controllers\StripeController;
+use App\Http\Controllers\TagController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserDeckController;
 use App\Http\Controllers\UserQuizController;
 use Illuminate\Support\Facades\Route;
-use App\Enums\TokenAbility;
-use App\Http\Controllers\StripeController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DeckController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\QcmController;
-use App\Http\Controllers\QuizController;
+
 
 // Deck Get routes
 Route::get('decks', [DeckController::class, 'getDecksByPage']);
 Route::get('decks/{id}', [DeckController::class, 'getDeckById']);
+
+// Qcm routes
+Route::get('/qcms/{id}', [QcmController::class, 'show']);
+Route::post('/quizzes/{id}/qcms', [QcmController::class, 'store']);
+Route::put('/qcms/{id}', [QcmController::class, 'update']);
+Route::delete('/qcms/{id}', [QcmController::class, 'destroy']);
+
+// Quiz routes
+Route::get('/quizzes/{id}', [QuizController::class, 'show']);
+
+// Tag routes
+Route::get('tags', [TagController::class, 'getAllTags']);
+Route::post('tags', [TagController::class, 'createTag']);
+Route::put('tags/{id}', [TagController::class, 'updateTagById']);
+Route::delete('tags/{id}', [TagController::class, 'deleteTagById']);
 
 // Auth routes
 Route::post('register', [AuthController::class, 'register']);
@@ -47,13 +64,3 @@ Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->valu
   Route::put('quizzes/{id}/like', [UserQuizController::class, 'likeOrDislikeQuizById']);
   Route::put('quizzes/{id}/grade', [UserQuizController::class, 'saveGradeQuizById']);
 });
-
-// Qcm routes
-Route::get('/qcms/{id}', [QcmController::class, 'show']);
-Route::post('/quizzes/{id}/qcms', [QcmController::class, 'store']);
-Route::put('/qcms/{id}', [QcmController::class, 'update']);
-Route::delete('/qcms/{id}', [QcmController::class, 'destroy']);
-
-// Quiz routes
-Route::get('/quizzes/{id}', [QuizController::class, 'show']);
-

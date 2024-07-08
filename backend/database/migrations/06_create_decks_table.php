@@ -15,11 +15,13 @@ return new class extends Migration {
             $table->string('name');
             $table->boolean('is_public');
             $table->boolean('is_organization');
-            $table->string('type');
             $table->integer('likes')->nullable();
+            $table->string('type');
+            $table->foreignId('tag_id');
             $table->foreignId('user_id');
             $table->timestamps();
 
+            $table->foreign('tag_id')->references('id')->on('tags');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }

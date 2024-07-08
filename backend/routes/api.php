@@ -13,9 +13,6 @@ use App\Http\Controllers\UserQuizController;
 use Illuminate\Support\Facades\Route;
 
 
-// Deck Get routes
-Route::get('decks', [DeckController::class, 'getDecksByPage']);
-Route::get('decks/{id}', [DeckController::class, 'getDeckById']);
 
 // Qcm routes
 Route::get('/qcms/{id}', [QcmController::class, 'show']);
@@ -48,6 +45,7 @@ Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->valu
 
   // Deck routes
   Route::post('decks', [DeckController::class, "createDeck"]);
+  Route::get('/decks/likes', [UserDeckController::class, 'getLikedDecks']);
   Route::put('decks/{id}', [DeckController::class, "updateDeckById"]);
   Route::delete('decks/{id}', [DeckController::class, "deleteDeckById"]);
   Route::put('decks/{id}/like', [UserDeckController::class, 'likeOrDislikeDeckById']);
@@ -65,3 +63,7 @@ Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->valu
 
 // Quiz routes
 Route::get('/quizzes/{id}', [QuizController::class, 'show']);
+
+// Deck Get routes
+Route::get('decks', [DeckController::class, 'getDecksByPage']);
+Route::get('decks/{id}', [DeckController::class, 'getDeckById']);

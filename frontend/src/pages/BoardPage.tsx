@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CreateSetBtn from "@/components/createSetBtn";
 import FilterBtnsBar from "@/components/filterBtnsBar";
 import QuizzDeckCard from "@/components/quizzDeckCard";
 import { mockDeckData, mockQuizzData } from "@/lib/mockData";
 import Pagin from "@/components/pagination";
+import { useAuth } from "@/contexts/AuthContext";
+import { fetchApi } from "@/utils/api";
+import { log } from "console";
 
 const BoardPage: React.FC = () => {
+  const { isReady, accessToken } = useAuth();
   const [activeButton, setActiveButton] = useState("All");
   const [isFavActive, setIsFavActive] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -22,6 +26,18 @@ const BoardPage: React.FC = () => {
     setIsFavActive((prevState) => !prevState);
     setCurrentPage(1);
   };
+
+  useEffect(() => {
+    if (!isReady) return;
+
+    const fetchData = async () => {
+      const response = await fetchApi("GET", "/quizzes", null, accessToken);
+      const data = await response.data;
+      console.log(data)
+    }
+
+    fetchData();
+  }, [isReady]);
 
   // combine quizz and deck data
   const combinedData = [...mockQuizzData, ...mockDeckData];

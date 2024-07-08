@@ -12,18 +12,7 @@ import { DeckType } from "@/types/DeckContext.type";
 import { Heart } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useNavigate } from "react-router-dom";
-
-// colors for tags
-const colorPalette: { [key: string]: string } = {
-  history: "bg-orange-100 text-orange-800",
-  geography: "bg-green-100 text-green-800",
-  science: "bg-yellow-100 text-yellow-800",
-  maths: "bg-red-100 text-red-800",
-  french: "bg-blue-100 text-blue-800",
-  english: "bg-violet-100 text-violet-800",
-  technology: "bg-rose-100 text-rose-800",
-  art: "bg-indigo-100 text-indigo-800",
-};
+import { colorPalette } from "@/utils/tagscolor";
 
 // method to define tag color
 const getColorClass = (tagName: string) => {

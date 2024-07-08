@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/select";
 
 const postQuizz = async (quizz: PostQuizz, accessToken: string) => {
-  const response = await fetchApi("POST", "quizz", quizz, accessToken);
+  const response = await fetchApi("POST", "quizzes", quizz, accessToken);
   console.log(response);
   return response;
 };
@@ -43,7 +43,7 @@ const CreateQuizzPage = () => {
   //State to manage the lable of the deck
   const [label, setLabel] = useState<string>("");
   //State to manage the visibility of the quizz
-  const [isPublic, setIsPublic] = useState<boolean>(false);
+  const [is_public, setIsPublic] = useState<boolean>(false);
   //State to store the labels
   const [labels, setLabels] = useState<string[]>([]);
   //State to manage the error message
@@ -97,7 +97,7 @@ const CreateQuizzPage = () => {
       setErrorMessage("");
       const quizz = {
         name,
-        isPublic,
+        is_public,
         tag_id: parseInt(label),
         qcms: [
           ...qcms.map((qcm) => ({
@@ -115,7 +115,7 @@ const CreateQuizzPage = () => {
         toast({
           description: "Quizz created successfully",
         });
-        redirect("/homepage");
+        navigate("/");
       } else {
         const data = await response.data.json();
         toast({ description: data.message });
@@ -165,10 +165,10 @@ const CreateQuizzPage = () => {
         <Label htmlFor="name">Visibility</Label>
         <div className="flex gap-2">
           <Switch
-            checked={isPublic}
-            onCheckedChange={() => setIsPublic(!isPublic)}
+            checked={is_public}
+            onCheckedChange={() => setIsPublic(!is_public)}
           />
-          <div>{isPublic ? "Public" : "Private"}</div>
+          <div>{is_public ? "Public" : "Private"}</div>
         </div>
       </div>
       <div className="flex flex-col gap-2 p-2 max-w-3xl min-w-full md:min-w-[768px]">

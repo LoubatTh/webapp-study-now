@@ -7,6 +7,7 @@ export async function fetchApi<T>(
 
   const headers = new Headers({
     "Content-Type": "application/json",
+    "Accept": "application/json"
   });
 
   if (token) {

@@ -99,7 +99,7 @@ const CreateDeckPage = () => {
       setErrorMessage("");
       const createdDeck = {
         name,
-        isPublic,
+        is_public: isPublic,
         tag_id: parseInt(label),
         flashcards: deck,
       };

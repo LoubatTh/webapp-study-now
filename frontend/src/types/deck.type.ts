@@ -7,14 +7,14 @@ export type Flashcard = {
 export type Deck = {
   id: number;
   name: string;
-  isPublic: boolean;
-  isOrganization?: boolean;
+  is_public: boolean;
+  is_organization?: boolean;
   likes?: number;
   flashcards: Flashcard[];
 };
 
 export type PostDeck = {
   name: string;
-  isPublic: boolean;
+  is_public: boolean;
   flashcards: Flashcard[];
 };

@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/select";
 
 const postQuizz = async (quizz: PostQuizz, accessToken: string) => {
-  const response = await fetchApi("POST", "quizz", quizz, accessToken);
+  const response = await fetchApi("POST", "quizzes", quizz, accessToken);
   console.log(response);
   return response;
 };
@@ -97,7 +97,7 @@ const CreateQuizzPage = () => {
       setErrorMessage("");
       const quizz = {
         name,
-        isPublic,
+        is_public: isPublic,
         tag_id: parseInt(label),
         qcms: [
           ...qcms.map((qcm) => ({
@@ -115,7 +115,7 @@ const CreateQuizzPage = () => {
         toast({
           description: "Quizz created successfully",
         });
-        redirect("/homepage");
+        navigate("/");
       } else {
         const data = await response.data.json();
         toast({ description: data.message });

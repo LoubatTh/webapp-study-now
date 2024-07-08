@@ -33,19 +33,27 @@ import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu"
 import * as React from "react"
 import { cn } from "@/lib/utils"
 import ImageLink from "./imageLink"
-import logo from "../assets/Logo-T-YEP.png"
+import logo from "../assets/images/Logo-T-YEP.png"
+import { useNavigate } from "react-router-dom"
 
 const Navbar = () => {
+
+  // handle click for navigation btn
+  const navigate = useNavigate()
+  const handleNavigate = (path: string) => {
+    navigate(path);
+  };
+
   return (
     <div className="flex justify-between p-5 items-center shadow-lg">
       <div className="flex items-center">
         <div>
           <ImageLink
-              href="/"
-              src={logo}
-              alt="logo du site"
-              width="w-16"
-              height="h-16"
+            href="/"
+            src={logo}
+            alt="logo du site"
+            width="w-16"
+            height="h-16"
           />
         </div>
         <div>
@@ -56,12 +64,18 @@ const Navbar = () => {
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()} href="/board">
+              <NavigationMenuLink
+                className={navigationMenuTriggerStyle()}
+                onClick={() => handleNavigate("/board")}
+              >
                 Board
               </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()} href="">
+              <NavigationMenuLink
+                className={navigationMenuTriggerStyle()}
+                href=""
+              >
                 Organizations
               </NavigationMenuLink>
             </NavigationMenuItem>
@@ -69,10 +83,34 @@ const Navbar = () => {
               <NavigationMenuTrigger>Account</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="flex flex-col gap-3 p-4 w-[300px]">
-                  <ListItem key="profile" title="Profile" href="">Consult your profile</ListItem>
-                  <ListItem key="stats" title="Stats" href="">Check your statistics</ListItem>
-                  <ListItem key="premium" title="Premium" href="">Get access to premium content</ListItem>
-                  <ListItem key="login" title="Login" href="">Connect to your account or create one</ListItem>
+                  <ListItem
+                    key="profile"
+                    title="Profile"
+                    onClick={() => handleNavigate("/profile")}
+                  >
+                    Consult your profile
+                  </ListItem>
+                  <ListItem
+                    key="stats"
+                    title="Stats"
+                    onClick={() => handleNavigate("/profile/stats")}
+                  >
+                    Check your statistics
+                  </ListItem>
+                  <ListItem
+                    key="premium"
+                    title="Premium"
+                    onClick={() => handleNavigate("/profile/premium")}
+                  >
+                    Get access to premium content
+                  </ListItem>
+                  <ListItem
+                    key="login"
+                    title="Login"
+                    onClick={() => handleNavigate("/login")}
+                  >
+                    Connect to your account or create one
+                  </ListItem>
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
@@ -124,7 +162,6 @@ const Navbar = () => {
         </DropdownMenu>
       </div>
     </div>
-
   );
 };
 

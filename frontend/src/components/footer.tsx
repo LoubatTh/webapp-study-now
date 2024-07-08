@@ -1,5 +1,5 @@
 import ImageLink from "./imageLink";
-import logo from "../assets/Logo-T-YEP.png";
+import logo from "../assets/images/Logo-T-YEP.png";
 
 const Footer = () => {
   return (

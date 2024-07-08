@@ -8,7 +8,7 @@ const FilterBtnsBar = ({
   onToggleHeart,
 }) => {
   return (
-    <div className="flex border border-black rounded-sm bg-black text-white">
+    <div className="flex border border-black rounded-xl bg-black text-white">
       <div className="p-1">
         <Button
           variant={isFavActive ? "secondary" : "ghost"}

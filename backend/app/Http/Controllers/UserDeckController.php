@@ -8,6 +8,7 @@ use App\Models\Deck;
 use App\Models\UserDeck;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Http\JsonResponse;
 
 class UserDeckController extends Controller
 {
@@ -92,5 +93,18 @@ class UserDeckController extends Controller
         } catch (\Exception $e) {
             return response()->json(["error" => $e->getMessage()], 400);
         }
+    }
+
+    public function getLikedDecks(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        $likedDecks = UserDeck::where("user_id", $user->id)->where("is_liked", true)->with('deck')->get();
+
+        if ($likedDecks->isEmpty()) {
+            return response()->json(['error' => "You haven't liked any deck yet"], 200);
+        }
+
+        return response()->json($likedDecks, 200);
     }
 }

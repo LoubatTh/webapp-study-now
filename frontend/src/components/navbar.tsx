@@ -38,6 +38,7 @@ import { useNavigate } from "react-router-dom"
 
 const Navbar = () => {
 
+  // handle click for navigation btn
   const navigate = useNavigate()
   const handleNavigate = (path: string) => {
     navigate(path);

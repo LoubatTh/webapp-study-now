@@ -22,15 +22,15 @@ class QuizFactory extends Factory
     public function definition(): array
     {
         $name = $this->faker->name();
-        $isPublic = $this->faker->boolean();
-        $isOrganization = $this->faker->boolean();
+        $is_public = $this->faker->boolean();
+        $is_organization = $this->faker->boolean();
         $likes = $this->faker->numberBetween(0, 1000);
         $tag_id = $this->faker->numberBetween(1, 21);
 
         return [
             "name" => $name,
-            "isPublic" => $isPublic,
-            "isOrganization" => $isOrganization,
+            "is_public" => $is_public,
+            "is_organization" => $is_organization,
             "type" => "Quiz",
             "likes" => $likes,
             "tag_id" => $tag_id,

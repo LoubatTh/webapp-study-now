@@ -33,8 +33,8 @@ class UserQuizTest extends TestCase
             [
                 'id' => 1,
                 'name' => 'Test',
-                'isPublic' => true,
-                'isOrganization' => false,
+                'is_public' => true,
+                'is_organization' => false,
                 'likes' => 2,
                 'owner' => self::$user->id,
             ]
@@ -44,8 +44,8 @@ class UserQuizTest extends TestCase
             [
                 'id' => 2,
                 'name' => 'TestPrivate',
-                'isPublic' => false,
-                'isOrganization' => false,
+                'is_public' => false,
+                'is_organization' => false,
                 'likes' => 20,
                 'owner' => self::$userPrivate->id,
             ]

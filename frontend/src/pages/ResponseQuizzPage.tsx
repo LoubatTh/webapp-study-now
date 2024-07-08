@@ -12,17 +12,21 @@ const ResponseQuizzPage = () => {
   // Permet de récupérer l'identifiant du quizz passé en paramètre dans l'URL
   const { quizzId } = useParams();
   //  Permet de stocker le quizz récupéré depuis l'API
-  const [ quizz, setQuizz ] = useState<any>(null); 
+  const [quizz, setQuizz] = useState<any>(null);
   // Permet de stocker le pourcentage de bonnes réponses de l'utilisateur
-  const [ correctPercentage, setCorrectPercentage ] = useState<number>(0);
-  // Permet de stocker les réponses sélectionnées par l'utilisateur 
-  const [ selectedAnswers, setSelectedAnswers ] = useState<{ [key: number]: any[];}>({});
+  const [correctPercentage, setCorrectPercentage] = useState<number>(0);
+  // Permet de stocker les réponses sélectionnées par l'utilisateur
+  const [selectedAnswers, setSelectedAnswers] = useState<{
+    [key: number]: any[];
+  }>({});
   // Permet de stocker les erreurs pour chaque question
-  const [ errors, setErrors ] = useState<{ [key: number]: string }>({});
+  const [errors, setErrors] = useState<{ [key: number]: string }>({});
   // Permet de stocker les réponses correctes pour chaque question
-  const [ answeredCorrectly, setAnsweredCorrectly ] = useState<{[key: number]: boolean; }>({});
+  const [answeredCorrectly, setAnsweredCorrectly] = useState<{
+    [key: number]: boolean;
+  }>({});
   // Permet de stocker l'état de la soumission du formulaire
-  const [ isSubmitting, setIsSubmitting ] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   /*
   Ce UseEffect permet de premièrement vérifier si l'utilisateur est prêt à 
@@ -33,11 +37,9 @@ const ResponseQuizzPage = () => {
     if (!isReady || !quizzId) return;
 
     const fetchQuiz = async () => {
-
       const response = await fetchApi("GET", `/quizzes/${quizzId}`);
       const data = await response.data;
       setQuizz(data);
-
     };
 
     fetchQuiz();
@@ -68,8 +70,7 @@ const ResponseQuizzPage = () => {
     ).length;
     const pourcentage = (totalCorrestResponses * 100) / totalQuestions;
     setCorrectPercentage(pourcentage);
-  }
-
+  };
 
   /*
   Cette méthode permet de valider les réponses de l'utilisateur
@@ -111,13 +112,12 @@ const ResponseQuizzPage = () => {
       // Puis on parcours la liste et on stock dans une variables toutes les réponses VALIDES de la question (il peut y en avoir qu'une seule !)
       const correctAnswers = qcm.answers
         .filter((answer) => answer.isValid)
-        .map((answer) => answer.response);
+        .map((answer) => answer.answer);
 
       // puis on parcours ensuite les réponses de l'utilisateur qu'on va comparer avec les réponses correctes
       const isCorrect =
-        userAnswers.every((answer) =>
-          correctAnswers.includes(answer.response)
-        ) && userAnswers.length === correctAnswers.length;
+        userAnswers.every((answer) => correctAnswers.includes(answer.answer)) &&
+        userAnswers.length === correctAnswers.length;
 
       newAnsweredCorrectly[qcm.id] = isCorrect;
 
@@ -134,7 +134,6 @@ const ResponseQuizzPage = () => {
     console.log(correctAnswers);
   };
 
-
   return (
     <>
       <div className="flex flex-col items-center gap-4">
@@ -145,7 +144,7 @@ const ResponseQuizzPage = () => {
             {quizz.qcms.map((qcm) => (
               <div
                 key={qcm.id}
-                className=" bg-white drop-shadow-2xl m-3 mb-10 p-3 rounded-xl"
+                className="border-gray-300 border-b-2 m-3 mb-5 p-3 pb-10"
               >
                 <QuestionQCM
                   question={qcm}

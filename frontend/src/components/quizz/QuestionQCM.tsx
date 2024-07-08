@@ -6,7 +6,7 @@ const QuestionQCM = ({
   question,
   onAnswerSelect,
   answeredCorrectly,
-  isSubmitting
+  isSubmitting,
 }: Questions) => {
   const [selectedAnswers, setSelectedAnswers] = useState<Answer[]>([]);
 
@@ -23,25 +23,24 @@ const QuestionQCM = ({
     onAnswerSelect(newSelectedAnswers);
   };
 
-
-  /*
-  Cette fonction permet de déterminer la couleur de la bordure de la réponse en fonction de la réponse sélectionnée
-  Lorsque qu'on ne sait pas encore si la réponse est bonne ou pas, on affiche une bordure noire si la réponse est sélectionnée
-  et une bordure transparente si elle ne l'est pas.
-  Lorsqu'on sait si la réponse est bonne ou pas, on affiche une bordure verte si la réponse est bonne et une bordure rouge sinon.
-  Dans tous les cas si aucun de ces scénarios n'arrive, alors la bordure est transparente
+  /* Cette fonction permet de déterminer la couleur du background de la réponse en fonction de la réponse sélectionnée
+  Lorsque qu'on ne sait pas encore si la réponse est bonne ou pas, on affiche une fond bleu si la réponse est sélectionnée
+  ou le fond par défaut si elle ne l'est pas.
+  Lorsqu'on sait si la réponse est bonne ou pas, on affiche un fond vert si la réponse est bonne et un fond rouge sinon.
+  Dans tous les cas si aucun de ces scénarios n'arrive, alors le fond est gris par défaut.
   */
   const getBorderColor = (answer: Answer) => {
     if (answeredCorrectly === undefined) {
       return selectedAnswers.includes(answer)
-        ? "border-black"
-        : "border-transparent";
+        ? "bg-blue-400 text-white"
+        : "bg-gray-100";
     }
     const isAnswerCorrect = answer.isValid;
     if (selectedAnswers.includes(answer)) {
-      return isAnswerCorrect ? "border-green-500" : "border-red-500";
+      return isAnswerCorrect
+        ? "bg-green-400 text-white"
+        : "bg-red-400 text-white";
     }
-    return "border-transparent";
   };
 
   /*
@@ -54,20 +53,28 @@ const QuestionQCM = ({
   }, [answeredCorrectly]);
 
   return (
-    <div>
-      <h2 className="font-medium mb-3">{question.question}</h2>
-      {question.answers.map((answer, index) => (
-        <p
-          className={`border-2 rounded-lg p-1 m-0.5 ${getBorderColor(answer)}`}
-          key={answer.response}
-          onClick={!isSubmitting ? () => handleAnswerClick(answer) : undefined}
-          style={{
-            cursor: isSubmitting ? "not-allowed" : "pointer",
-          }}
-        >
-          {getLetterById(index)}. {answer.response}
-        </p>
-      ))}
+    <div className="drop-shadow-md">
+      <div className="bg-gray-100 rounded-lg p-2 m-0.5 mb-2">
+        <h2 className="font-medium text-center">{question.question}</h2>
+      </div>
+      <div className="grid grid-cols-2 grid-rows-2 gap-1">
+        {question.answers.map((answer, index) => (
+          <p
+            className={`rounded-lg p-1 m-0.5 ${getBorderColor(
+              answer
+            )}`}
+            key={answer.answer}
+            onClick={
+              !isSubmitting ? () => handleAnswerClick(answer) : undefined
+            }
+            style={{
+              cursor: isSubmitting ? "not-allowed" : "pointer",
+            }}
+          >
+            {getLetterById(index)}. {answer.answer}
+          </p>
+        ))}
+      </div>
     </div>
   );
 };

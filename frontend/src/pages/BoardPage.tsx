@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import CreateSetBtn from "@/components/createSetBtn";
 import FilterBtnsBar from "@/components/filterBtnsBar";
-import QuizzCard from "@/components/quizzCard";
-import DeckCard from "@/components/deckCard";
+import QuizzDeckCard from "@/components/quizzDeckCard";
 import { mockDeckData, mockQuizzData } from "@/lib/mockData";
 import Pagin from "@/components/pagination";
 
@@ -86,13 +85,13 @@ const BoardPage: React.FC = () => {
         </div>
       </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4">
-        {displayedItems.map((item, index) =>
-          item.type === "quizz" ? (
-            <QuizzCard key={index} quizz={item} />
-          ) : (
-            <DeckCard key={index} deck={item} />
-          )
-        )}
+        {displayedItems.map((item, index) => (
+          <QuizzDeckCard
+            key={index}
+            data={item}
+            type={item.type === "quizz" ? "quizz" : "deck"}
+          />
+        ))}
       </div>
       <div className="flex justify-center my-4">
         <Pagin

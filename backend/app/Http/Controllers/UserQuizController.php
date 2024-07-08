@@ -99,7 +99,7 @@ class UserQuizController extends Controller
     {
         $user = $request->user();
 
-        $likedQuizzes = UserQuiz::where("user_id", $user->id)->where("is_liked", true)->get();
+        $likedQuizzes = UserQuiz::where("user_id", $user->id)->where("is_liked", true)->with("quiz")->get();
 
         if ($likedQuizzes->isEmpty()) {
             return response()->json(['error' => "You haven't liked any quiz yet"], 200);

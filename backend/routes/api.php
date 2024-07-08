@@ -23,9 +23,6 @@ Route::post('/quizzes/{id}/qcms', [QcmController::class, 'store']);
 Route::put('/qcms/{id}', [QcmController::class, 'update']);
 Route::delete('/qcms/{id}', [QcmController::class, 'destroy']);
 
-// Quiz routes
-Route::get('/quizzes/{id}', [QuizController::class, 'show']);
-
 // Tag routes
 Route::get('tags', [TagController::class, 'getAllTags']);
 Route::post('tags', [TagController::class, 'createTag']);
@@ -59,8 +56,12 @@ Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->valu
   // Quiz routes
   Route::post('/quizzes', [QuizController::class, 'store']);
   Route::get('/quizzes', [QuizController::class, 'myQuizzes']);
+  Route::get('/quizzes/likes', [UserQuizController::class, 'getLikedQuizzes']);
   Route::put('/quizzes/{id}', [QuizController::class, 'update']);
   Route::delete('/quizzes/{id}', [QuizController::class, 'destroy']);
   Route::put('quizzes/{id}/like', [UserQuizController::class, 'likeOrDislikeQuizById']);
   Route::put('quizzes/{id}/grade', [UserQuizController::class, 'saveGradeQuizById']);
 });
+
+// Quiz routes
+Route::get('/quizzes/{id}', [QuizController::class, 'show']);

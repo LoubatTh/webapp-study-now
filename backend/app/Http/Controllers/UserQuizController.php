@@ -8,6 +8,7 @@ use App\Models\Quiz;
 use App\Models\UserQuiz;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Http\JsonResponse;
 
 class UserQuizController extends Controller
 {
@@ -92,5 +93,18 @@ class UserQuizController extends Controller
         } catch (\Exception $e) {
             return response()->json(["error" => $e->getMessage()], 400);
         }
+    }
+
+    public function getLikedQuizzes(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        $likedQuizzes = UserQuiz::where("user_id", $user->id)->where("is_liked", true)->get();
+
+        if ($likedQuizzes->isEmpty()) {
+            return response()->json(['error' => "You haven't liked any quiz yet"], 200);
+        }
+
+        return response()->json($likedQuizzes, 200);
     }
 }

@@ -86,7 +86,7 @@ const BoardPage: React.FC = () => {
           <QuizzDeckCard
             key={index}
             data={item}
-            type={item.type === "quizz" ? "quizz" : "deck"}
+            type={item.type}
           />
         ))}
       </div>

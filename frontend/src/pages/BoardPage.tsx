@@ -29,15 +29,7 @@ const BoardPage: React.FC = () => {
       return false;
     }
 
-    if (activeButton === "All") {
-      return true;
-    } else if (activeButton === "Quizz") {
-      return item.type === "quizz";
-    } else if (activeButton === "Deck") {
-      return item.type === "deck";
-    }
-
-    return true;
+    return activeButton === "All" || activeButton.toLowerCase() === item.type;
   });
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);

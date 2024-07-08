@@ -44,6 +44,7 @@ Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->valu
   Route::get('/quizzes', [QuizController::class, 'myQuizzes']);
   Route::put('/quizzes/{id}', [QuizController::class, 'update']);
   Route::delete('/quizzes/{id}', [QuizController::class, 'destroy']);
+  Route::get('/quizzes/{id}', [QuizController::class, 'show']);
   Route::put('quizzes/{id}/like', [UserQuizController::class, 'likeOrDislikeQuizById']);
   Route::put('quizzes/{id}/grade', [UserQuizController::class, 'saveGradeQuizById']);
 });
@@ -53,7 +54,4 @@ Route::get('/qcms/{id}', [QcmController::class, 'show']);
 Route::post('/quizzes/{id}/qcms', [QcmController::class, 'store']);
 Route::put('/qcms/{id}', [QcmController::class, 'update']);
 Route::delete('/qcms/{id}', [QcmController::class, 'destroy']);
-
-// Quiz routes
-Route::get('/quizzes/{id}', [QuizController::class, 'show']);
 

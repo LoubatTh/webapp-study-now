@@ -80,7 +80,7 @@ class QuizController extends Controller
             return response()->json(['error' => 'Forbidden'], 403);
         }
 
-        return response()->json($quiz, 200);
+        return response()->json($quiz->load("qcms"), 200);
     }
 
 
@@ -137,7 +137,7 @@ class QuizController extends Controller
             return response()->json(['message' => "You haven't created any quiz yet"], 200);
         }
 
-        return response()->json($quizzes, 200);
+        return response()->json($quizzes->load("qcms"), 200);
     }
 
 }

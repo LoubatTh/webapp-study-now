@@ -134,4 +134,5 @@ class QuizController extends Controller
 
         return response()->json($quizzes, 200);
     }
+    
 }

@@ -43,7 +43,7 @@ const CreateDeckPage = () => {
   //State to manage the lable of the deck
   const [label, setLabel] = useState<string>("");
   //State to manage the visibility of the deck
-  const [is_public, setIsPublic] = useState<boolean>(false);
+  const [isPublic, setIsPublic] = useState<boolean>(false);
   //State to store the labels
   const [labels, setLabels] = useState<string[]>([]);
   //State to manage the error message
@@ -99,7 +99,7 @@ const CreateDeckPage = () => {
       setErrorMessage("");
       const createdDeck = {
         name,
-        is_public,
+        is_public: isPublic,
         tag_id: parseInt(label),
         flashcards: deck,
       };
@@ -162,10 +162,10 @@ const CreateDeckPage = () => {
         <Label htmlFor="name">Visibility</Label>
         <div className="flex gap-2">
           <Switch
-            checked={is_public}
-            onCheckedChange={() => setIsPublic(!is_public)}
+            checked={isPublic}
+            onCheckedChange={() => setIsPublic(!isPublic)}
           />
-          <div>{is_public ? "Public" : "Private"}</div>
+          <div>{isPublic ? "Public" : "Private"}</div>
         </div>
       </div>
       <div className="flex flex-col gap-2 p-2 max-w-3xl min-w-full md:min-w-[768px]">

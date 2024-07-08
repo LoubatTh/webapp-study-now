@@ -5,7 +5,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu"
+} from "@/components/ui/navigation-menu-special"
 
 import {
   AlignJustify,
@@ -14,8 +14,10 @@ import {
   LayoutDashboard,
   BarChart3,
   LogIn,
-  // LogOut,
+  LogOut,
   User,
+  Home,
+
 } from "lucide-react"
 
 import {
@@ -32,11 +34,14 @@ import { Button } from "@/components/ui/button"
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu"
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import ImageLink from "./imageLink"
+import Image from "./image"
 import logo from "../assets/images/Logo-T-YEP.png"
 import { useNavigate } from "react-router-dom"
+import { useAuth } from "@/contexts/AuthContext"
 
 const Navbar = () => {
+
+  const { accessToken, logout } = useAuth()
 
   // handle click for navigation btn
   const navigate = useNavigate()
@@ -44,75 +49,116 @@ const Navbar = () => {
     navigate(path);
   };
 
+
+
   return (
     <div className="flex justify-between p-5 items-center shadow-lg">
-      <div className="flex items-center">
+      <div
+        onClick={() => handleNavigate("/")}
+        className="flex items-center cursor-pointer"
+      >
         <div>
-          <ImageLink
-            href="/"
-            src={logo}
-            alt="logo du site"
-            width="w-16"
-            height="h-16"
-          />
+          <Image src={logo} alt="logo du site" width="w-16" height="h-16" />
         </div>
         <div>
-          <h3>StudyNow</h3>
+          <h3 className="font-bold text-xl">StudyNow</h3>
         </div>
       </div>
       <div className="hidden md:flex">
         <NavigationMenu>
           <NavigationMenuList>
-            <NavigationMenuItem>
+            <NavigationMenuItem className="cursor-pointer">
               <NavigationMenuLink
                 className={navigationMenuTriggerStyle()}
-                onClick={() => handleNavigate("/board")}
+                onClick={() => handleNavigate("/")}
               >
-                Board
+                <Home className="mr-2 h-4 w-4" />
+                Home
               </NavigationMenuLink>
             </NavigationMenuItem>
+
+            {accessToken ? (
+              <>
+                <NavigationMenuItem className="cursor-pointer">
+                  <NavigationMenuLink
+                    className={navigationMenuTriggerStyle()}
+                    onClick={() => handleNavigate("/board")}
+                  >
+                    <ClipboardList className="mr-2 h-4 w-4" />
+                    My Board
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+
+                <NavigationMenuItem className="cursor-pointer">
+                  <NavigationMenuLink
+                    className={navigationMenuTriggerStyle()}
+                    onClick={() => handleNavigate("/organizations")}
+                  >
+                    <LayoutDashboard className="mr-2 h-4 w-4" />
+                    My Organizations
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+              </>
+            ) : (
+              <></>
+            )}
+
             <NavigationMenuItem>
-              <NavigationMenuLink
-                className={navigationMenuTriggerStyle()}
-                href=""
-              >
-                Organizations
-              </NavigationMenuLink>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <NavigationMenuTrigger>Account</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul className="flex flex-col gap-3 p-4 w-[300px]">
-                  <ListItem
-                    key="profile"
-                    title="Profile"
-                    onClick={() => handleNavigate("/profile")}
-                  >
-                    Consult your profile
-                  </ListItem>
-                  <ListItem
-                    key="stats"
-                    title="Stats"
-                    onClick={() => handleNavigate("/profile/stats")}
-                  >
-                    Check your statistics
-                  </ListItem>
-                  <ListItem
-                    key="premium"
-                    title="Premium"
-                    onClick={() => handleNavigate("/profile/premium")}
-                  >
-                    Get access to premium content
-                  </ListItem>
-                  <ListItem
-                    key="login"
-                    title="Login"
-                    onClick={() => handleNavigate("/login")}
-                  >
-                    Connect to your account or create one
-                  </ListItem>
-                </ul>
-              </NavigationMenuContent>
+              {!accessToken ? (
+                <NavigationMenuLink
+                  className="flex items-center bg-black p-3 text-white rounded-md hover:bg-slate-800 cursor-pointer"
+                  onClick={() => handleNavigate("/login")}
+                >
+                  <LogIn className="mr-2 h-4 w-4" />
+                  Connexion
+                </NavigationMenuLink>
+              ) : (
+                <>
+                  <NavigationMenuTrigger>
+                    <User className="mr-2 h-4 w-4" />
+                    Account
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="flex flex-col gap-3 p-4 w-[300px]">
+                      <ListItem
+                        className="cursor-pointer"
+                        key="profile"
+                        title="Profile"
+                        onClick={() => handleNavigate("/profile")}
+                      >
+                        Consult your profile
+                      </ListItem>
+                      <ListItem
+                        className="cursor-pointer"
+                        key="stats"
+                        title="Stats"
+                        onClick={() => handleNavigate("/profile/statistics")}
+                      >
+                        Check your statistics
+                      </ListItem>
+                      <ListItem
+                        className="cursor-pointer"
+                        key="premium"
+                        title="Premium"
+                        onClick={() => handleNavigate("/profile/premium")}
+                      >
+                        Get access to premium content
+                      </ListItem>
+                      <ListItem
+                        key="Logout"
+                        title="Logout"
+                        onClick={() => {
+                          handleNavigate("/");
+                          logout();
+                        }}
+                        className="cursor-pointer bg-red-100 text-red-400 hover:bg-red-200 hover:text-red-500"
+                      >
+                        Disconnect to your account
+                      </ListItem>
+                    </ul>
+                  </NavigationMenuContent>
+                </>
+              )}
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
@@ -128,35 +174,40 @@ const Navbar = () => {
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleNavigate("/profile")}>
                 <User className="mr-2 h-4 w-4" />
                 <a href="">Profile</a>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => handleNavigate("/profil/statistics")}
+              >
                 <BarChart3 className="mr-2 h-4 w-4" />
                 <a href="">Statistics</a>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => handleNavigate("/profil/premium")}
+              >
                 <CreditCard className="mr-2 h-4 w-4" />
                 <a href="">Premium</a>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleNavigate("/board")}>
                 <ClipboardList className="mr-2 h-4 w-4" />
-                <a href="">Board</a>
+                <a href="">My Boards</a>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => handleNavigate("/organizations")}
+              >
                 <LayoutDashboard className="mr-2 h-4 w-4" />
-                <a href="">Organizations</a>
+                <a href="">My Organizations</a>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogIn className="mr-2 h-4 w-4" />
-              <a href="">Login</a>
+            <DropdownMenuItem className="bg-red-100 text-red-400">
+              <LogOut className="mr-2 h-4 w-4" />
+              <a href="">Logout</a>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

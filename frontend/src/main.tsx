@@ -11,9 +11,9 @@ import { AuthProvider } from "./contexts/AuthContext";
 import RouteChangeListener from "./listeners/routes/RouteChangeListener";
 import { UserProvider } from "./contexts/UserContext";
 import ProfilePage from "./pages/ProfilePage";
-import LayoutNavbarPage from "./pages/LayoutNavbarPage";
 import DeckPlayPage from "./pages/DeckPlayPage";
 import ResponseQuizzPage from "./pages/ResponseQuizzPage";
+import LayoutNavbarPage from "./pages/LayoutNavbarPage";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <BrowserRouter>

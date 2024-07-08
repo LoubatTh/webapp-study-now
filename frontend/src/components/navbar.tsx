@@ -176,38 +176,38 @@ const Navbar = () => {
             <DropdownMenuGroup>
               <DropdownMenuItem onClick={() => handleNavigate("/profile")}>
                 <User className="mr-2 h-4 w-4" />
-                <a href="">Profile</a>
+                <p>Profile</p>
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => handleNavigate("/profil/statistics")}
               >
                 <BarChart3 className="mr-2 h-4 w-4" />
-                <a href="">Statistics</a>
+                <p>Statistics</p>
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => handleNavigate("/profil/premium")}
               >
                 <CreditCard className="mr-2 h-4 w-4" />
-                <a href="">Premium</a>
+                <p>Premium</p>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem onClick={() => handleNavigate("/board")}>
                 <ClipboardList className="mr-2 h-4 w-4" />
-                <a href="">My Boards</a>
+                <p>My Boards</p>
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => handleNavigate("/organizations")}
               >
                 <LayoutDashboard className="mr-2 h-4 w-4" />
-                <a href="">My Organizations</a>
+                <p>My Organizations</p>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="bg-red-100 text-red-400">
               <LogOut className="mr-2 h-4 w-4" />
-              <a href="">Logout</a>
+              <p>Logout</p>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

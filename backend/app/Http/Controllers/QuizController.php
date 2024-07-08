@@ -127,14 +127,20 @@ class QuizController extends Controller
         return response()->json($quiz->load("qcms"), 200);
     }
 
-    public function myQuizzes(Request $request): JsonResponse
+    public function index(Request $request): JsonResponse
     {
 
-        $user = $request->user();
-        $quizzes = Quiz::where("owner", $user->id)->get();
+        if ($request->has("myDecks")) {
 
-        if ($quizzes->isEmpty()) {
-            return response()->json(['message' => "You haven't created any quiz yet"], 200);
+            $user = $request->user();
+            $quizzes = Quiz::where("owner", $user->id)->get();
+
+            if ($quizzes->isEmpty()) {
+                return response()->json(['message' => "You haven't created any quiz yet"], 200);
+            }
+        
+        } else {
+            $quizzes = Quiz::where("is_public", true)->get();
         }
 
         return response()->json($quizzes->load("qcms"), 200);

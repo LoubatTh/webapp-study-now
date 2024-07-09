@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use App\Models\Quiz;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\QuizResource;
 
 class QuizController extends Controller
 {
@@ -80,7 +81,7 @@ class QuizController extends Controller
             return response()->json(['error' => 'Forbidden'], 403);
         }
 
-        return response()->json($quiz->load("qcms"), 200);
+        return response()->json(new QuizResource($quiz), 200);
     }
 
 

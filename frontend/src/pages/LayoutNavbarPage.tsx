@@ -6,7 +6,7 @@ const LayoutNavbarPage = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
-      <div className="flex-grow p-4">
+      <div className="flex flex-col flex-grow p-4">
         <Outlet />
       </div>
       <Footer />

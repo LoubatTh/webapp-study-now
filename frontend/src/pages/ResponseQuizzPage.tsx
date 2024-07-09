@@ -1,3 +1,5 @@
+import { ResourceForbidden } from "@/components/errors/ResourceForbidden";
+import ResourceNotFound from "@/components/errors/ResourceNotFound";
 import QuestionQCM from "@/components/quizz/QuestionQCM";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
@@ -31,6 +33,7 @@ const ResponseQuizzPage = () => {
   const [isNotFound, setIsNotFound] = useState<boolean>(false);
   // Permet de stocker l'état de la soumission du formulaire
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
 
   /*
   Ce UseEffect permet de premièrement vérifier si l'utilisateur est prêt à 
@@ -150,35 +153,13 @@ const ResponseQuizzPage = () => {
   };
 
   if(isNotFound){
-    return (
-      <>
-        <div className="flex-grow flex flex-col items-center justify-center">
-          <div>
-            <h1 className="text-7xl font-bold text-red-500 m-4">Oups !</h1>
-            {/* <img src={error404} alt="error 404" className="w-1/3 " /> */}
-          </div>
-          <p className="text-center text-lg text-red-600">
-            Il semblerait que le quizz que vous essayez de rejoindre n'existe
-            pas.
-          </p>
-        </div>
-      </>
-    );
+    return <ResourceNotFound type="quizz" />;
   }
 
   if(isForbidden){
-    return (
-      <>
-        <div className="flex-grow flex flex-col items-center justify-center">
-          
-          <h1 className="text-7xl font-bold text-red-500 m-4">Oups !</h1>
-          <p className="text-center text-lg text-red-600">
-            Il semblerait que vous essayez d'accéder <br /> à un quizz privé.
-          </p>
-        </div>
-      </>
-    );
+    return <ResourceForbidden type="quizz "/>;
   }
+  
 
   return (
       <>

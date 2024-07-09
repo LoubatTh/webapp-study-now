@@ -16,14 +16,15 @@ class DeckResource extends JsonResource
     {
         return [
             "id" => $this->id,
+            "type" => $this->type,
             "name" => $this->name,
             "is_public" => $this->is_public,
             "is_organization" => $this->is_organization,
             "likes" => $this->likes,
-            "type" => $this->type,
             "tag" => $this->whenLoaded('tag', function () {
                 return $this->tag->name;
             }),
+            "owner" => $this->user->name,
             "flashcards" => FlashcardResource::collection($this->whenLoaded("flashcards"))
         ];
     }

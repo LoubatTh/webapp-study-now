@@ -36,7 +36,7 @@ const PremiumPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ type: "spring", duration: 0.5, delay: 0.2 }}
           >
-            <Card className="transition-all border-gray-600 h-min hover:-translate-y-2">
+            <Card className="shadow-2xl transition-all border-3 border-white h-min hover:-translate-y-2">
               <CardHeader>
                 <CardTitle className="flex gap-1 text-base">
                   <BookMarked size={24} /> Basic
@@ -86,7 +86,7 @@ const PremiumPage = () => {
           >
             <Card
               className={cn(
-                "transition-all hover:-translate-y-2 border-" + premiumColorClass
+                "shadow-2xl transition-all hover:-translate-y-2 border-2 border-white hover:border-blue-400"
               )}
             >
               <CardHeader>

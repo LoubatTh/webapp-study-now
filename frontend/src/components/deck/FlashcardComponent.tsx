@@ -29,7 +29,10 @@ const FlashcardComponent = ({
   };
 
   return (
-    <div className="flex flex-col justify-center items-center gap-8">
+    <div
+      data-testid={`flashcard-${index}`}
+      className="flex flex-col justify-center items-center gap-8"
+    >
       <div className="relative w-96 h-48 perspective" onClick={handleFlip}>
         <motion.div
           className={`absolute inset-0 flex justify-center items-center border shadow-ms ${
@@ -41,10 +44,17 @@ const FlashcardComponent = ({
           style={{ transformStyle: "preserve-3d" }}
         >
           <div className="absolute inset-0 flex justify-center items-center backface-hidden">
-            <h2 className="text-xl font-bold">{question}</h2>
+            <h2
+              data-testid={`flashcard-question-${index}`}
+              className="text-xl font-bold"
+            >
+              {question}
+            </h2>
           </div>
           <div className="absolute inset-0 flex justify-center items-center backface-hidden rotate-y-180">
-            <p className="text-lg">{answer}</p>
+            <p data-testid={`flashcard-answer-${index}`} className="text-lg">
+              {answer}
+            </p>
           </div>
         </motion.div>
       </div>

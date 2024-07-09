@@ -5,7 +5,10 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DeckResource extends JsonResource
+use App\Http\Resources\TagResource;
+use App\Http\Resources\QcmResource;
+
+class QuizResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -21,13 +24,9 @@ class DeckResource extends JsonResource
             "is_public" => $this->is_public,
             "is_organization" => $this->is_organization,
             "likes" => $this->likes,
-            "tag" => $this->whenLoaded('tag', function () {
-                return $this->tag->name;
-            }),
-            "owner" => $this->whenLoaded('user', function () {
-                return $this->user->name;
-            }),
-            "flashcards" => FlashcardResource::collection($this->whenLoaded("flashcards"))
+            "tag" => $this->tag->name,
+            "owner" => $this->user->name,
+            "qcms" => QcmResource::collection($this->qcms),
         ];
     }
 }

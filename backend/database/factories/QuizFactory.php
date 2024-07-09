@@ -34,7 +34,7 @@ class QuizFactory extends Factory
             "type" => "Quiz",
             "likes" => $likes,
             "tag_id" => $tag_id,
-            "owner" => User::factory(),
+            "user_id" => User::factory(),
         ];
     }
 

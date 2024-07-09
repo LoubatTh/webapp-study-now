@@ -62,7 +62,7 @@ describe("DeckComponent Component", () => {
     expect(secondFlashcardAnswer).toBeInTheDocument();
     expect(thirdFlashcardAnswer).toBeInTheDocument();
 
-    expect(firstFlashcardQuestion).toHaveTextContent("What color is it?");
+    expect(firstFlashcardQuestion).toHaveTextContent("What color is it ?");
     expect(secondFlashcardQuestion).toHaveTextContent("What number is it ?");
     expect(thirdFlashcardQuestion).toHaveTextContent("Capital of France");
 
@@ -91,9 +91,9 @@ describe("DeckComponent Component", () => {
     expect(secondFlashcardQuestion).toBeVisible();
     expect(thirdFlashcardQuestion).toBeVisible();
 
-    expect(firstFlashcardAnswer).not.toBeInvalid();
-    expect(secondFlashcardAnswer).not.toBeVisible();
-    expect(thirdFlashcardAnswer).not.toBeVisible();
+    expect(firstFlashcardAnswer).toHaveStyle("rotate-y-180");
+    expect(secondFlashcardAnswer).toHaveStyle({ transform: "rotateY(180deg)" });
+    expect(thirdFlashcardAnswer).toHaveStyle({ transform: "rotateY(180deg)" });
 
     fireEvent.click(firstFlashcard);
     fireEvent.click(secondFlashcard);

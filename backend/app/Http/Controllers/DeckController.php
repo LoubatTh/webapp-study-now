@@ -22,7 +22,7 @@ class DeckController extends Controller
         try {
             $numberPerPage = 10;
             $myDecks = $request->has("myDecks");
-            $decks = Deck::with("tag", "flashcards");
+            $decks = Deck::with("tag", "user", "flashcards");
 
             if ($myDecks) {
                 $user = Auth::guard('sanctum')->user();
@@ -47,7 +47,7 @@ class DeckController extends Controller
     public function getDeckById(int $id, Request $request)
     {
         try {
-            $deck = Deck::with("tag", "flashcards")->find($id);
+            $deck = Deck::with("tag", "user", "flashcards")->find($id);
             if (!$deck) {
                 return response()->json(["message" => "Deck not found"], 404);
             }

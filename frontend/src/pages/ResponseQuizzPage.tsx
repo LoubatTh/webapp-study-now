@@ -5,6 +5,8 @@ import { answerSchema } from "@/lib/form/answer.form";
 import { fetchApi } from "@/utils/api";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import Image from "@/components/image";
+import error404 from "@/assets/errors/error_404.png";
 
 const ResponseQuizzPage = () => {
   // Permet de s'assurer que aucune action nécessitant l'authentification ne soit effectuée avant que le système soit initialisé
@@ -25,6 +27,10 @@ const ResponseQuizzPage = () => {
   const [answeredCorrectly, setAnsweredCorrectly] = useState<{
     [key: number]: boolean;
   }>({});
+  // Permet de savoir si ce quizz est privé
+  const [isForbidden, setIsForbidden] = useState<boolean>(false);
+  // Permet de savoir si ce quizz existe ou pas
+  const [isNotFound, setIsNotFound] = useState<boolean>(false);
   // Permet de stocker l'état de la soumission du formulaire
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
@@ -37,8 +43,20 @@ const ResponseQuizzPage = () => {
     if (!isReady || !quizzId) return;
 
     const fetchQuiz = async () => {
-      const response = await fetchApi("GET", `/quizzes/${quizzId}`, null, accessToken);
-      const data = await response.data;
+      const response = await fetchApi(
+        "GET",
+        `/quizzes/${quizzId}`,
+        null,
+        accessToken
+      );
+      // console.log("dzqdqzdqzdzq", await response)
+      const data = await response.data; 
+      if (data === undefined && response.message === "Forbidden") {
+        setIsForbidden(true);
+      } else if(response.message === "Quizz not found"){
+        setIsNotFound(true);
+      }
+
       setQuizz(data);
     };
 
@@ -134,50 +152,83 @@ const ResponseQuizzPage = () => {
     console.log(correctAnswers);
   };
 
-  return (
-    <>
-      <div className="flex flex-col items-center gap-4">
-        {quizz ? (
+  if(isNotFound){
+    return (
+      <>
+        <div className="flex-grow flex flex-col items-center justify-center">
           <div>
-            <h1 className="my-4 text-center text-lg	font-bold">{quizz.name}</h1>
-
-            {quizz.qcms.map((qcm) => (
-              <div
-                key={qcm.id}
-                className="border-gray-300 border-b-2 m-3 mb-5 p-3 pb-10"
-              >
-                <QuestionQCM
-                  question={qcm}
-                  onAnswerSelect={(answers) =>
-                    handleAnswerSelect(qcm.id, answers)
-                  }
-                  answeredCorrectly={answeredCorrectly[qcm.id]}
-                  isSubmitting={isSubmitting}
-                />
-                {errors[qcm.id] && (
-                  <p className="text-red-500">{errors[qcm.id]}</p>
-                )}
-              </div>
-            ))}
-            <div className="flex items-center gap-2 m-3">
-              <Button
-                className="w-1/2"
-                onClick={handleSubmit}
-                variant="default"
-              >
-                Valider
-              </Button>
-              <p className="">
-                Vous avez eu {correctPercentage}% de bonnes réponses
-              </p>
-            </div>
+            <h1 className="text-7xl font-bold text-red-500 m-4">Oups !</h1>
+            {/* <img src={error404} alt="error 404" className="w-1/3 " /> */}
           </div>
-        ) : (
-          <p>Chargement...</p>
-        )}
-      </div>
-    </>
-  );
+          <p className="text-center text-lg text-red-600">
+            Il semblerait que le quizz que vous essayez de rejoindre n'existe
+            pas.
+          </p>
+        </div>
+      </>
+    );
+  }
+
+  if(isForbidden){
+    return (
+      <>
+        <div className="flex-grow flex flex-col items-center justify-center">
+          
+          <h1 className="text-7xl font-bold text-red-500 m-4">Oups !</h1>
+          <p className="text-center text-lg text-red-600">
+            Il semblerait que vous essayez d'accéder <br /> à un quizz privé.
+          </p>
+        </div>
+      </>
+    );
+  }
+
+  return (
+      <>
+        <div className="flex flex-col items-center gap-4">
+          {quizz ? (
+            <div>
+              <h1 className="my-4 text-center text-lg	font-bold">
+                {quizz.name}
+              </h1>
+
+              {quizz.qcms.map((qcm) => (
+                <div
+                  key={qcm.id}
+                  className="border-gray-300 border-b-2 m-3 mb-5 p-3 pb-10"
+                >
+                  <QuestionQCM
+                    question={qcm}
+                    onAnswerSelect={(answers) =>
+                      handleAnswerSelect(qcm.id, answers)
+                    }
+                    answeredCorrectly={answeredCorrectly[qcm.id]}
+                    isSubmitting={isSubmitting}
+                  />
+                  {errors[qcm.id] && (
+                    <p className="text-red-500">{errors[qcm.id]}</p>
+                  )}
+                </div>
+              ))}
+              <div className="flex items-center gap-2 m-3">
+                <Button
+                  className="w-1/2"
+                  onClick={handleSubmit}
+                  variant="default"
+                >
+                  Valider
+                </Button>
+                <p className="">
+                  Vous avez eu {correctPercentage}% de bonnes réponses
+                </p>
+              </div>
+            </div>
+          ) : (
+            <p>Chargement...</p>
+          )}
+        </div>
+      </>
+    );
 };
 
 export default ResponseQuizzPage;

@@ -40,6 +40,7 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
   };
 
   return (
+<<<<<<< HEAD
     <div onClick={handleClick} className="cursor-pointer">
       <Card
         className={cn(
@@ -48,14 +49,37 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
       >
         <CardHeader>
           <div className="flex justify-between">
+=======
+<<<<<<< HEAD
+      <div onClick={handleClick} className="cursor-pointer">
+        <Card className={cn("transition duration-200 shadow-lg transform hover:shadow-2xl hover:scale-105")}>
+          <CardHeader>
+>>>>>>> 4b43e5f (feat: complete the homepage, start creating the searchbar and finish the boardpage)
             <CardTitle>{name}</CardTitle>
             <div className="flex gap-2">
               <EditButton id={id} type={type} />
               <DeleteButton id={id} type={type} onDeleteCard={onDeleteCard} />
             </div>
+<<<<<<< HEAD
           </div>
           <CardDescription>
             {type === "Quiz" ? "Quizz" : "Deck"}
+=======
+            <div className="flex items-center">
+              <p className="mr-1">{likes}</p>
+              <Heart className="text-red-500" />
+            </div>
+          </CardFooter>
+        </Card>
+      </div>
+=======
+    <div onClick={handleClick} className="cursor-pointer">
+      <Card className="transition-transform duration-200 transform hover:shadow-lg hover:scale-105">
+        <CardHeader>
+          <CardTitle>{name}</CardTitle>
+          <CardDescription>
+            {type}
+>>>>>>> 4b43e5f (feat: complete the homepage, start creating the searchbar and finish the boardpage)
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -76,10 +100,21 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
             </Avatar>
             <p className="ml-2">lulu</p>
           </div>
+<<<<<<< HEAD
           <LikeButton id={id} type={type} likes={likes} isLiked={false} />
         </CardFooter>
       </Card>
     </div>
+=======
+          <div className="flex items-center">
+            <p className="mr-1">{likes}</p>
+            <Heart className="text-red-500" />
+          </div>
+        </CardFooter>
+      </Card>
+    </div>
+>>>>>>> d107868 (feat: complete the homepage, start creating the searchbar and finish the boardpage)
+>>>>>>> 4b43e5f (feat: complete the homepage, start creating the searchbar and finish the boardpage)
   );
 };
 

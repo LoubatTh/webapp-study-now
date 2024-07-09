@@ -4,6 +4,7 @@ import QuizzDeckCard from "@/components/quizzDeckCard";
 import { useAuth } from "@/contexts/AuthContext";
 import { fetchApi } from "@/utils/api";
 import { Deck } from "@/types/deck.type";
+import { Quizz } from "@/types/deck.type";
 import { motion } from "framer-motion";
 import { QuizzType } from "@/types/QuizzContext.type";
 import FilterBar from "@/components/FilterBar";

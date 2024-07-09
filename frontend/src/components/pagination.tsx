@@ -45,7 +45,7 @@ const Pagin = ({ currentPage, totalPages, onPageChange }) => {
   };
 
   return (
-    <Pagination>
+    <Pagination className="py-7">
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious

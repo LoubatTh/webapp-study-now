@@ -26,10 +26,29 @@ class QcmFactory extends Factory
         $answer3 = $this->faker->word();
         $answer4 = $this->faker->word();
 
+        $answers = [
+            [
+                "answer" => $answer1,
+                "isValid" => true
+            ],
+            [
+                "answer" => $answer2,
+                "isValid" => false
+            ],
+            [
+                "answer" => $answer3,
+                "isValid" => false
+            ],
+            [
+                "answer" => $answer4,
+                "isValid" => false
+            ]
+        ];
+
         return [
             "quiz_id" => Quiz::factory(),
             "question" => $question,
-            "answers" => [$answer1, $answer2, $answer3, $answer4],
+            "answers" => $answers,
         ];
     }
 }

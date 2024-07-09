@@ -5,7 +5,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu-special"
+} from "@/components/ui/navigation-menu-special";
 
 import {
   AlignJustify,
@@ -17,8 +17,7 @@ import {
   LogOut,
   User,
   Home,
-
-} from "lucide-react"
+} from "lucide-react";
 
 import {
   DropdownMenu,
@@ -28,37 +27,34 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
-import { Button } from "@/components/ui/button"
-import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu"
-import * as React from "react"
-import { cn } from "@/lib/utils"
-import Image from "./image"
-import logo from "../assets/images/Logo-T-YEP.png"
-import { useNavigate } from "react-router-dom"
-import { useAuth } from "@/contexts/AuthContext"
+import { Button } from "@/components/ui/button";
+import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
+import * as React from "react";
+import { cn } from "@/lib/utils";
+import Image from "./image";
+import logo from "../assets/images/Logo-T-YEP.png";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Navbar = () => {
-
-  const { accessToken, logout } = useAuth()
+  const { accessToken, logout } = useAuth();
 
   // handle click for navigation btn
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const handleNavigate = (path: string) => {
     navigate(path);
   };
 
-
-
   return (
-    <div className="flex justify-between p-5 items-center shadow-lg">
+    <div className="flex justify-between p-2 items-center">
       <div
         onClick={() => handleNavigate("/")}
         className="flex items-center cursor-pointer"
       >
         <div>
-          <Image src={logo} alt="logo du site" width="w-16" height="h-16" />
+          <Image src={logo} alt="logo du site" width="w-8" height="h-8" />
         </div>
         <div>
           <h3 className="font-bold text-xl">StudyNow</h3>
@@ -176,38 +172,51 @@ const Navbar = () => {
             <DropdownMenuGroup>
               <DropdownMenuItem onClick={() => handleNavigate("/profile")}>
                 <User className="mr-2 h-4 w-4" />
-                <a href="">Profile</a>
+                <p>Profile</p>
               </DropdownMenuItem>
+
               <DropdownMenuItem
                 onClick={() => handleNavigate("/profil/statistics")}
               >
                 <BarChart3 className="mr-2 h-4 w-4" />
-                <a href="">Statistics</a>
+                <p>Statistics</p>
               </DropdownMenuItem>
+
               <DropdownMenuItem
                 onClick={() => handleNavigate("/profil/premium")}
               >
                 <CreditCard className="mr-2 h-4 w-4" />
-                <a href="">Premium</a>
+                <p>Premium</p>
               </DropdownMenuItem>
             </DropdownMenuGroup>
+
             <DropdownMenuSeparator />
+
             <DropdownMenuGroup>
               <DropdownMenuItem onClick={() => handleNavigate("/board")}>
                 <ClipboardList className="mr-2 h-4 w-4" />
-                <a href="">My Boards</a>
+                <p>My Boards</p>
               </DropdownMenuItem>
+
               <DropdownMenuItem
                 onClick={() => handleNavigate("/organizations")}
               >
                 <LayoutDashboard className="mr-2 h-4 w-4" />
-                <a href="">My Organizations</a>
+                <p>My Organizations</p>
               </DropdownMenuItem>
             </DropdownMenuGroup>
+
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="bg-red-100 text-red-400">
+
+            <DropdownMenuItem
+              className="bg-red-100 text-red-400"
+              onClick={() => {
+                handleNavigate("/");
+                logout();
+              }}
+            >
               <LogOut className="mr-2 h-4 w-4" />
-              <a href="">Logout</a>
+              <p>Logout</p>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -238,8 +247,8 @@ const ListItem = React.forwardRef<
         </a>
       </NavigationMenuLink>
     </li>
-  )
-})
-ListItem.displayName = "ListItem"
+  );
+});
+ListItem.displayName = "ListItem";
 
 export default Navbar;

@@ -7,7 +7,7 @@ help:
 
 init: ## Init application
 	docker exec -it backend php artisan key:generate;
-	make migrate;
+	make seed;
 	make webhook;
 
 migrate: ## Run migration
@@ -24,3 +24,6 @@ test: ## Run tests
 
 webhook: ## Create Stripe webhook
 	docker exec -it backend php artisan cashier:webhook --url="http://backend/stripe/webhook";
+
+seed: ## Seed db
+	docker exec -it backend php artisan migrate:fresh --seed;

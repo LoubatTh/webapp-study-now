@@ -7,9 +7,11 @@ export type Flashcard = {
 export type Deck = {
   id: number;
   name: string;
+  type: string;
+  tag: string;
   is_public: boolean;
   is_organization?: boolean;
-  likes?: number;
+  likes: number;
   flashcards: Flashcard[];
 };
 

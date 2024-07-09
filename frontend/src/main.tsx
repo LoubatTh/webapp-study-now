@@ -14,6 +14,8 @@ import ProfilePage from "./pages/ProfilePage";
 import DeckPlayPage from "./pages/DeckPlayPage";
 import ResponseQuizzPage from "./pages/ResponseQuizzPage";
 import LayoutNavbarPage from "./pages/LayoutNavbarPage";
+import OrganizationsPage from "./pages/OrganizationsPage";
+import Error404 from "./pages/errors/Error404";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
@@ -29,9 +31,11 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <Route path="/create-deck" element={<CreateDeckPage />} />
             <Route path="/deck/:deckId" element={<DeckPlayPage />} />
             <Route path="/quizz/:quizzId" element={<ResponseQuizzPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/organizations" element={<OrganizationsPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="*" element={<Error404 />} />
           </Route>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
         </Routes>
       </UserProvider>
     </AuthProvider>

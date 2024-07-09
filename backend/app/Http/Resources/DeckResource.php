@@ -24,7 +24,9 @@ class DeckResource extends JsonResource
             "tag" => $this->whenLoaded('tag', function () {
                 return $this->tag->name;
             }),
-            "owner" => $this->user->name,
+            "owner" => $this->whenLoaded('user', function () {
+                return $this->user->name;
+            }),
             "flashcards" => FlashcardResource::collection($this->whenLoaded("flashcards"))
         ];
     }

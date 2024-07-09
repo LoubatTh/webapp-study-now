@@ -5,6 +5,7 @@ import Pagin from "@/components/pagination";
 import { fetchApi } from "@/utils/api";
 import { Deck } from "@/types/deck.type";
 import { Quizz } from "@/types/quizz.type";
+import { Quizz } from "@/types/quizz.type";
 
 const getDecks = async () => {
   const response = await fetchApi("GET", `decks`);
@@ -17,6 +18,7 @@ const getQuizzes = async () => {
 };
 const Homepage = () => {
   const [decks, setDecks] = useState<Deck[]>([]);
+  const [quizzes, setQuizzes] = useState<Quizz[]>([]);
   const [quizzes, setQuizzes] = useState<Quizz[]>([]);
   const [loading, isLoading] = useState(true);
   const [activeButton, setActiveButton] = useState("All");
@@ -36,10 +38,10 @@ const Homepage = () => {
     setCurrentPage(1);
   };
 
-  // // combine quizz and deck data
+  // combine quizz and deck data
   const combinedData = [...decks, ...quizzes];
 
-  // // Function to filter combined data
+  // Function to filter combined data
   const filteredData = combinedData.filter((item) => {
     if (isFavActive && item.likes === 0) {
       return false;
@@ -48,14 +50,14 @@ const Homepage = () => {
     return activeButton === "All" || activeButton === item.type;
   });
 
-  // // method to set the number of page for pagination
+  // method to set the number of page for pagination
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const displayedItems = filteredData.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
-  // // handle click for pagination button
+  // handle click for pagination button
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -73,7 +75,7 @@ const Homepage = () => {
   const getDataQuizzes = async () => {
     const response = await getQuizzes();
     if (response.status === 200) {
-      const quizzes = response.data.quizzes ;
+      const quizzes: Quizz[] = response.data.quizzes as Quizz[];
       setQuizzes(quizzes);
     } else {
       console.log(response.message);

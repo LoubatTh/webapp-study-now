@@ -144,7 +144,12 @@ class QuizController extends Controller
 
         if ($request->has("myQuizzes")) {
 
-            $user = $request->user();
+            $user = Auth::guard('sanctum')->user();
+            
+            if (!$user) {
+                return response()->json(["message" => "Unauthorized"], 401);
+            }
+
             $quizzes = Quiz::where("user_id", $user->id)->get();
 
             if ($quizzes->isEmpty()) {

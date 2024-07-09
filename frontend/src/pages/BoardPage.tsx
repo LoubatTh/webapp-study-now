@@ -9,12 +9,17 @@ import { fetchApi } from "@/utils/api";
 import { Deck } from "@/types/deck.type";
 
 const getDecksUser = async (accessToken: string) => {
-  const response = await fetchApi("GET", `decks`, null, accessToken);
+  const response = await fetchApi("GET", `decks?myDecks`, null, accessToken);
   return response;
 };
 
 const getquizzesUser = async (accessToken: string) => {
-  const response = await fetchApi("GET", `quizzes`, null, accessToken);
+  const response = await fetchApi(
+    "GET",
+    `quizzes?myQuizzes`,
+    null,
+    accessToken
+  );
   return response;
 };
 const BoardPage = () => {

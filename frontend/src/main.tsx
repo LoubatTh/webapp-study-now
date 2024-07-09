@@ -28,7 +28,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <Route path="" element={<Homepage />} />
             <Route path="/board" element={<BoardPage />} />
             <Route path="/create-quizz" element={<CreateQuizzPage />} />
+            <Route path="/edit-quizz/:id" element={<CreateQuizzPage />} />
             <Route path="/create-deck" element={<CreateDeckPage />} />
+            <Route path="/edit-deck/:id" element={<CreateDeckPage />} />
             <Route path="/deck/:deckId" element={<DeckPlayPage />} />
             <Route path="/quizz/:quizzId" element={<ResponseQuizzPage />} />
             <Route path="/profile" element={<ProfilePage />} />

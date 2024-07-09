@@ -18,10 +18,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useUser } from "@/contexts/UserContext";
 
 const postDeck = async (deck: PostDeck, accessToken: string) => {
   const response = await fetchApi("POST", "decks", deck, accessToken);
+  console.log(response);
+  return response;
+};
+
+const editDeck = async (id: string, deck: PostDeck, accessToken: string) => {
+  console.log(id);
+  const response = await fetchApi("PUT", `decks/${id}`, deck, accessToken);
   console.log(response);
   return response;
 };
@@ -31,15 +39,26 @@ const getLabels = async () => {
   return response;
 };
 
+const getDeck = async (id: string, accessToken: string) => {
+  const response = await fetchApi("GET", `decks/${id}`, null, accessToken);
+  return response;
+};
+
 const CreateDeckPage = () => {
   //Get the navigate function from the useNavigate hook
   const navigate = useNavigate();
   //Get the access token from the AuthContext
   const { accessToken } = useAuth();
+  //Get the user from the AuthUser
+  const { name } = useUser();
+  //Check if its a creation page or an edition page
+  const { id } = useParams();
   //Use the useDeckStore store to get the decks
-  const { deck, resetDeck } = useDeckStore();
+  const { deck, saveFlashcard, removeFlashcard, resetDeck } = useDeckStore();
+  //loading state
+  const [loading, setLoading] = useState<boolean>(true);
   //State to manage the name of the deck
-  const [name, setName] = useState<string>("");
+  const [nameDeck, setNameDeck] = useState<string>("");
   //State to manage the lable of the deck
   const [label, setLabel] = useState<string>("");
   //State to manage the visibility of the deck
@@ -59,6 +78,7 @@ const CreateDeckPage = () => {
   //Function to delete a flashcard from the list
   const deleteFlashcard = (id: number): void => {
     setFlashcardList(deckList.filter((flashcard) => flashcard.id !== id));
+    removeFlashcard(id);
   };
 
   //Function to toggle the collapse of a deck
@@ -76,17 +96,17 @@ const CreateDeckPage = () => {
   const labelArray = async () => {
     const response = await getLabels();
     if (response.status === 200) {
-      const data = await response.data.json();
+      const data = await response.data;
       setLabels(data);
     } else {
-      const data = await response.data.json();
+      const data = await response.data;
       toast({ description: data.message });
     }
   };
 
   //Function to create the flashcard with the decks and send it to the backend
-  async function createQuizzHandler(): Promise<void> {
-    if (name.length < 1) {
+  const createDeckHandler = async (): Promise<void> => {
+    if (nameDeck.length < 1) {
       setErrorMessage("The name field is required.");
       return;
     } else if (deck.length < 1) {
@@ -98,31 +118,84 @@ const CreateDeckPage = () => {
     } else {
       setErrorMessage("");
       const createdDeck = {
-        name,
+        name: nameDeck,
         is_public: isPublic,
         tag_id: parseInt(label),
         flashcards: deck,
       };
       console.log(createdDeck);
-      // const response = await postDeck(createdDeck, accessToken);
-      // if (response.status === 201) {
-      //   setName("");
-      //   setFlashcardList([{ id: 0, collapsed: false }]);
-      //   resetDeck;
-      //   toast({
-      //     description: "Deck created successfully",
-      //   });
-      //   navigate("/homepage");
-      // } else {
-      //   const data = await response.data.json();
-      //   toast({ description: data.message });
-      // }
+      try {
+        let response: any;
+        if (id) {
+          response = await editDeck(id, createdDeck, accessToken);
+          if (response.status === 204) {
+            toast({ description: "Deck edited successfully" });
+          } else {
+            throw new Error(response.data.message);
+          }
+        } else {
+          response = await postDeck(createdDeck, accessToken);
+          if (response.status === 201) {
+            toast({ description: "Deck created successfully" });
+          } else {
+            throw new Error(response.data.message);
+          }
+        }
+        setNameDeck("");
+        setFlashcardList([{ id: 0, collapsed: false }]);
+        resetDeck();
+        navigate("/board");
+      } catch (error: any) {
+        toast({ description: error.message });
+      }
     }
-  }
+  };
+
+  const getDeckData = async (id: string, accessToken: string) => {
+    const response = await getDeck(id, accessToken);
+    if (response.status === 401 || response.status === 403) {
+      navigate("/");
+    }
+    if (response.status === 200) {
+      const data = (await response.data) as PostDeck;
+      if (data.owner !== name) {
+        navigate("/");
+      }
+      console.log(name);
+      console.log(data);
+      setNameDeck(data.name);
+      setLabel(() => {
+        const label = labels.find((label) => label.name === data.tag);
+        return label ? label.id : null;
+      });
+      setIsPublic(data.is_public);
+      data.flashcards.forEach((flashcard) => {
+        saveFlashcard(flashcard);
+      });
+      // Save flashcards to the store and set flashcard list with collapsed state
+      const copiedFlashcards = data.flashcards.map((flashcard) => ({
+        ...flashcard,
+        question: flashcard.question,
+        answer: flashcard.answer,
+        collapsed: true,
+      }));
+
+      copiedFlashcards.forEach((flashcard) => {
+        saveFlashcard(flashcard);
+      });
+
+      setFlashcardList(copiedFlashcards);
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
     labelArray();
-  }, []);
+    if (id && accessToken && loading && name) {
+      getDeckData(id, accessToken);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, accessToken, loading, name]);
 
   return (
     <div className="flex flex-col items-center gap-4">
@@ -133,8 +206,8 @@ const CreateDeckPage = () => {
           id="name"
           type="text"
           placeholder="My Deck name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={nameDeck}
+          onChange={(e) => setNameDeck(e.target.value)}
         />
         {errorMessage && (
           <div className="text-sm font-medium text-destructive">
@@ -149,11 +222,11 @@ const CreateDeckPage = () => {
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectItem value="1">Apple</SelectItem>
-              <SelectItem value="2">Banana</SelectItem>
-              <SelectItem value="3">Blueberry</SelectItem>
-              <SelectItem value="4">Grapes</SelectItem>
-              <SelectItem value="5">Pineapple</SelectItem>
+              {labels.map((label) => (
+                <SelectItem key={label.id} value={label.id}>
+                  {label.name}
+                </SelectItem>
+              ))}
             </SelectGroup>
           </SelectContent>
         </Select>
@@ -177,6 +250,7 @@ const CreateDeckPage = () => {
             </div>
             <CreateFlashcard
               id={flashcard.id}
+              flashcard={flashcard}
               index={i + 1}
               flashcardsSize={deckList.length}
               collapsed={flashcard.collapsed}
@@ -189,7 +263,7 @@ const CreateDeckPage = () => {
           Add New Flashcard
         </Button>
         <Separator className="my-2" />
-        <Button onClick={createQuizzHandler} variant="default">
+        <Button onClick={createDeckHandler} variant="default">
           Create Deck
         </Button>
       </div>

@@ -5,7 +5,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu-special";
+} from "@/components/ui/navigation-menu";
 
 import {
   AlignJustify,
@@ -16,7 +16,6 @@ import {
   LogIn,
   LogOut,
   User,
-  Home,
 } from "lucide-react";
 
 import {
@@ -33,14 +32,11 @@ import { Button } from "@/components/ui/button";
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import Image from "./image";
+import ImageLink from "./imageLink";
 import logo from "../assets/images/Logo-T-YEP.png";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
 
 const Navbar = () => {
-  const { accessToken, logout } = useAuth();
-
   // handle click for navigation btn
   const navigate = useNavigate();
   const handleNavigate = (path: string) => {

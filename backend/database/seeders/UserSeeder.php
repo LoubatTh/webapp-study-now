@@ -12,9 +12,6 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = User::factory()->hasDecks(2)->hasQuizzes(2)->create();
-        $user->delete();
-
         User::factory()
             ->count(10)
             ->hasDecks(10) // 100 decks

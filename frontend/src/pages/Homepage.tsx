@@ -16,6 +16,7 @@ const getQuizzes = async () => {
   const response = await fetchApi("GET", `quizzes`);
   return response;
 };
+
 const Homepage = () => {
   const [decks, setDecks] = useState<Deck[]>([]);
   const [quizzes, setQuizzes] = useState<Quizz[]>([]);
@@ -66,6 +67,7 @@ const Homepage = () => {
     const response = await getDecks();
     if (response.status === 200) {
       const decks: Deck[] = response.data.decks as Deck[];
+      console.log("Decks: ", decks);
       setDecks(decks);
     } else {
       console.log(response.message);
@@ -76,6 +78,7 @@ const Homepage = () => {
     const response = await getQuizzes();
     if (response.status === 200) {
       const quizzes: Quizz[] = response.data.quizzes as Quizz[];
+      console.log("Quizzes: ", quizzes);
       setQuizzes(quizzes);
     } else {
       console.log(response.message);

@@ -5,8 +5,6 @@ import { answerSchema } from "@/lib/form/answer.form";
 import { fetchApi } from "@/utils/api";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Image from "@/components/image";
-import error404 from "@/assets/errors/error_404.png";
 
 const ResponseQuizzPage = () => {
   // Permet de s'assurer que aucune action nécessitant l'authentification ne soit effectuée avant que le système soit initialisé
@@ -49,7 +47,6 @@ const ResponseQuizzPage = () => {
         null,
         accessToken
       );
-      // console.log("dzqdqzdqzdzq", await response)
       const data = await response.data; 
       if (data === undefined && response.message === "Forbidden") {
         setIsForbidden(true);

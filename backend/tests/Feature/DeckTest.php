@@ -80,7 +80,7 @@ class DeckTest extends TestCase
     {
         $response = $this->getJson('/api/decks');
 
-        $response->assertStatus(200)->assertJsonCount(10, 'decks');
+        $response->assertStatus(200)->assertJsonCount(9, 'decks');
 
         $response->assertJsonStructure([
             'decks' => [

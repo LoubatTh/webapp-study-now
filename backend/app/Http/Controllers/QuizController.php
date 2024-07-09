@@ -80,7 +80,7 @@ class QuizController extends Controller
             return response()->json(['message' => 'Forbidden'], 403);
         }
 
-        return response()->json($quiz, 200);
+        return response()->json($quiz->load("qcms"), 200);
     }
 
 
@@ -127,17 +127,22 @@ class QuizController extends Controller
         return response()->json($quiz->load("qcms"), 200);
     }
 
-    public function myQuizzes(Request $request): JsonResponse
+    public function index(Request $request): JsonResponse
     {
 
-        $user = $request->user();
-        $quizzes = Quiz::where("owner", $user->id)->get();
+        if ($request->has("myQuizzes")) {
+            $user = $request->user();
+            $quizzes = Quiz::where("owner", $user->id)->get();
 
-        if ($quizzes->isEmpty()) {
-            return response()->json(['message' => "You haven't created any quizz yet"], 200);
+            if ($quizzes->isEmpty()) {
+                return response()->json(['message' => "You haven't created any quiz yet"], 200);
+            }
+
+        } else {
+            $quizzes = Quiz::where("is_public", true)->get();
         }
 
-        return response()->json($quizzes, 200);
+        return response()->json($quizzes->load("qcms"), 200);
     }
 
 }

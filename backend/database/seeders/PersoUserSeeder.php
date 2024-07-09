@@ -17,8 +17,8 @@ class PersoUserSeeder extends Seeder
         $user->delete();
 
         $password = "password";
-        $user = User::factory()->create([
-            'name' => 'Yolann',
+        $user = User::factory()->hasDecks(4)->create([
+            'name' => 'Victor',
             'email' => 'morellet.victor@neuf.fr',
             'password' => $password ??= Hash::make('password'),
         ]);
@@ -27,6 +27,41 @@ class PersoUserSeeder extends Seeder
         $user = User::factory()->create([
             'name' => 'UserTest',
             'email' => 'test@test.fr',
+            'password' => $password ??= Hash::make('password'),
+        ]);
+        $user->save();
+
+        $user = User::factory()->hasDecks(4)->create([
+            'name' => 'Nathan',
+            'email' => 'nathan.dulac@epitech.eu',
+            'password' => $password ??= Hash::make('password'),
+        ]);
+        $user->save();
+
+        $user = User::factory()->hasDecks(4)->create([
+            'name' => 'Steven',
+            'email' => 'steven.dorion@epitech.eu',
+            'password' => $password ??= Hash::make('password'),
+        ]);
+        $user->save();
+
+        $user = User::factory()->hasDecks(4)->create([
+            'name' => 'Matteo',
+            'email' => 'matteo.degano@epitech.eu',
+            'password' => $password ??= Hash::make('password'),
+        ]);
+        $user->save();
+
+        $user = User::factory()->hasDecks(4)->create([
+            'name' => 'Thomas',
+            'email' => 'thomas.loubat@epitech.eu',
+            'password' => $password ??= Hash::make('password'),
+        ]);
+        $user->save();
+
+        $user = User::factory()->hasDecks(4)->create([
+            'name' => 'Scott',
+            'email' => 'john.fitzgerald@epitech.eu',
             'password' => $password ??= Hash::make('password'),
         ]);
         $user->save();

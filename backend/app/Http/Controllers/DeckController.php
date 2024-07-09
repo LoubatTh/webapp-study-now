@@ -20,7 +20,7 @@ class DeckController extends Controller
     public function getDecksByPage(Request $request)
     {
         try {
-            $numberPerPage = 10;
+            $numberPerPage = 9;
             $myDecks = $request->has("myDecks");
             $decks = Deck::with("tag", "user", "flashcards");
 

@@ -48,13 +48,13 @@ const Navbar = () => {
   };
 
   return (
-    <div className="flex justify-between p-5 items-center shadow-lg">
+    <div className="flex justify-between p-2 items-center shadow-lg">
       <div
         onClick={() => handleNavigate("/")}
         className="flex items-center cursor-pointer"
       >
         <div>
-          <Image src={logo} alt="logo du site" width="w-16" height="h-16" />
+          <Image src={logo} alt="logo du site" width="w-8" height="h-8" />
         </div>
         <div>
           <h3 className="font-bold text-xl">StudyNow</h3>

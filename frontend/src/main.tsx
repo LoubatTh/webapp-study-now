@@ -32,8 +32,8 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <Route path="/quizz/:quizzId" element={<ResponseQuizzPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/organizations" element={<OrganizationsPage />} />
+            <Route path="/login" element={<LoginPage />} />
           </Route>
-          <Route path="/login" element={<LoginPage />} />
         </Routes>
       </UserProvider>
     </AuthProvider>

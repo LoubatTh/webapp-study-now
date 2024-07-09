@@ -48,7 +48,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="flex justify-between p-2 items-center shadow-lg">
+    <div className="flex justify-between p-2 items-center">
       <div
         onClick={() => handleNavigate("/")}
         className="flex items-center cursor-pointer"

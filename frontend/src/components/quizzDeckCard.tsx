@@ -10,23 +10,8 @@ import React from "react";
 import { Heart } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useNavigate } from "react-router-dom";
-
-// colors for tags
-// const colorPalette: { [key: string]: string } = {
-//   history: "bg-orange-100 text-orange-800",
-//   geography: "bg-green-100 text-green-800",
-//   science: "bg-yellow-100 text-yellow-800",
-//   maths: "bg-red-100 text-red-800",
-//   french: "bg-blue-100 text-blue-800",
-//   english: "bg-violet-100 text-violet-800",
-//   technology: "bg-rose-100 text-rose-800",
-//   art: "bg-indigo-100 text-indigo-800",
-// };
-
-// method to define tag color
-// const getColorClass = (tagName: string) => {
-//   return colorPalette[tagName] || "bg-gray-100 text-gray-800";
-// };
+import { getColorClass } from "@/utils/tagscolor";
+import { cn } from "@/lib/utils";
 
 // set type for quizz and deck
 // type CardDataType = QuizzType | DeckType;
@@ -66,7 +51,14 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <span>{tag}</span>
+          <span
+            className={cn(
+              "p-1 ps-2 pe-2 rounded-lg font-medium text-sm",
+              getColorClass(tag.toLowerCase())
+            )}
+          >
+            {tag}
+          </span>
         </CardContent>
         <CardFooter className="justify-between">
           <div className="flex items-center">

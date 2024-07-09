@@ -21,7 +21,7 @@ class DeckFactory extends Factory
      */
     public function definition(): array
     {
-        $name = $this->faker->name();
+        $name = $this->faker->word();
         $is_public = $this->faker->boolean();
         $is_organization = $this->faker->boolean();
         $likes = $this->faker->numberBetween(0, 1000);

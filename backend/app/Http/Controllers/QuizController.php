@@ -39,7 +39,7 @@ class QuizController extends Controller
         ]);
 
         foreach ($data['qcms'] as $qcmData) {
-            $qcm = $quiz->qcms()->create([
+            $quiz->qcms()->create([
                 'question' => $qcmData['question'],
                 'answers' => $qcmData['answers']
             ]);
@@ -57,7 +57,7 @@ class QuizController extends Controller
         $quiz = Quiz::where("id", $id)->where("owner", $user->id)->first();
 
         if (!$quiz) {
-            return response()->json(['error' => 'Resource not found'], 404);
+            return response()->json(['message' => 'Quizz not found'], 404);
         }
 
         Quiz::destroy($id);
@@ -72,12 +72,12 @@ class QuizController extends Controller
         $quiz = Quiz::with('qcms')->find($id);
 
         if (!$quiz) {
-            return response()->json(['error' => 'Resource not found'], 404);
+            return response()->json(['message' => 'Quizz not found'], 404);
 
         }
 
         if ($quiz->is_public == false && $user->id != $quiz->owner) {
-            return response()->json(['error' => 'Forbidden'], 403);
+            return response()->json(['message' => 'Forbidden'], 403);
         }
 
         return response()->json($quiz->load("qcms"), 200);
@@ -105,7 +105,7 @@ class QuizController extends Controller
 
 
         if (!$quiz) {
-            return response()->json(['error' => 'Resource not found'], 404);
+            return response()->json(['message' => 'Quizz not found'], 404);
         }
 
         $quiz->name = $data["name"];
@@ -118,7 +118,7 @@ class QuizController extends Controller
         $quiz->qcms()->delete();
 
         foreach ($data["qcms"] as $qcmData) {
-            $qcm = $quiz->qcms()->create([
+            $quiz->qcms()->create([
                 'question' => $qcmData['question'],
                 'answers' => $qcmData['answers']
             ]);
@@ -131,14 +131,13 @@ class QuizController extends Controller
     {
 
         if ($request->has("myQuizzes")) {
-
             $user = $request->user();
             $quizzes = Quiz::where("owner", $user->id)->get();
 
             if ($quizzes->isEmpty()) {
                 return response()->json(['message' => "You haven't created any quiz yet"], 200);
             }
-        
+
         } else {
             $quizzes = Quiz::where("is_public", true)->get();
         }

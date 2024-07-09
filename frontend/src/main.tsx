@@ -16,6 +16,7 @@ import ResponseQuizzPage from "./pages/ResponseQuizzPage";
 import LayoutNavbarPage from "./pages/LayoutNavbarPage";
 import OrganizationsPage from "./pages/OrganizationsPage";
 import Error404 from "./pages/errors/Error404";
+import PremiumPage from "./pages/PremiumPage";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
@@ -34,6 +35,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/organizations" element={<OrganizationsPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/premium" element={<PremiumPage />} />
             <Route path="*" element={<Error404 />} />
           </Route>
         </Routes>

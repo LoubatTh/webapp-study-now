@@ -80,8 +80,15 @@ class QuizController extends Controller
         }
 
 
-        if ($quiz->is_public == false && $user->id != $quiz->user_id) {
-            return response()->json(['error' => 'Forbidden'], 403);
+        if ($quiz->is_public == false) {
+
+            if (!$user) {
+                return response()->json(["message" => "Unauthorized"], 401);
+            }
+
+            if ($user->id != $quiz->user_id) {
+                return response()->json(['message' => 'Forbidden'], 403);
+            }
 
         }
 

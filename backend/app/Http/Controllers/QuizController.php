@@ -9,6 +9,7 @@ use App\Models\Quiz;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\QuizResource;
+use App\Http\Resources\QuizCollection;
 
 class QuizController extends Controller
 {
@@ -145,7 +146,7 @@ class QuizController extends Controller
             $quizzes = Quiz::where("is_public", true)->get();
         }
 
-        return response()->json($quizzes->load("qcms"), 200);
+        return response()->json(new QuizCollection($quizzes), 200);
     }
 
 }

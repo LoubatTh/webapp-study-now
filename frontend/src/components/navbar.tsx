@@ -5,7 +5,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
+} from "@/components/ui/navigation-menu-special";
 
 import {
   AlignJustify,
@@ -16,6 +16,7 @@ import {
   LogIn,
   LogOut,
   User,
+  Home,
 } from "lucide-react";
 
 import {
@@ -32,11 +33,14 @@ import { Button } from "@/components/ui/button";
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import ImageLink from "./imageLink";
+import Image from "./image";
 import logo from "../assets/images/Logo-T-YEP.png";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Navbar = () => {
+  const { accessToken, logout } = useAuth();
+
   // handle click for navigation btn
   const navigate = useNavigate();
   const handleNavigate = (path: string) => {
@@ -168,38 +172,51 @@ const Navbar = () => {
             <DropdownMenuGroup>
               <DropdownMenuItem onClick={() => handleNavigate("/profile")}>
                 <User className="mr-2 h-4 w-4" />
-                <a href="">Profile</a>
+                <p>Profile</p>
               </DropdownMenuItem>
+
               <DropdownMenuItem
                 onClick={() => handleNavigate("/profil/statistics")}
               >
                 <BarChart3 className="mr-2 h-4 w-4" />
-                <a href="">Statistics</a>
+                <p>Statistics</p>
               </DropdownMenuItem>
+
               <DropdownMenuItem
                 onClick={() => handleNavigate("/profil/premium")}
               >
                 <CreditCard className="mr-2 h-4 w-4" />
-                <a href="">Premium</a>
+                <p>Premium</p>
               </DropdownMenuItem>
             </DropdownMenuGroup>
+
             <DropdownMenuSeparator />
+
             <DropdownMenuGroup>
               <DropdownMenuItem onClick={() => handleNavigate("/board")}>
                 <ClipboardList className="mr-2 h-4 w-4" />
-                <a href="">My Boards</a>
+                <p>My Boards</p>
               </DropdownMenuItem>
+
               <DropdownMenuItem
                 onClick={() => handleNavigate("/organizations")}
               >
                 <LayoutDashboard className="mr-2 h-4 w-4" />
-                <a href="">My Organizations</a>
+                <p>My Organizations</p>
               </DropdownMenuItem>
             </DropdownMenuGroup>
+
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="bg-red-100 text-red-400">
+
+            <DropdownMenuItem
+              className="bg-red-100 text-red-400"
+              onClick={() => {
+                handleNavigate("/");
+                logout();
+              }}
+            >
               <LogOut className="mr-2 h-4 w-4" />
-              <a href="">Logout</a>
+              <p>Logout</p>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

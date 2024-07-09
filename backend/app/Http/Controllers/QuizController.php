@@ -130,7 +130,7 @@ class QuizController extends Controller
     public function index(Request $request): JsonResponse
     {
 
-        if ($request->has("myDecks")) {
+        if ($request->has("myQuizzes")) {
 
             $user = $request->user();
             $quizzes = Quiz::where("owner", $user->id)->get();

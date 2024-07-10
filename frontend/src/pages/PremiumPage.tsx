@@ -20,7 +20,6 @@ const advantages = [
 
 ]
 
-const premiumColorClass = "blue-500";
 
 const PremiumPage = () => {
   return (
@@ -92,7 +91,7 @@ const PremiumPage = () => {
               <CardHeader>
                 <CardTitle
                   className={cn(
-                    "flex gap-1 text-base text-" + premiumColorClass
+                    "flex gap-1 text-base text-blue-500"
                   )}
                 >
                   <StarsIcon size={24} /> Premium
@@ -115,7 +114,7 @@ const PremiumPage = () => {
                       className={clsx("flex items-center gap-2 pb-2")}
                     >
                       <CheckCircle
-                        className={cn("text-" + premiumColorClass)}
+                        className={cn("text-blue-500")}
                         size={16}
                       />
                       <span>{advantage.name}</span>

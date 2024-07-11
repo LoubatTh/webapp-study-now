@@ -12,26 +12,20 @@ POSTGRES_DB=app
 
    Copy the .env.example file and rename it .env
 
-3. Install composer packages :
+3. Run containers
+
+```bash
+docker compose up --build
+```
+
+4. Init backend :
+
+> Initialiazing the backend will generate keys, migrate and seed the db and create the webhook to handle Stripe events.
 
    Go to backend folder
 
 ```bash
-composer install
-```
-
-4. Generate the Laravel key :
-
-   Go to backend folder
-
-```bash
-php artisan key:generate
-```
-
-5. Migrate the structure tables :
-
-```bash
-docker compose exec backend php artisan migrate
+make init
 ```
 
 You can see Laravel launched at http://localhost:8000 and adminer at http://localhost:8080

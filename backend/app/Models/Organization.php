@@ -15,7 +15,6 @@ class Organization extends Model
         'owner_id',
     ];
 
-
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'users_organizations', 'organization_id', 'user_id');

@@ -1,22 +1,17 @@
-import React from 'react'
-import { useUser } from '../contexts/UserContext'
-
-
+import { useUser } from "../contexts/UserContext";
 
 const ProfilePage = () => {
-
-
-  const { name, email, isSubscribed } = useUser();
+  const { id, name, email, isSubscribed } = useUser();
 
   return (
     <>
       <div>ProfilePage</div>
+      <p>id: {id}</p>
       <p>name: {name}</p>
       <p>email: {email}</p>
-      <p>isSubscribed: {isSubscribed ? 'true' : 'false'}</p>
-      
+      <p>isSubscribed: {isSubscribed ? "true" : "false"}</p>
     </>
-  )
-}
+  );
+};
 
-export default ProfilePage
+export default ProfilePage;

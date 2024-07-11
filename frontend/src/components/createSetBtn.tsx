@@ -20,8 +20,8 @@ const CreateSetBtn = () => {
             <NavigationMenuTrigger>Create</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="flex flex-col gap-3 p-4 w-[300px]">
-                <ListItem key="deck" title="Deck" href="">Create a set of flashcards</ListItem>
-                <ListItem key="QCM" title="QCM" href="">Create a set of Quizzes</ListItem>
+                <ListItem key="deck" title="Deck" href="/create-deck">Create a set of flashcards</ListItem>
+                <ListItem key="quizz" title="quizz" href="create-quizz">Create a set of QCM</ListItem>
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>

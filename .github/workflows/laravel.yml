@@ -49,7 +49,7 @@ jobs:
         working-directory: ./backend
 
       - name: Migrate
-        run: php artisan migrate
+        run: php artisan migrate:fresh --seed
         working-directory: ./backend
 
       - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest

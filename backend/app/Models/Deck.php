@@ -11,24 +11,28 @@ class Deck extends Model
 
     protected $fillable = [
         'name',
-        'isPublic',
-        'isOrganization',
+        'is_public',
+        'is_organization',
         'likes',
+        'type',
+        'tag_id',
         'user_id'
     ];
 
     protected $casts = [
         'name' => 'string',
-        'isPublic' => 'boolean',
-        'isOrganization' => 'boolean',
+        'is_public' => 'boolean',
+        'is_organization' => 'boolean',
         'likes' => 'integer',
-        'user_id' => 'integer',
+        'type' => 'string',
+        'tag_id' => 'integer',
+        'user_id' => 'integer'
     ];
 
-    // public function tag()
-    // {
-    //     return $this->belongsTo(Tag::class);
-    // }
+    public function tag()
+    {
+        return $this->belongsTo(Tag::class);
+    }
 
     public function user()
     {

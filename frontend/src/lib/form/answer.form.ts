@@ -4,7 +4,7 @@ export const answerSchema = z.object({
   answers: z
     .array(
       z.object({
-        response: z.string(),
+        answer: z.string(),
         isValid: z.boolean(),
       })
     )

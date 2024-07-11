@@ -7,6 +7,7 @@ export async function fetchApi<T>(
 
   const headers = new Headers({
     "Content-Type": "application/json",
+    "Accept": "application/json"
   });
 
   if (token) {
@@ -27,7 +28,11 @@ export async function fetchApi<T>(
     const response = await fetch(`/api/${endpoint}`, config);
     const data = await response.json();
     if (!response.ok) {
-      return data;
+      return {
+        data,
+        status: response.status,
+        error: data.error || "Error occurred",
+      };
     }
     return { data, status: response.status };
   } catch (error: any) {

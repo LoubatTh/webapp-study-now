@@ -1,3 +1,5 @@
+import { ResourceForbidden } from "@/components/errors/ResourceForbidden";
+import ResourceNotFound from "@/components/errors/ResourceNotFound";
 import QuestionQCM from "@/components/quizz/QuestionQCM";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
@@ -8,21 +10,30 @@ import { useParams } from "react-router-dom";
 
 const ResponseQuizzPage = () => {
   // Permet de s'assurer que aucune action nécessitant l'authentification ne soit effectuée avant que le système soit initialisé
-  const { isReady } = useAuth();
+  const { isReady, accessToken } = useAuth();
   // Permet de récupérer l'identifiant du quizz passé en paramètre dans l'URL
   const { quizzId } = useParams();
   //  Permet de stocker le quizz récupéré depuis l'API
-  const [ quizz, setQuizz ] = useState<any>(null); 
+  const [quizz, setQuizz] = useState<any>(null);
   // Permet de stocker le pourcentage de bonnes réponses de l'utilisateur
-  const [ correctPercentage, setCorrectPercentage ] = useState<number>(0);
-  // Permet de stocker les réponses sélectionnées par l'utilisateur 
-  const [ selectedAnswers, setSelectedAnswers ] = useState<{ [key: number]: any[];}>({});
+  const [correctPercentage, setCorrectPercentage] = useState<number>(0);
+  // Permet de stocker les réponses sélectionnées par l'utilisateur
+  const [selectedAnswers, setSelectedAnswers] = useState<{
+    [key: number]: any[];
+  }>({});
   // Permet de stocker les erreurs pour chaque question
-  const [ errors, setErrors ] = useState<{ [key: number]: string }>({});
+  const [errors, setErrors] = useState<{ [key: number]: string }>({});
   // Permet de stocker les réponses correctes pour chaque question
-  const [ answeredCorrectly, setAnsweredCorrectly ] = useState<{[key: number]: boolean; }>({});
+  const [answeredCorrectly, setAnsweredCorrectly] = useState<{
+    [key: number]: boolean;
+  }>({});
+  // Permet de savoir si ce quizz est privé
+  const [isForbidden, setIsForbidden] = useState<boolean>(false);
+  // Permet de savoir si ce quizz existe ou pas
+  const [isNotFound, setIsNotFound] = useState<boolean>(false);
   // Permet de stocker l'état de la soumission du formulaire
-  const [ isSubmitting, setIsSubmitting ] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
 
   /*
   Ce UseEffect permet de premièrement vérifier si l'utilisateur est prêt à 
@@ -32,12 +43,36 @@ const ResponseQuizzPage = () => {
   useEffect(() => {
     if (!isReady || !quizzId) return;
 
+    // Initalisation des states
+    setQuizz(null);
+    setIsForbidden(false);
+    setIsNotFound(false);
+
     const fetchQuiz = async () => {
+      const response = await fetchApi(
+        "GET",
+        `quizzes/${quizzId}`,
+        null,
+        accessToken
+      );
 
-      const response = await fetchApi("GET", `/quizzes/${quizzId}`);
-      const data = await response.data;
-      setQuizz(data);
+      const status = await response.status;
 
+      // Si la requête est bien effectué, on stocke le quizz dans le state quizz
+      if(status == 200){
+        const data = await response.data;
+        setQuizz(data);
+      }
+
+      // Si le quizz est privé, on stocke la variable isForbidden à true
+      if(status == 403){
+        setIsForbidden(true);
+      }
+
+      // Si le quizz n'existe pas, on stocke la variable isNotFound à true
+      if(status == 404 || status == 500){
+        setIsNotFound(true);
+      }
     };
 
     fetchQuiz();
@@ -68,8 +103,7 @@ const ResponseQuizzPage = () => {
     ).length;
     const pourcentage = (totalCorrestResponses * 100) / totalQuestions;
     setCorrectPercentage(pourcentage);
-  }
-
+  };
 
   /*
   Cette méthode permet de valider les réponses de l'utilisateur
@@ -111,13 +145,12 @@ const ResponseQuizzPage = () => {
       // Puis on parcours la liste et on stock dans une variables toutes les réponses VALIDES de la question (il peut y en avoir qu'une seule !)
       const correctAnswers = qcm.answers
         .filter((answer) => answer.isValid)
-        .map((answer) => answer.response);
+        .map((answer) => answer.answer);
 
       // puis on parcours ensuite les réponses de l'utilisateur qu'on va comparer avec les réponses correctes
       const isCorrect =
-        userAnswers.every((answer) =>
-          correctAnswers.includes(answer.response)
-        ) && userAnswers.length === correctAnswers.length;
+        userAnswers.every((answer) => correctAnswers.includes(answer.answer)) &&
+        userAnswers.length === correctAnswers.length;
 
       newAnsweredCorrectly[qcm.id] = isCorrect;
 
@@ -134,51 +167,61 @@ const ResponseQuizzPage = () => {
     console.log(correctAnswers);
   };
 
+  if(isNotFound){
+    return <ResourceNotFound type="quizz" />;
+  }
+
+  if(isForbidden){
+    return <ResourceForbidden type="quizz "/>;
+  }
+  
 
   return (
-    <>
-      <div className="flex flex-col items-center gap-4">
-        {quizz ? (
-          <div>
-            <h1 className="my-4 text-center text-lg	font-bold">{quizz.name}</h1>
+      <>
+        <div className="flex flex-col items-center gap-4">
+          {quizz ? (
+            <div>
+              <h1 className="my-4 text-center text-lg	font-bold">
+                {quizz.name}
+              </h1>
 
-            {quizz.qcms.map((qcm) => (
-              <div
-                key={qcm.id}
-                className=" bg-white drop-shadow-2xl m-3 mb-10 p-3 rounded-xl"
-              >
-                <QuestionQCM
-                  question={qcm}
-                  onAnswerSelect={(answers) =>
-                    handleAnswerSelect(qcm.id, answers)
-                  }
-                  answeredCorrectly={answeredCorrectly[qcm.id]}
-                  isSubmitting={isSubmitting}
-                />
-                {errors[qcm.id] && (
-                  <p className="text-red-500">{errors[qcm.id]}</p>
-                )}
+              {quizz.qcms.map((qcm) => (
+                <div
+                  key={qcm.id}
+                  className="border-gray-300 border-b-2 m-3 mb-5 p-3 pb-10"
+                >
+                  <QuestionQCM
+                    question={qcm}
+                    onAnswerSelect={(answers) =>
+                      handleAnswerSelect(qcm.id, answers)
+                    }
+                    answeredCorrectly={answeredCorrectly[qcm.id]}
+                    isSubmitting={isSubmitting}
+                  />
+                  {errors[qcm.id] && (
+                    <p className="text-red-500">{errors[qcm.id]}</p>
+                  )}
+                </div>
+              ))}
+              <div className="flex items-center gap-2 m-3">
+                <Button
+                  className="w-1/2"
+                  onClick={handleSubmit}
+                  variant="default"
+                >
+                  Valider
+                </Button>
+                <p className="">
+                  Vous avez eu {correctPercentage}% de bonnes réponses
+                </p>
               </div>
-            ))}
-            <div className="flex items-center gap-2 m-3">
-              <Button
-                className="w-1/2"
-                onClick={handleSubmit}
-                variant="default"
-              >
-                Valider
-              </Button>
-              <p className="">
-                Vous avez eu {correctPercentage}% de bonnes réponses
-              </p>
             </div>
-          </div>
-        ) : (
-          <p>Chargement...</p>
-        )}
-      </div>
-    </>
-  );
+          ) : (
+            <p>Chargement...</p>
+          )}
+        </div>
+      </>
+    );
 };
 
 export default ResponseQuizzPage;

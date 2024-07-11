@@ -24,6 +24,12 @@ export const mockTagsData: TagsType[] = [
   {
     name: "geography"
   },
+  {
+    name: "technology"
+  },
+  {
+    name: "art"
+  },
 ]
 
 // mock user data
@@ -55,11 +61,30 @@ export const mockUsersData: UserContextType[] = [
     created_at: "01/07/2024",
     updated_at:"01/07/2024"
   },
+  {
+    name: "Jerem Doe",
+    email: "jerem.doe@example.com",
+    role: "user",
+    isSubscribed: true,
+    email_verified_at: "01/07/2024",
+    created_at: "01/07/2024",
+    updated_at:"01/07/2024"
+  },
+  {
+    name: "Jean Doe",
+    email: "jean.doe@example.com",
+    role: "user",
+    isSubscribed: true,
+    email_verified_at: "01/07/2024",
+    created_at: "01/07/2024",
+    updated_at:"01/07/2024"
+  },
 ]
 
 // mock quizz data
 export const mockQuizzData: QuizzType[] = [
   {
+    id: 1,
     name: "world war 2",
     visibility: "public",
     likes: 3,
@@ -68,6 +93,7 @@ export const mockQuizzData: QuizzType[] = [
     type: "quizz"
   },
   {
+    id: 2,
     name: "grammar",
     visibility: "public",
     likes: 10,
@@ -76,6 +102,7 @@ export const mockQuizzData: QuizzType[] = [
     type: "quizz"
   },
   {
+    id: 3,
     name: "Pythagore",
     visibility: "public",
     likes: 50,
@@ -84,6 +111,7 @@ export const mockQuizzData: QuizzType[] = [
     type: "quizz"
   },
   {
+    id: 4,
     name: "english grammar",
     visibility: "public",
     likes: 21,
@@ -92,6 +120,7 @@ export const mockQuizzData: QuizzType[] = [
     type: "quizz"
   },
   {
+    id: 5,
     name: "Capital city",
     visibility: "public",
     likes: 21,
@@ -99,11 +128,30 @@ export const mockQuizzData: QuizzType[] = [
     owner: mockUsersData[2],
     type: "quizz"
   },
+  {
+    id: 11,
+    name: "Modern Technology",
+    visibility: "public",
+    likes: 12,
+    tags: mockTagsData[6],
+    owner: mockUsersData[3],
+    type: "quizz"
+  },
+  {
+    id: 12,
+    name: "Renaissance Art",
+    visibility: "public",
+    likes: 8,
+    tags: mockTagsData[7],
+    owner: mockUsersData[4],
+    type: "quizz"
+  },
 ]
 
 // mock quizz data
 export const mockDeckData: DeckType[] = [
   {
+    id: 6,
     name: "Napoleon",
     visibility: "public",
     likes: 7,
@@ -112,6 +160,7 @@ export const mockDeckData: DeckType[] = [
     type: "deck"
   },
   {
+    id: 7,
     name: "COD",
     visibility: "public",
     likes: 15,
@@ -120,6 +169,7 @@ export const mockDeckData: DeckType[] = [
     type: "deck"
   },
   {
+    id: 8,
     name: "Thales",
     visibility: "public",
     likes: 34,
@@ -128,6 +178,7 @@ export const mockDeckData: DeckType[] = [
     type: "deck"
   },
   {
+    id: 9,
     name: "Conjugation",
     visibility: "public",
     likes: 34,
@@ -136,11 +187,30 @@ export const mockDeckData: DeckType[] = [
     type: "deck"
   },
   {
+    id: 10,
     name: "demopraphy",
     visibility: "public",
     likes: 34,
     tags: mockTagsData[5],
     owner: mockUsersData[2],
+    type: "deck"
+  },
+  {
+    id: 13,
+    name: "AI Innovations",
+    visibility: "public",
+    likes: 19,
+    tags: mockTagsData[6],
+    owner: mockUsersData[3],
+    type: "deck"
+  },
+  {
+    id: 14,
+    name: "Impressionism",
+    visibility: "public",
+    likes: 22,
+    tags: mockTagsData[7],
+    owner: mockUsersData[4],
     type: "deck"
   },
 ]

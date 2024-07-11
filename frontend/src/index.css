@@ -74,3 +74,16 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Animation for Flashard */
+
+.perspective {
+  perspective: 1000px;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}

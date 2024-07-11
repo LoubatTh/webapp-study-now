@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "../components/ui/button";
 import { Separator } from "../components/ui/separator";
 import { Input } from "../components/ui/input";
@@ -10,23 +10,42 @@ import { fetchApi } from "@/utils/api";
 import CreateQCM from "../components/quizz/CreateQCM";
 import useQCMStore from "../lib/stores/quizzStore";
 import { toast } from "@/components/ui/use-toast";
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const postQuizz = async (quizz: PostQuizz, accessToken: string) => {
-  const response = await fetchApi("POST", "quizz", quizz, accessToken);
+  const response = await fetchApi("POST", "quizzes", quizz, accessToken);
   console.log(response);
   return response;
 };
 
+const getLabels = async () => {
+  const response = await fetchApi("GET", "tags");
+  return response;
+};
+
 const CreateQuizzPage = () => {
+  //Get the access token from the AuthContext
+  const navigate = useNavigate();
   //Get the access token from the AuthContext
   const { accessToken } = useAuth();
   //Use the useQCMStore store to get the QCMs
   const { qcms, resetQCMs } = useQCMStore();
   //State to manage the name of the quizz
   const [name, setName] = useState<string>("");
+  //State to manage the lable of the deck
+  const [label, setLabel] = useState<string>("");
   //State to manage the visibility of the quizz
   const [isPublic, setIsPublic] = useState<boolean>(false);
+  //State to store the labels
+  const [labels, setLabels] = useState<string[]>([]);
   //State to manage the error message
   const [errorMessage, setErrorMessage] = useState<string>("");
   //State to manage the list of QCMs
@@ -51,10 +70,25 @@ const CreateQuizzPage = () => {
     );
   };
 
+  //Function to get the labels for the select input
+  const labelArray = async () => {
+    const response = await getLabels();
+    if (response.status === 200) {
+      const data = await response.data.json();
+      setLabels(data);
+    } else {
+      const data = await response.data.json();
+      toast({ description: data.message });
+    }
+  };
+
   //Function to create the quizz with the QCMs and send it to the backend
   async function createQuizzHandler(): Promise<void> {
     if (name.length < 1) {
       setErrorMessage("The name field is required.");
+      return;
+    } else if (label === "") {
+      setErrorMessage("The label field is required.");
       return;
     } else if (qcms.length < 1) {
       setErrorMessage("You need to add at least one QCM.");
@@ -63,8 +97,14 @@ const CreateQuizzPage = () => {
       setErrorMessage("");
       const quizz = {
         name,
-        isPublic,
-        qcms: qcms,
+        is_public: isPublic,
+        tag_id: parseInt(label),
+        qcms: [
+          ...qcms.map((qcm) => ({
+            question: qcm.question,
+            answers: qcm.answers,
+          })),
+        ],
       };
       console.log(quizz);
       const response = await postQuizz(quizz, accessToken);
@@ -75,13 +115,17 @@ const CreateQuizzPage = () => {
         toast({
           description: "Quizz created successfully",
         });
-        redirect("/homepage");
+        navigate("/");
       } else {
         const data = await response.data.json();
         toast({ description: data.message });
       }
     }
   }
+
+  useEffect(() => {
+    labelArray();
+  }, []);
 
   return (
     <div className="flex flex-col items-center gap-4">
@@ -100,6 +144,22 @@ const CreateQuizzPage = () => {
             {errorMessage}
           </div>
         )}
+      </div>
+      <div className="max-w-3xl min-w-full md:min-w-[768px] p-2">
+        <Select value={label} onValueChange={(e) => setLabel(e)}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select a label" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="1">Apple</SelectItem>
+              <SelectItem value="2">Banana</SelectItem>
+              <SelectItem value="3">Blueberry</SelectItem>
+              <SelectItem value="4">Grapes</SelectItem>
+              <SelectItem value="5">Pineapple</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
       </div>
       <div className="flex flex-col gap-3 p-2 max-w-3xl min-w-full md:min-w-[768px]">
         <Label htmlFor="name">Visibility</Label>

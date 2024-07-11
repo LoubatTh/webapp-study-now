@@ -4,7 +4,6 @@ export type Answer = {
 };
 
 export type QCM = {
-  id: number;
   question: string;
   answers: Answer[];
 };
@@ -12,13 +11,13 @@ export type QCM = {
 export type Quizz = {
   id: number;
   name: string;
-  isPublic: boolean;
+  is_public: boolean;
   qcms: QCM[];
 };
 
 export type PostQuizz = {
   name: string;
-  isPublic: boolean;
+  is_public: boolean;
   qcms: QCM[];
 };
 

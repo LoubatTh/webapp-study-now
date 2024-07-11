@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Flashcard;
+use Illuminate\Routing\Controller;
 
-class FlashcardController
+class FlashcardController extends Controller
 {
     /**
      * Store a newly created resource in storage.

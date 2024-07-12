@@ -19,7 +19,7 @@ const defaultState = {
   name: "",
   email: "",
   role: "",
-  isSubscribed: false,
+  is_subscribed: false,
   email_verified_at: null,
   created_at: "",
   updated_at: "",

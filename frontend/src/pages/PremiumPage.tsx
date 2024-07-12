@@ -1,10 +1,13 @@
 import PageTitle from '@/components/pageTitle'
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
+import { fetchApi } from '@/utils/api';
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
 import { BookMarked, CheckCircle, Star, StarsIcon, XCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const advantages = [
     { name: "Advantage 1", basic: true, premium: true },
@@ -22,6 +25,36 @@ const advantages = [
 
 
 const PremiumPage = () => {
+
+  const navigation = useNavigate();
+  const { accessToken } = useAuth();
+
+  const handleNavigation = (path: string) => {
+    navigation(path);
+  }
+
+  const handlePremiumSubscription = async () => {
+    
+    document.body.style.cursor = "wait";
+
+    try {
+        const response = await fetchApi(
+          "POST",
+          "stripe/checkout",
+          null,
+          accessToken
+        );
+        const stripeUrl = await response.data.url;
+
+        window.open(stripeUrl, "_self");
+    } catch (error) {
+        console.error("Error during the subscription process", error);
+    } finally {
+        document.body.style.cursor = "default";
+    }
+
+  };
+
   return (
     <>
       <motion.div
@@ -78,7 +111,7 @@ const PremiumPage = () => {
                   ))}
                 </ul>
 
-                <Button className="mt-5 w-full">Get Started</Button>
+                <Button onClick={() => handleNavigation("/profile")} className="mt-5 w-full">Get Started</Button>
               </CardContent>
             </Card>
           </motion.div>
@@ -121,7 +154,7 @@ const PremiumPage = () => {
                   ))}
                 </ul>
 
-                <Button className={cn("mt-5 w-full")}>Subscribe</Button>
+                <Button onClick={handlePremiumSubscription} className={cn("mt-5 w-full")}>Subscribe</Button>
               </CardContent>
             </Card>
           </motion.div>

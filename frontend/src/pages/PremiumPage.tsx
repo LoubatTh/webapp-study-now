@@ -24,7 +24,13 @@ const advantages = [
 const PremiumPage = () => {
   return (
     <>
-      <PageTitle title="Subscriptions plans" />
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: "spring", duration: 0.5}}
+      >
+        <PageTitle title="Subscriptions plans" />
+      </motion.div>
 
       <div className="flex justify-center p-6">
         <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6 md:w-auto">
@@ -89,11 +95,7 @@ const PremiumPage = () => {
               )}
             >
               <CardHeader>
-                <CardTitle
-                  className={cn(
-                    "flex gap-1 text-base text-blue-500"
-                  )}
-                >
+                <CardTitle className={cn("flex gap-1 text-base text-blue-500")}>
                   <StarsIcon size={24} /> Premium
                 </CardTitle>
 
@@ -113,10 +115,7 @@ const PremiumPage = () => {
                       key={index}
                       className={clsx("flex items-center gap-2 pb-2")}
                     >
-                      <CheckCircle
-                        className={cn("text-blue-500")}
-                        size={16}
-                      />
+                      <CheckCircle className={cn("text-blue-500")} size={16} />
                       <span>{advantage.name}</span>
                     </li>
                   ))}

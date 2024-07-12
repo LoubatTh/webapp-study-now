@@ -17,8 +17,8 @@ import { motion } from "framer-motion";
 
 const ProfilePage = () => {
 
-  const { id, name, email, is_subscribed } = useUser();
-  const { accessToken } = useAuth();
+    const { id, name, email, is_subscribed } = useUser();
+    const { accessToken } = useAuth();
 
     const registerForm = useForm({
       resolver: zodResolver(RegisterFormSchema),
@@ -42,6 +42,25 @@ const ProfilePage = () => {
        const response = await fetchApi("PUT", "user", body, accessToken);
 
     };
+
+    function handleResume() {
+      document.body.style.cursor = "wait";
+    }
+
+    function handleCancel() {
+      document.body.style.cursor = "wait";
+
+      try {
+        const response = fetchApi("POST", "stripe/cancel", null, accessToken);
+        console.log(response);
+      } catch (error) {
+        console.error("Error during the subscription process", error);
+      } finally {
+        document.body.style.cursor = "default";
+      
+      }
+
+    }
 
   return (
     <div className="flex flex-grow justify-center items-center">
@@ -84,11 +103,15 @@ const ProfilePage = () => {
                   </div>
                   <div className="flex items-center mb-4">
                     {is_subscribed ? (
-                      <StarsIcon className="mr-2 text-yellow-500" />
+                      <StarsIcon className="mr-2 text-blue-500" />
                     ) : (
                       <XCircle className="mr-2 text-red-500" />
                     )}
-                    <p className={is_subscribed ? "text-yellow-500 font-bold" : ""}>{is_subscribed ? "Premium" : "Free Subscription"}</p>
+                    <p
+                      className={is_subscribed ? "text-blue-500 font-bold" : ""}
+                    >
+                      {is_subscribed ? "Premium" : "Free Subscription"}
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -200,7 +223,17 @@ const ProfilePage = () => {
                 <CardDescription>Manage your subscription</CardDescription>
               </CardHeader>
               <CardContent className="space-y-2">
-                <p> Mettre les infos de la subscription ici </p>
+                <div className="flex flex-col gap-2 justify-between mt-4">
+                  <p>
+                    (TODO: Attendre que le back renvoie + d'infos pour améliorer cette
+                    page)
+                  </p>
+                  <Button onClick={handleResume}>Resume</Button>
+                  <p>
+                    (TODO: Cancel qui fonctionne askip mais le GET du user renvoie encore true pour is_subscribed donc ça marche pas encore)
+                  </p>
+                  <Button onClick={handleCancel}>Cancel</Button>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>

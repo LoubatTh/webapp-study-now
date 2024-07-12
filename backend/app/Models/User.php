@@ -67,4 +67,10 @@ class User extends Authenticatable
         return $this->belongsToMany(Quiz::class, 'user_quizzes')
                     ->wherePivot('is_liked', true);
     }
+
+    public function likedDecks()
+    {
+        return $this->belongsToMany(Deck::class, 'user_decks')
+                    ->wherePivot('is_liked', true);
+    }
 }

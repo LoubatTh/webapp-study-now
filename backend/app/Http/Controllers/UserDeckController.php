@@ -9,6 +9,8 @@ use App\Models\UserDeck;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\JsonResponse;
+use App\Http\Resources\DeckResource;
+use App\Http\Resources\DeckCollection;
 
 class UserDeckController extends Controller
 {
@@ -97,14 +99,16 @@ class UserDeckController extends Controller
 
     public function getLikedDecks(Request $request): JsonResponse
     {
+        $numberPerPage = 9;
+
         $user = $request->user();
 
-        $likedDecks = UserDeck::where("user_id", $user->id)->where("is_liked", true)->with('deck')->get();
+        $likedDecks = $user->likedDecks()->paginate($numberPerPage);
 
         if ($likedDecks->isEmpty()) {
             return response()->json(['error' => "You haven't liked any deck yet"], 200);
         }
 
-        return response()->json($likedDecks, 200);
+        return response()->json(new DeckCollection($likedDecks), 200);
     }
 }

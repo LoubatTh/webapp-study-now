@@ -15,7 +15,7 @@ class QuizCollection extends ResourceCollection
     public function toArray(Request $request): array
     {
         return [
-            "data" => $this->collection,
+            "quizzes" => $this->collection,
         ];
     }
 }

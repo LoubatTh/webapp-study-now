@@ -53,7 +53,6 @@ Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->valu
 
   // Quiz routes
   Route::post('/quizzes', [QuizController::class, 'store']);
-  Route::get('/quizzes', [QuizController::class, 'index']);
   Route::get('/quizzes/likes', [UserQuizController::class, 'getLikedQuizzes']);
   Route::put('/quizzes/{id}', [QuizController::class, 'update']);
   Route::delete('/quizzes/{id}', [QuizController::class, 'destroy']);
@@ -62,6 +61,7 @@ Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->valu
 });
 
 // Quiz routes
+Route::get('/quizzes', [QuizController::class, 'index']);
 Route::get('/quizzes/{id}', [QuizController::class, 'show']);
 
 // Deck Get routes

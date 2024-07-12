@@ -80,8 +80,15 @@ class QuizController extends Controller
         }
 
 
-        if ($quiz->is_public == false && $user->id != $quiz->user_id) {
-            return response()->json(['error' => 'Forbidden'], 403);
+        if ($quiz->is_public == false) {
+
+            if (!$user) {
+                return response()->json(["message" => "Unauthorized"], 401);
+            }
+
+            if ($user->id != $quiz->user_id) {
+                return response()->json(['message' => 'Forbidden'], 403);
+            }
 
         }
 
@@ -115,7 +122,7 @@ class QuizController extends Controller
 
         $quiz->name = $data["name"];
         $quiz->is_public = $data['is_public'] ? $data['is_public'] : false;
-        $quiz->is_organization = $data['is_organization'] ? $data['is_organization'] : false;
+        $quiz->is_organization = $request->has("is_public") ? $request->is_public : false;
         $quiz->tag_id = $data['tag_id'] ? $data['tag_id'] : $quiz->tag_id;
         $quiz->save();
 
@@ -137,7 +144,12 @@ class QuizController extends Controller
 
         if ($request->has("myQuizzes")) {
 
-            $user = $request->user();
+            $user = Auth::guard('sanctum')->user();
+            
+            if (!$user) {
+                return response()->json(["message" => "Unauthorized"], 401);
+            }
+
             $quizzes = Quiz::where("user_id", $user->id)->get();
 
             if ($quizzes->isEmpty()) {

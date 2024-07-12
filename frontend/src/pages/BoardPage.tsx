@@ -185,7 +185,6 @@ const BoardPage = () => {
                   />
                 </motion.div>
               ))}
-              a
             </>
           )}
         </motion.div>

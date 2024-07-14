@@ -113,6 +113,12 @@ class OrganizationDeckController
             ], 400);
         }
 
+        if (!$organizationDeck) {
+            return response()->json([
+                'error' => 'Not found',
+            ], 404);
+        }
+
         Storage::delete($organizationDeck['file_path']);
         $filePath = Storage::putFile('organizations/decks', $file, 'public');
         $organizationDeck->update([

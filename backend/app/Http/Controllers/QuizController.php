@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Models\Quiz;
+use App\Models\Tag;
+use App\Models\User;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -129,18 +131,34 @@ class QuizController extends Controller
 
     public function index(Request $request): JsonResponse
     {
+        $isSearch = $request->has("search");
 
         if ($request->has("myQuizzes")) {
             $user = $request->user();
-            $quizzes = Quiz::where("owner", $user->id)->get();
+            $quizzes = Quiz::where("owner", $user->id);
 
             if ($quizzes->isEmpty()) {
                 return response()->json(['message' => "You haven't created any quiz yet"], 200);
             }
 
         } else {
-            $quizzes = Quiz::where("is_public", true)->get();
+            $quizzes = Quiz::where("is_public", true);
         }
+
+        if ($isSearch) {
+            $search = $request->input("search");
+            $searchTerm = "%{$search}%";
+
+            $quizzes = $quizzes->where('name', 'ILIKE', $searchTerm);
+
+            $tag_ids = Tag::where('name', 'ILIKE', $searchTerm)->pluck('id');
+
+            $user_ids = User::where('name', 'ILIKE', $searchTerm)->pluck('id');
+
+            $quizzes = $quizzes->orWhereIn("tag_id", $tag_ids)->orWhereIn("user_id", $user_ids);
+        }
+
+        $quizzes = $quizzes->get();
 
         return response()->json($quizzes->load("qcms"), 200);
     }

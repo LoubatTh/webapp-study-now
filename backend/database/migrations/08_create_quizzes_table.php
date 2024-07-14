@@ -22,6 +22,8 @@ return new class extends Migration {
             $table->foreignId('owner')->constrained('users', 'id')->onDelete('cascade');
 
             $table->foreign('tag_id')->references('id')->on('tags');
+
+            $table->fullText('name');
         });
     }
 

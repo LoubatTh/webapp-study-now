@@ -1,6 +1,9 @@
 <?php
 
-use App\Enums\TokenAbility;
+use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\OrganizationDeckController;
+use App\Http\Controllers\OrganizationQuizController;
+use App\Http\Controllers\OrganizationUserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DeckController;
 use App\Http\Controllers\QcmController;
@@ -10,9 +13,12 @@ use App\Http\Controllers\TagController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserDeckController;
 use App\Http\Controllers\UserQuizController;
+use App\Http\Middleware\EnsureIsOrganizationMember;
+use App\Http\Middleware\EnsureIsOrganizationOwner;
+use App\Http\Middleware\EnsureOrganizationExist;
+use App\Http\Middleware\EnsureUserIsPremium;
 use Illuminate\Support\Facades\Route;
-
-
+use App\Enums\TokenAbility;
 
 // Qcm routes
 Route::get('/qcms/{id}', [QcmController::class, 'show']);
@@ -33,15 +39,43 @@ Route::get('refresh', [AuthController::class, 'refreshToken'])->middleware(['aut
 Route::post('logout', [AuthController::class, 'logout'])->middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->value]);
 
 Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->value])->group(function () {
-  // User routes
-  Route::get('user', [UserController::class, 'show']);
-  Route::put('user', [UserController::class, 'update']);
-  Route::delete('user', [UserController::class, 'destroy']);
+    // User routes
+    Route::get('user', [UserController::class, 'show']);
+    Route::get('user/organizations', [UserController::class, 'showOrganizations']);
+    Route::put('user', [UserController::class, 'update']);
+    Route::delete('user', [UserController::class, 'destroy']);
 
-  // Stripe routes
-  Route::post('stripe/checkout', [StripeController::class, 'subcriptionCheckout']);
-  Route::post('stripe/cancel', [StripeController::class, 'cancel']);
-  Route::post('stripe/resume', [StripeController::class, 'resume']);
+    // Stripe routes
+    Route::post('stripe/checkout', [StripeController::class, 'subcriptionCheckout']);
+    Route::post('stripe/cancel', [StripeController::class, 'cancel']);
+    Route::post('stripe/resume', [StripeController::class, 'resume']);
+
+    // Organization routes
+    Route::get('organizations/{id}', [OrganizationController::class, 'show']);
+    Route::middleware([EnsureOrganizationExist::class])->group(function () {
+        Route::middleware([EnsureIsOrganizationMember::class])->group(function () {
+            Route::get('organizations/{id}/users', [OrganizationUserController::class, 'show']);
+            Route::get('organizations/{id}/decks', [OrganizationDeckController::class, 'index']);
+            Route::get('organizations/{id}/decks/{deckId}', [OrganizationDeckController::class, 'show']);
+            Route::get('organizations/{id}/quizzes', [OrganizationDeckController::class, 'index']);
+            Route::get('organizations/{id}/quizzes/{quizId}', [OrganizationQuizController::class, 'show']);
+        });
+        Route::middleware([EnsureUserIsPremium::class])->group(function () {
+            Route::post('organizations', [OrganizationController::class, 'store'])->withoutMiddleware(EnsureOrganizationExist::class);
+            Route::middleware([EnsureIsOrganizationOwner::class])->group(function () {
+                Route::put('organizations/{id}', [OrganizationController::class, 'update']);
+                Route::delete('organizations/{id}', [OrganizationController::class, 'destroy']);
+                Route::post('organizations/{id}/users', [OrganizationUserController::class, 'store']);
+                Route::delete('organizations/{id}/users/{userId}', [OrganizationUserController::class, 'destroy']);
+                Route::post('organizations/{id}/decks', [OrganizationDeckController::class, 'store']);
+                Route::put('organizations/{id}/decks/{deckId}', [OrganizationDeckController::class, 'update']);
+                Route::delete('organizations/{id}/decks/{deckId}', [OrganizationDeckController::class, 'destroy']);
+                Route::post('organizations/{id}/quizzes', [OrganizationQuizController::class, 'store']);
+                Route::put('organizations/{id}/quizzes/{quizId}', [OrganizationQuizController::class, 'update']);
+                Route::delete('organizations/{id}/quizzes/{quizId}', [OrganizationQuizController::class, 'destroy']);
+            });
+        });
+    });
 
   // Deck routes
   Route::post('decks', [DeckController::class, "createDeck"]);

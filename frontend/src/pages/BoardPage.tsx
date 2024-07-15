@@ -8,7 +8,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { fetchApi } from "@/utils/api";
 import { Deck } from "@/types/deck.type";
 import { motion } from "framer-motion";
-import PageTitle from "@/components/pageTitle";
 
 const getDecksUser = async (accessToken: string) => {
   const response = await fetchApi("GET", `decks?myDecks`, null, accessToken);

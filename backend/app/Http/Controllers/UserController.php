@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Organization;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Validation\ValidationException;
@@ -65,17 +66,35 @@ class UserController extends Controller
     {
         try {
             $data = $request->validate([
-                'name' => 'required|string',
+                'name' => 'string',
+                'password' => 'string|min:8',
+                'new_password' => 'string|min:8'
             ]);
         } catch (ValidationException $e) {
             return response()->json($e->errors(), 400);
         }
 
         $user = $request->user();
-        $user->update($data);
+        $fields = [];
+
+        if(isset($data['name'])) {
+            $fields['name'] = $data['name'];
+        }
+
+        if (isset($data['password']) && isset($data['new_password'])) {
+            if (!Hash::check($data['password'], $user->password)) {
+                return response()->json([
+                    'error' => 'Invalid password',
+                ], 400);
+            }
+
+            $fields['password'] = Hash::make($data['new_password']);
+        }
+
+        $user->update($fields);
 
         return response()->json([
-            'message' => 'User updated'
+            'message' => 'User updated',
         ]);
     }
 

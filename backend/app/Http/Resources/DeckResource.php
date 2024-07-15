@@ -19,7 +19,6 @@ class DeckResource extends JsonResource
             "type" => $this->type,
             "name" => $this->name,
             "is_public" => $this->is_public,
-            "is_organization" => $this->is_organization,
             "likes" => $this->likes,
             "tag" => $this->whenLoaded('tag', function () {
                 return $this->tag->name;

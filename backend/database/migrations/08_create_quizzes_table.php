@@ -23,6 +23,8 @@ return new class extends Migration {
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('tag_id')->references('id')->on('tags');
+
+            $table->fullText('name');
         });
     }
 

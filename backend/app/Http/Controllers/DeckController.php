@@ -8,9 +8,12 @@ use App\Http\Requests\UpdateDeckRequest;
 use App\Http\Resources\DeckCollection;
 use App\Http\Resources\DeckResource;
 use App\Models\Deck;
+use App\Models\Tag;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DeckController extends Controller
 {
@@ -22,6 +25,7 @@ class DeckController extends Controller
         try {
             $numberPerPage = 9;
             $myDecks = $request->has("myDecks");
+            $isSearch = $request->has("search");
             $decks = Deck::with("tag", "user", "flashcards");
 
             if ($myDecks) {
@@ -33,6 +37,19 @@ class DeckController extends Controller
                 $decks = $decks->where("user_id", $user->id);
             } else {
                 $decks = $decks->where("is_public", true);
+            }
+
+            if ($isSearch) {
+                $search = $request->input("search");
+                $searchTerm = "%{$search}%";
+
+                $decks = $decks->where('name', 'ILIKE', $searchTerm);
+
+                $tag_ids = Tag::where('name', 'ILIKE', $searchTerm)->pluck('id');
+
+                $user_ids = User::where('name', 'ILIKE', $searchTerm)->pluck('id');
+
+                $decks = $decks->orWhereIn("tag_id", $tag_ids)->orWhereIn("user_id", $user_ids);
             }
 
             return response()->json(new DeckCollection($decks->paginate($numberPerPage)), 200);

@@ -9,7 +9,7 @@ const Homepage = () => {
   };
   return (
     <>
-      <div className="flex justify-center items-center my-20 mx-auto">
+      <div className="flex justify-center items-center min-h-[80vh] mx-auto">
         <div className="max-w-md my-auto">
           <h1 className="text-5xl md:text-3xl lg:text-5xl m-4">
             Study smarter, share easily

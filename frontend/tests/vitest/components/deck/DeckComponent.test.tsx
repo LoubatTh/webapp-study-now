@@ -1,7 +1,7 @@
 import React from "react";
 import "@testing-library/jest-dom";
 import { Flashcard } from "../../../../src/types/deck.type";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import DeckComponent from "../../../../src/components/deck/DeckComponent";
 
@@ -23,7 +23,7 @@ const flashcards: Flashcard[] = [
   },
 ];
 
-//Test the create QCM component
+//Test the Deck component
 describe("DeckComponent Component", () => {
   const defaultProps = {
     id: 1,
@@ -71,40 +71,37 @@ describe("DeckComponent Component", () => {
     expect(thirdFlashcardAnswer).toHaveTextContent("Paris");
   });
 
-  //Test the error validation messages
+  //Test the change on click
   it("Flashcards turn on click", async () => {
     render(<DeckComponent {...defaultProps} />);
 
-    const firstFlashcard = screen.getByTestId("flashcard-0");
-    const secondFlashcard = screen.getByTestId("flashcard-1");
-    const thirdFlashcard = screen.getByTestId("flashcard-2");
+    const firstFlashcard = screen.getByTestId("flashcard-click-0");
+    const secondFlashcard = screen.getByTestId("flashcard-click-1");
+    const thirdFlashcard = screen.getByTestId("flashcard-click-2");
 
-    const firstFlashcardQuestion = screen.getByTestId("flashcard-question-0");
-    const secondFlashcardQuestion = screen.getByTestId("flashcard-question-1");
-    const thirdFlashcardQuestion = screen.getByTestId("flashcard-question-2");
+    const firstFlashcardCard = screen.getByTestId("flashcard-card-0");
+    const secondFlashcardCard = screen.getByTestId("flashcard-card-1");
+    const thirdFlashcardCard = screen.getByTestId("flashcard-card-2");
 
-    const firstFlashcardAnswer = screen.getByTestId("flashcard-answer-0");
-    const secondFlashcardAnswer = screen.getByTestId("flashcard-answer-1");
-    const thirdFlashcardAnswer = screen.getByTestId("flashcard-answer-2");
-
-    expect(firstFlashcardQuestion).toBeVisible();
-    expect(secondFlashcardQuestion).toBeVisible();
-    expect(thirdFlashcardQuestion).toBeVisible();
-
-    expect(firstFlashcardAnswer).toHaveStyle("rotate-y-180");
-    expect(secondFlashcardAnswer).toHaveStyle({ transform: "rotateY(180deg)" });
-    expect(thirdFlashcardAnswer).toHaveStyle({ transform: "rotateY(180deg)" });
+    expect(firstFlashcardCard).toHaveStyle({ transformStyle: "preserve-3d" });
+    expect(firstFlashcardCard).toHaveStyle({ transform: "none" });
+    expect(secondFlashcardCard).toHaveStyle({ transform: "none" });
+    expect(thirdFlashcardCard).toHaveStyle({ transform: "none" });
 
     fireEvent.click(firstFlashcard);
     fireEvent.click(secondFlashcard);
     fireEvent.click(thirdFlashcard);
 
-    expect(firstFlashcardQuestion).not.toBeVisible();
-    expect(secondFlashcardQuestion).not.toBeVisible();
-    expect(thirdFlashcardQuestion).not.toBeVisible();
-
-    expect(firstFlashcardAnswer).toBeInvalid();
-    expect(secondFlashcardAnswer).toBeVisible();
-    expect(thirdFlashcardAnswer).toBeVisible();
+    await waitFor(() => {
+      expect(firstFlashcardCard).toHaveStyle({
+        transform: "rotateY(180deg) translateZ(0)",
+      });
+      expect(secondFlashcardCard).toHaveStyle({
+        transform: "rotateY(180deg) translateZ(0)",
+      });
+      expect(thirdFlashcardCard).toHaveStyle({
+        transform: "rotateY(180deg) translateZ(0)",
+      });
+    });
   });
 });

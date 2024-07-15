@@ -33,8 +33,13 @@ const FlashcardComponent = ({
       data-testid={`flashcard-${index}`}
       className="flex flex-col justify-center items-center gap-8"
     >
-      <div className="relative w-96 h-48 perspective" onClick={handleFlip}>
+      <div
+        data-testid={`flashcard-click-${index}`}
+        className="relative w-96 h-48 perspective"
+        onClick={handleFlip}
+      >
         <motion.div
+          data-testid={`flashcard-card-${index}`}
           className={`absolute inset-0 flex justify-center items-center border shadow-ms ${
             isFlipped ? "rotate-y-180 border-primary" : ""
           }`}
@@ -61,6 +66,7 @@ const FlashcardComponent = ({
       <div className="flex flex-col gap-2 text-center">
         <Typography>My rating</Typography>
         <Rating
+          data-testid={`flashcard-rating-${index}`}
           value={star}
           onChange={(event, newValue) => {
             handleStar(newValue);

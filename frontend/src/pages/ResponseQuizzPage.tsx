@@ -43,21 +43,36 @@ const ResponseQuizzPage = () => {
   useEffect(() => {
     if (!isReady || !quizzId) return;
 
+    // Initalisation des states
+    setQuizz(null);
+    setIsForbidden(false);
+    setIsNotFound(false);
+
     const fetchQuiz = async () => {
       const response = await fetchApi(
         "GET",
-        `/quizzes/${quizzId}`,
+        `quizzes/${quizzId}`,
         null,
         accessToken
       );
-      const data = await response.data; 
-      if (data === undefined && response.message === "Forbidden") {
-        setIsForbidden(true);
-      } else if(response.message === "Quizz not found"){
-        setIsNotFound(true);
+
+      const status = await response.status;
+
+      // Si la requête est bien effectué, on stocke le quizz dans le state quizz
+      if(status == 200){
+        const data = await response.data;
+        setQuizz(data);
       }
 
-      setQuizz(data);
+      // Si le quizz est privé, on stocke la variable isForbidden à true
+      if(status == 403){
+        setIsForbidden(true);
+      }
+
+      // Si le quizz n'existe pas, on stocke la variable isNotFound à true
+      if(status == 404 || status == 500){
+        setIsNotFound(true);
+      }
     };
 
     fetchQuiz();

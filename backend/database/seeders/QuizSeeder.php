@@ -19,7 +19,7 @@ class QuizSeeder extends Seeder
             "type" => "Quiz",
             "likes" => 0,
             "tag_id" => 1,
-            "owner" => 4,
+            "user_id" => 4,
         ]);
 
         Quiz::factory()->create([
@@ -29,7 +29,7 @@ class QuizSeeder extends Seeder
             "type" => "Quiz",
             "likes" => 0,
             "tag_id" => 2,
-            "owner" => 4,
+            "user_id" => 4,
         ]);
 
         Quiz::factory()->create([
@@ -39,7 +39,7 @@ class QuizSeeder extends Seeder
             "type" => "Quiz",
             "likes" => 0,
             "tag_id" => 4,
-            "owner" => 4,
+            "user_id" => 4,
         ]);
 
         Quiz::factory()->create([
@@ -49,7 +49,7 @@ class QuizSeeder extends Seeder
             "type" => "Quiz",
             "likes" => 0,
             "tag_id" => 3,
-            "owner" => 4,
+            "user_id" => 4,
         ]);
     }
 }

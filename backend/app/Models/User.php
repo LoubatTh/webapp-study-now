@@ -4,10 +4,14 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Cashier\Billable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
 
 class User extends Authenticatable
 {
@@ -49,6 +53,11 @@ class User extends Authenticatable
         ];
     }
 
+    public function organizations(): BelongsToMany
+    {
+        return $this->belongsToMany(Organization::class, 'users_organizations', 'user_id', 'organization_id');
+    }
+
     public function decks()
     {
         return $this->hasMany(Deck::class);
@@ -56,6 +65,18 @@ class User extends Authenticatable
 
     public function quizzes()
     {
-        return $this->hasMany(Quiz::class, 'owner');
+        return $this->hasMany(Quiz::class);
+    }
+
+    public function likedQuizzes()
+    {
+        return $this->belongsToMany(Quiz::class, 'user_quizzes')
+                    ->wherePivot('is_liked', true);
+    }
+
+    public function likedDecks()
+    {
+        return $this->belongsToMany(Deck::class, 'user_decks')
+                    ->wherePivot('is_liked', true);
     }
 }

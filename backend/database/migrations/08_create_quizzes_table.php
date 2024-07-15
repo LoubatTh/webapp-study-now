@@ -19,8 +19,9 @@ return new class extends Migration {
             $table->boolean('is_organization');
             $table->string('type');
             $table->foreignId('tag_id');
-            $table->foreignId('owner')->constrained('users', 'id')->onDelete('cascade');
+            $table->foreignId('user_id');
 
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('tag_id')->references('id')->on('tags');
 
             $table->fullText('name');

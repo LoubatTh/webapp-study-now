@@ -42,39 +42,39 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
   };
 
   return (
-    <div onClick={handleClick} className="cursor-pointer">
-      <Card className="transition-transform duration-200 transform hover:shadow-lg hover:scale-105">
-        <CardHeader>
-          <CardTitle>{name}</CardTitle>
-          <CardDescription>
-            {type === "quizz" ? "Quizz" : "Deck"}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <span
-            className={cn(
-              "p-1 ps-2 pe-2 rounded-lg font-medium text-sm",
-              getColorClass(tag.toLowerCase())
-            )}
-          >
-            {tag}
-          </span>
-        </CardContent>
-        <CardFooter className="justify-between">
-          <div className="flex items-center">
-            <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <p className="ml-2">lulu</p>
-          </div>
-          <div className="flex items-center">
-            <p className="mr-1">{likes}</p>
-            <Heart className="text-red-500" />
-          </div>
-        </CardFooter>
-      </Card>
-    </div>
+      <div onClick={handleClick} className="cursor-pointer">
+        <Card className={cn("transition duration-200 shadow-lg transform hover:shadow-2xl hover:scale-105")}>
+          <CardHeader>
+            <CardTitle>{name}</CardTitle>
+            <CardDescription>
+              {type === "quizz" ? "Quizz" : "Deck"}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <span
+              className={cn(
+                "p-1 ps-2 pe-2 rounded-lg font-medium text-sm",
+                getColorClass(tag.toLowerCase())
+              )}
+            >
+              {tag}
+            </span>
+          </CardContent>
+          <CardFooter className="justify-between">
+            <div className="flex items-center">
+              <Avatar>
+                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+              <p className="ml-2">lulu</p>
+            </div>
+            <div className="flex items-center">
+              <p className="mr-1">{likes}</p>
+              <Heart className="text-red-500" />
+            </div>
+          </CardFooter>
+        </Card>
+      </div>
   );
 };
 

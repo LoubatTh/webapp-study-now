@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Organization;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Validation\ValidationException;
@@ -9,7 +10,7 @@ use Illuminate\Validation\ValidationException;
 class UserController extends Controller
 {
     /**
-     * Display the specified resource.
+     * Display the current user.
      */
     public function show(Request $request)
     {
@@ -28,6 +29,33 @@ class UserController extends Controller
         ];
 
         return response()->json($response);
+    }
+
+    /**
+     * Display the current user organizations.
+     */
+    public function showOrganizations(Request $request)
+    {
+        $user = $request->user();
+        $ownedOrganizations = Organization::where('owner_id', $user->id)->get();
+        $organizations = [];
+
+        foreach ($user->organizations as $organization) {
+            $response = [
+                'id' => $organization['id'],
+                'name' => $organization['name'],
+                'created_at' => $organization['created_at'],
+                'updated_at' => $organization['updated_at'],
+                'owner_id' => $organization['owner_id'],
+            ];
+
+            array_push($organizations, $response);
+        }
+
+        return response()->json([
+            'owned_organizations' => $ownedOrganizations,
+            'organizations' => $organizations,
+        ], 200);
     }
 
     /**

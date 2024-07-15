@@ -36,7 +36,7 @@ class UserQuizTest extends TestCase
                 'is_public' => true,
                 'is_organization' => false,
                 'likes' => 2,
-                'owner' => self::$user->id,
+                'user_id' => self::$user->id,
             ]
         );
 
@@ -47,7 +47,7 @@ class UserQuizTest extends TestCase
                 'is_public' => false,
                 'is_organization' => false,
                 'likes' => 20,
-                'owner' => self::$userPrivate->id,
+                'user_id' => self::$userPrivate->id,
             ]
         );
 

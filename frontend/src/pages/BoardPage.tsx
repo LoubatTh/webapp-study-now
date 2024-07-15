@@ -7,6 +7,8 @@ import QuizzDeckCard from "@/components/quizzDeckCard";
 import { useAuth } from "@/contexts/AuthContext";
 import { fetchApi } from "@/utils/api";
 import { Deck } from "@/types/deck.type";
+import { motion } from "framer-motion";
+import PageTitle from "@/components/pageTitle";
 
 const getDecksUser = async (accessToken: string) => {
   const response = await fetchApi("GET", `decks`, null, accessToken);
@@ -17,6 +19,22 @@ const getquizzesUser = async (accessToken: string) => {
   const response = await fetchApi("GET", `quizzes`, null, accessToken);
   return response;
 };
+
+const cardVariants = {
+  initial: {
+    opacity: 0,
+    y: 50,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 120,
+    },
+  },
+};
+
 const BoardPage = () => {
   const { accessToken, isReady } = useAuth();
   const [decks, setDecks] = useState<Deck[]>([]);
@@ -112,7 +130,7 @@ const BoardPage = () => {
           <CreateSetBtn />
         </div>
         <div>
-          <h3>My board</h3>
+          <p>My board</p>
         </div>
         {/* <div>
           <FilterBtnsBar
@@ -139,24 +157,37 @@ const BoardPage = () => {
           />
         </div> */}
       </div>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4">
-        {decks && (
-          <>
-            {decks.map((deck, index) => (
-              <QuizzDeckCard
-                key={index}
-                id={deck.id}
-                name={deck.name}
-                tag={deck.tag}
-                likes={deck.likes}
-                type={deck.type}
-                is_public={deck.is_public}
-                is_organization={deck.is_organization}
-              />
-            ))}
-          </>
-        )}
-      </div>
+        <motion.div
+          className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4"
+          initial="initial"
+          animate="visible"
+          variants={{
+            visible: {
+              transition: {
+                staggerChildren: 0.1, 
+              },
+            },
+          }}
+        >
+          {decks && (
+            <>
+              {decks.map((deck, index) => (
+                <motion.div variants={cardVariants} key={deck.id}>
+                  <QuizzDeckCard
+                    key={index}
+                    id={deck.id}
+                    name={deck.name}
+                    tag={deck.tag}
+                    likes={deck.likes}
+                    type={deck.type}
+                    is_public={deck.is_public}
+                    is_organization={deck.is_organization}
+                  />
+                </motion.div>
+              ))}
+            </>
+          )}
+        </motion.div>
       {/* <div className="flex justify-center my-4">
         <Pagin
           currentPage={currentPage}

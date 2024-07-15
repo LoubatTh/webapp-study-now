@@ -17,8 +17,8 @@ class StripeController extends Controller
             ->trialDays(1)
             ->allowPromotionCodes()
             ->checkout([
-                'success_url' => 'http://localhost:3000',
-                'cancel_url' => 'http://localhost:3000',
+                'success_url' => 'http://localhost:3000/profile',
+                'cancel_url' => 'http://localhost:3000/premium',
             ]);
 
         return response()->json([

@@ -9,6 +9,8 @@ use App\Models\UserQuiz;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\JsonResponse;
+use App\Http\Resources\QuizResource;
+use App\Http\Resources\QuizCollection;
 
 class UserQuizController extends Controller
 {
@@ -99,12 +101,13 @@ class UserQuizController extends Controller
     {
         $user = $request->user();
 
-        $likedQuizzes = UserQuiz::where("user_id", $user->id)->where("is_liked", true)->with("quiz")->get();
+        $likedQuizzes = $user->likedQuizzes;
+        
 
         if ($likedQuizzes->isEmpty()) {
-            return response()->json(['error' => "You haven't liked any quiz yet"], 200);
+            return response()->json(['message' => "You haven't liked any quiz yet"], 200);
         }
 
-        return response()->json($likedQuizzes, 200);
+        return response()->json(new QuizCollection($likedQuizzes), 200);
     }
 }

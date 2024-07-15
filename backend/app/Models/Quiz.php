@@ -18,7 +18,7 @@ class Quiz extends Model
         'likes',
         'type',
         'tag_id',
-        'owner'
+        'user_id'
     ];
 
     public function qcms(): HasMany
@@ -31,8 +31,8 @@ class Quiz extends Model
         return $this->belongsTo(Tag::class);
     }
 
-    public function owner(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'owner');
+        return $this->belongsTo(User::class);
     }
 }

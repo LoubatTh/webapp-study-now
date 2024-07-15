@@ -136,7 +136,7 @@ const Navbar = () => {
                         className="cursor-pointer"
                         key="premium"
                         title="Premium"
-                        onClick={() => handleNavigate("/profile/premium")}
+                        onClick={() => handleNavigate("/premium")}
                       >
                         Get access to premium content
                       </ListItem>
@@ -183,7 +183,7 @@ const Navbar = () => {
               </DropdownMenuItem>
 
               <DropdownMenuItem
-                onClick={() => handleNavigate("/profil/premium")}
+                onClick={() => handleNavigate("/premium")}
               >
                 <CreditCard className="mr-2 h-4 w-4" />
                 <p>Premium</p>

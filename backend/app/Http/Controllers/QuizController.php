@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Models\Quiz;
+use App\Models\Tag;
+use App\Models\User;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\QuizResource;
@@ -141,26 +143,38 @@ class QuizController extends Controller
 
     public function index(Request $request): JsonResponse
     {
+        $numberPerPage = 9;
+        $isSearch = $request->has("search");
 
         if ($request->has("myQuizzes")) {
 
             $user = Auth::guard('sanctum')->user();
-            
             if (!$user) {
                 return response()->json(["message" => "Unauthorized"], 401);
             }
 
-            $quizzes = Quiz::where("user_id", $user->id)->get();
-
-            if ($quizzes->isEmpty()) {
+            $quizzes = Quiz::where("user_id", $user->id);
+            if (!$quizzes) {
                 return response()->json(['message' => "You haven't created any quiz yet"], 200);
             }
 
         } else {
-            $quizzes = Quiz::where("is_public", true)->get();
+            $quizzes = Quiz::where("is_public", true);
         }
 
-        return response()->json(new QuizCollection($quizzes), 200);
-    }
+        if ($isSearch) {
+            $search = $request->input("search");
+            $searchTerm = "%{$search}%";
 
+            $quizzes = $quizzes->where('name', 'ILIKE', $searchTerm);
+
+            $tag_ids = Tag::where('name', 'ILIKE', $searchTerm)->pluck('id');
+
+            $user_ids = User::where('name', 'ILIKE', $searchTerm)->pluck('id');
+
+            $quizzes = $quizzes->orWhereIn("tag_id", $tag_ids)->orWhereIn("user_id", $user_ids);
+        }
+
+        return response()->json(new QuizCollection($quizzes->paginate($numberPerPage)), 200);
+    }
 }

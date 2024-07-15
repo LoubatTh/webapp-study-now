@@ -45,7 +45,7 @@ class OrganizationDeckController
                 ]);
             }
 
-            if (!$deck['isPublic'] && $deck['user_id'] !== $request->user()['id']) {
+            if (!$deck['is_public'] && ($deck['user_id'] !== $request->user()['id'])) {
                 return response()->json([
                     'error' => 'Only owned or public decks can be added to the organization',
                 ], 403);
@@ -69,9 +69,15 @@ class OrganizationDeckController
                 'file_path' => $filePath,
             ]);
 
+            if ($filePath) {
+                return response()->json([
+                    'message' => 'Deck added to the organization',
+                    'file_url' => $this->urlBuilder($filePath),
+                ], 201);
+            }
+
             return response()->json([
                 'message' => 'Deck added to the organization',
-                'file_url' => $this->urlBuilder($filePath),
             ], 201);
         } catch (HttpException $e) {
             return response()->json([
@@ -119,7 +125,10 @@ class OrganizationDeckController
             ], 404);
         }
 
-        Storage::delete($organizationDeck['file_path']);
+        if ($organizationDeck['file_path']) {
+            Storage::delete($organizationDeck['file_path']);
+        }
+
         $filePath = Storage::putFile('organizations/decks', $file, 'public');
         $organizationDeck->update([
             'file_path' => $filePath,

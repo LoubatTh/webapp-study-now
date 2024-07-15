@@ -7,6 +7,7 @@ export async function fetchApi<T>(
   const headers = new Headers({
     "Content-Type": "application/json",
     Accept: "application/json",
+    Accept: "application/json",
   });
 
   if (token) {
@@ -17,14 +18,25 @@ export async function fetchApi<T>(
     method,
     headers,
     body: body ? JSON.stringify(body) : undefined,
+    body: body ? JSON.stringify(body) : undefined,
   };
 
+  if (method === "GET" || method === "DELETE") {
   if (method === "GET" || method === "DELETE") {
     delete config.body;
   }
 
   try {
     const response = await fetch(`/api/${endpoint}`, config);
+    const contentType = response.headers.get("content-type");
+    let data;
+
+    if (contentType && contentType.indexOf("application/json") !== -1) {
+      data = await response.json();
+    } else {
+      data = await response.text();
+    }
+
     const contentType = response.headers.get("content-type");
     let data;
 
@@ -41,6 +53,7 @@ export async function fetchApi<T>(
         error: data.error || "Error occurred",
       };
     }
+
 
     return { data, status: response.status };
   } catch (error: any) {

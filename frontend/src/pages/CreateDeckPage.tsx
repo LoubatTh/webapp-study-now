@@ -20,9 +20,18 @@ import {
 } from "@/components/ui/select";
 import { useNavigate, useParams } from "react-router-dom";
 import { useUser } from "@/contexts/UserContext";
+import { useNavigate, useParams } from "react-router-dom";
+import { useUser } from "@/contexts/UserContext";
 
 const postDeck = async (deck: PostDeck, accessToken: string) => {
   const response = await fetchApi("POST", "decks", deck, accessToken);
+  console.log(response);
+  return response;
+};
+
+const editDeck = async (id: string, deck: PostDeck, accessToken: string) => {
+  console.log(id);
+  const response = await fetchApi("PUT", `decks/${id}`, deck, accessToken);
   console.log(response);
   return response;
 };
@@ -44,6 +53,11 @@ const getDeck = async (id: string, accessToken: string) => {
   return response;
 };
 
+const getDeck = async (id: string, accessToken: string) => {
+  const response = await fetchApi("GET", `decks/${id}`, null, accessToken);
+  return response;
+};
+
 const CreateDeckPage = () => {
   //Get the navigate function from the useNavigate hook
   const navigate = useNavigate();
@@ -53,11 +67,19 @@ const CreateDeckPage = () => {
   const { name } = useUser();
   //Check if its a creation page or an edition page
   const { id } = useParams();
+  //Get the user from the AuthUser
+  const { name } = useUser();
+  //Check if its a creation page or an edition page
+  const { id } = useParams();
   //Use the useDeckStore store to get the decks
   const { deck, saveFlashcard, removeFlashcard, resetDeck } = useDeckStore();
   //loading state
   const [loading, setLoading] = useState<boolean>(true);
+  const { deck, saveFlashcard, removeFlashcard, resetDeck } = useDeckStore();
+  //loading state
+  const [loading, setLoading] = useState<boolean>(true);
   //State to manage the name of the deck
+  const [nameDeck, setNameDeck] = useState<string>("");
   const [nameDeck, setNameDeck] = useState<string>("");
   //State to manage the lable of the deck
   const [label, setLabel] = useState<string>("");
@@ -79,6 +101,7 @@ const CreateDeckPage = () => {
   const deleteFlashcard = (id: number): void => {
     setFlashcardList(deckList.filter((flashcard) => flashcard.id !== id));
     removeFlashcard(id);
+    removeFlashcard(id);
   };
 
   //Function to toggle the collapse of a deck
@@ -97,14 +120,18 @@ const CreateDeckPage = () => {
     const response = await getLabels();
     if (response.status === 200) {
       const data = await response.data;
+      const data = await response.data;
       setLabels(data);
     } else {
+      const data = await response.data;
       const data = await response.data;
       toast({ description: data.message });
     }
   };
 
   //Function to create the flashcard with the decks and send it to the backend
+  const createDeckHandler = async (): Promise<void> => {
+    if (nameDeck.length < 1) {
   const createDeckHandler = async (): Promise<void> => {
     if (nameDeck.length < 1) {
       setErrorMessage("The name field is required.");
@@ -118,6 +145,7 @@ const CreateDeckPage = () => {
     } else {
       setErrorMessage("");
       const createdDeck = {
+        name: nameDeck,
         name: nameDeck,
         is_public: isPublic,
         tag_id: parseInt(label),
@@ -196,6 +224,11 @@ const CreateDeckPage = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, accessToken, loading, name]);
+    if (id && accessToken && loading && name) {
+      getDeckData(id, accessToken);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, accessToken, loading, name]);
 
   return (
     <div className="flex flex-col items-center gap-4">
@@ -206,6 +239,8 @@ const CreateDeckPage = () => {
           id="name"
           type="text"
           placeholder="My Deck name"
+          value={nameDeck}
+          onChange={(e) => setNameDeck(e.target.value)}
           value={nameDeck}
           onChange={(e) => setNameDeck(e.target.value)}
         />
@@ -222,6 +257,11 @@ const CreateDeckPage = () => {
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
+              {labels.map((label) => (
+                <SelectItem key={label.id} value={label.id}>
+                  {label.name}
+                </SelectItem>
+              ))}
               {labels.map((label) => (
                 <SelectItem key={label.id} value={label.id}>
                   {label.name}
@@ -251,6 +291,7 @@ const CreateDeckPage = () => {
             <CreateFlashcard
               id={flashcard.id}
               flashcard={flashcard}
+              flashcard={flashcard}
               index={i + 1}
               flashcardsSize={deckList.length}
               collapsed={flashcard.collapsed}
@@ -263,6 +304,7 @@ const CreateDeckPage = () => {
           Add New Flashcard
         </Button>
         <Separator className="my-2" />
+        <Button onClick={createDeckHandler} variant="default">
         <Button onClick={createDeckHandler} variant="default">
           Create Deck
         </Button>

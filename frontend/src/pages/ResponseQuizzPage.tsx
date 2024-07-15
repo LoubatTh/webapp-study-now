@@ -34,7 +34,6 @@ const ResponseQuizzPage = () => {
   // Permet de stocker l'état de la soumission du formulaire
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-
   /*
   Ce UseEffect permet de premièrement vérifier si l'utilisateur est prêt à 
   utiliser l'application (en attendant que le AuthContext soit initialisé)
@@ -59,18 +58,18 @@ const ResponseQuizzPage = () => {
       const status = await response.status;
 
       // Si la requête est bien effectué, on stocke le quizz dans le state quizz
-      if(status == 200){
+      if (status == 200) {
         const data = await response.data;
         setQuizz(data);
       }
 
       // Si le quizz est privé, on stocke la variable isForbidden à true
-      if(status == 403){
+      if (status == 403) {
         setIsForbidden(true);
       }
 
       // Si le quizz n'existe pas, on stocke la variable isNotFound à true
-      if(status == 404 || status == 500){
+      if (status == 404 || status == 500) {
         setIsNotFound(true);
       }
     };
@@ -167,61 +166,58 @@ const ResponseQuizzPage = () => {
     console.log(correctAnswers);
   };
 
-  if(isNotFound){
+  if (isNotFound) {
     return <ResourceNotFound type="quizz" />;
   }
 
-  if(isForbidden){
-    return <ResourceForbidden type="quizz "/>;
+  if (isForbidden) {
+    return <ResourceForbidden type="quizz " />;
   }
-  
 
   return (
-      <>
-        <div className="flex flex-col items-center gap-4">
-          {quizz ? (
-            <div>
-              <h1 className="my-4 text-center text-lg	font-bold">
-                {quizz.name}
-              </h1>
+    <>
+      <div className="flex flex-col items-center gap-4">
+        {quizz ? (
+          <div>
+            <h1 className="my-4 text-center text-lg	font-bold">{quizz.name}</h1>
 
-              {quizz.qcms.map((qcm) => (
-                <div
-                  key={qcm.id}
-                  className="border-gray-300 border-b-2 m-3 mb-5 p-3 pb-10"
-                >
-                  <QuestionQCM
-                    question={qcm}
-                    onAnswerSelect={(answers) =>
-                      handleAnswerSelect(qcm.id, answers)
-                    }
-                    answeredCorrectly={answeredCorrectly[qcm.id]}
-                    isSubmitting={isSubmitting}
-                  />
-                  {errors[qcm.id] && (
-                    <p className="text-red-500">{errors[qcm.id]}</p>
-                  )}
-                </div>
-              ))}
-              <div className="flex items-center gap-2 m-3">
-                <Button
-                  className="w-1/2"
-                  onClick={handleSubmit}
-                  variant="default"
-                >
-                  Valider
-                </Button>
-                <p className="">
-                  Vous avez eu {correctPercentage}% de bonnes réponses
-                </p>
+            {quizz.qcms.map((qcm) => (
+              <div
+                key={qcm.id}
+                className="border-gray-300 border-b-2 m-3 mb-5 p-3 pb-10"
+              >
+                <QuestionQCM
+                  question={qcm}
+                  onAnswerSelect={(answers) =>
+                    handleAnswerSelect(qcm.id, answers)
+                  }
+                  answeredCorrectly={answeredCorrectly[qcm.id]}
+                  isSubmitting={isSubmitting}
+                />
+                {errors[qcm.id] && (
+                  <p className="text-red-500">{errors[qcm.id]}</p>
+                )}
               </div>
+            ))}
+            <div className="flex items-center gap-2 m-3">
+              <Button
+                className="w-1/2"
+                onClick={handleSubmit}
+                variant="default"
+              >
+                Valider
+              </Button>
+              <p className="">
+                Vous avez eu {correctPercentage}% de bonnes réponses
+              </p>
             </div>
-          ) : (
-            <p>Chargement...</p>
-          )}
-        </div>
-      </>
-    );
+          </div>
+        ) : (
+          <p>Chargement...</p>
+        )}
+      </div>
+    </>
+  );
 };
 
 export default ResponseQuizzPage;

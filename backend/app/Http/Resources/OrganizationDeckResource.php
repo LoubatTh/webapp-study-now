@@ -15,7 +15,6 @@ class OrganizationDeckResource extends JsonResource
     public function toArray(Request $request): array
     {
         $appUrl = env('APP_DEBUG') ? 'backend' : env('APP_URL');
-
          
         return [
                 'id' => $this->id,

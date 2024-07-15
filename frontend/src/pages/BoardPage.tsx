@@ -8,21 +8,13 @@ import { useAuth } from "@/contexts/AuthContext";
 import { fetchApi } from "@/utils/api";
 import { Deck } from "@/types/deck.type";
 import { motion } from "framer-motion";
-import PageTitle from "@/components/pageTitle";
 
 const getDecksUser = async (accessToken: string) => {
-  const response = await fetchApi("GET", `decks?myDecks`, null, accessToken);
   const response = await fetchApi("GET", `decks?myDecks`, null, accessToken);
   return response;
 };
 
 const getquizzesUser = async (accessToken: string) => {
-  const response = await fetchApi(
-    "GET",
-    `quizzes?myQuizzes`,
-    null,
-    accessToken
-  );
   const response = await fetchApi(
     "GET",
     `quizzes?myQuizzes`,
@@ -108,7 +100,6 @@ const BoardPage = () => {
     console.log(response);
     console.log(response);
     if (response.status === 200) {
-      const quizzes: QuizzType = response.data?.data as QuizzType;
       const quizzes: QuizzType = response.data?.data as QuizzType;
       setQuizzes(quizzes);
     } else {

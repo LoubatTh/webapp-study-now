@@ -16,6 +16,7 @@ class OrganizationController
     {
         Organization::create([
             'name' => $request->name,
+            'description' => $request->description,
             'owner_id' => $request->user()['id'],
         ]);
 

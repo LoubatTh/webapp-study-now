@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Card,
   CardContent,
@@ -6,13 +7,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import React from "react";
-import { Heart } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useNavigate } from "react-router-dom";
 import { getColorClass } from "@/utils/tagscolor";
 import { cn } from "@/lib/utils";
 import EditButton from "./EditButton";
+import DeleteButton from "./DeleteButton";
+import LikeButton from "./LikeButton";
 
 type CommonCardProps = {
   id: number;
@@ -20,6 +21,7 @@ type CommonCardProps = {
   tag: string;
   type: string;
   likes: number;
+  onDeleteCard: (id: number) => void;
 };
 
 const QuizzDeckCard: React.FC<CommonCardProps> = ({
@@ -28,6 +30,7 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
   tag,
   type,
   likes,
+  onDeleteCard,
 }: CommonCardProps) => {
   const navigate = useNavigate();
 
@@ -46,8 +49,9 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
         <CardHeader>
           <div className="flex justify-between">
             <CardTitle>{name}</CardTitle>
-            <div>
+            <div className="flex gap-2">
               <EditButton id={id} type={type} />
+              <DeleteButton id={id} type={type} onDeleteCard={onDeleteCard} />
             </div>
           </div>
           <CardDescription>
@@ -72,10 +76,7 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
             </Avatar>
             <p className="ml-2">lulu</p>
           </div>
-          <div className="flex items-center">
-            <p className="mr-1">{likes}</p>
-            <Heart className="text-red-500" />
-          </div>
+          <LikeButton id={id} type={type} likes={likes} isLiked={false} />
         </CardFooter>
       </Card>
     </div>

@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
+import { FilePen } from "lucide-react";
 
 type EditButtonProps = {
   id: number;
@@ -20,7 +21,9 @@ const EditButton = ({ id, type }: EditButtonProps) => {
 
   return (
     <div>
-      <Button onClick={(event) => editHandler(event)}>Edit</Button>
+      <Button className="p-3" onClick={(event) => editHandler(event)}>
+        <FilePen size={14} />
+      </Button>
     </div>
   );
 };

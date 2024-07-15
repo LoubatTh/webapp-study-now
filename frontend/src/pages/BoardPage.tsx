@@ -98,8 +98,9 @@ const BoardPage = () => {
 
   const getDataQuizzes = async () => {
     const response = await getquizzesUser(accessToken);
+    console.log(response);
     if (response.status === 200) {
-      const quizzes = response.data;
+      const quizzes: QuizzType = response.data?.data as QuizzType;
       setQuizzes(quizzes);
     } else {
       console.log(response.message);
@@ -162,37 +163,37 @@ const BoardPage = () => {
           />
         </div> */}
       </div>
-        <motion.div
-          className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4"
-          initial="initial"
-          animate="visible"
-          variants={{
-            visible: {
-              transition: {
-                staggerChildren: 0.1, 
-              },
+      <motion.div
+        className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4"
+        initial="initial"
+        animate="visible"
+        variants={{
+          visible: {
+            transition: {
+              staggerChildren: 0.1,
             },
-          }}
-        >
-          {decks && (
-            <>
-              {decks.map((deck, index) => (
-                <motion.div variants={cardVariants} key={deck.id}>
-                  <QuizzDeckCard
-                    key={index}
-                    id={deck.id}
-                    name={deck.name}
-                    tag={deck.tag}
-                    likes={deck.likes}
-                    type={deck.type}
-                    is_public={deck.is_public}
-                    is_organization={deck.is_organization}
-                  />
-                </motion.div>
-              ))}
-            </>
-          )}
-        </motion.div>
+          },
+        }}
+      >
+        {decks && (
+          <>
+            {decks.map((deck, index) => (
+              <motion.div variants={cardVariants} key={deck.id}>
+                <QuizzDeckCard
+                  key={index}
+                  id={deck.id}
+                  name={deck.name}
+                  tag={deck.tag}
+                  likes={deck.likes}
+                  type={deck.type}
+                  is_public={deck.is_public}
+                  is_organization={deck.is_organization}
+                />
+              </motion.div>
+            ))}
+          </>
+        )}
+      </motion.div>
       {/* <div className="flex justify-center my-4">
         <Pagin
           currentPage={currentPage}

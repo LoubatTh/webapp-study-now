@@ -60,10 +60,8 @@ const QuestionQCM = ({
       <div className="grid grid-cols-2 grid-rows-2 gap-1">
         {question.answers.map((answer, index) => (
           <p
-            className={`rounded-lg p-1 m-0.5 ${getBorderColor(
-              answer
-            )}`}
-            key={answer.answer}
+            className={`rounded-lg p-1 m-0.5 ${getBorderColor(answer)}`}
+            key={index}
             onClick={
               !isSubmitting ? () => handleAnswerClick(answer) : undefined
             }

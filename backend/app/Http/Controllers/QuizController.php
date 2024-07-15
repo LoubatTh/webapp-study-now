@@ -125,7 +125,7 @@ class QuizController extends Controller
         $quiz->name = $data["name"];
         $quiz->is_public = $data['is_public'] ? $data['is_public'] : false;
         $quiz->is_organization = $request->has("is_public") ? $request->is_public : false;
-        $quiz->tag_id = $data['tag_id'] ? $data['tag_id'] : $quiz->tag_id;
+        $quiz->tag_id = $request->has("tag_id") ? $request->tag_id : $quiz->tag_id;
         $quiz->save();
 
 

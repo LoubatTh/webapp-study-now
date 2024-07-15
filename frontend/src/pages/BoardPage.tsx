@@ -1,22 +1,29 @@
 import { useEffect, useState } from "react";
 import CreateSetBtn from "@/components/createSetBtn";
-// import FilterBtnsBar from "@/components/filterBtnsBar";
 import QuizzDeckCard from "@/components/quizzDeckCard";
-// import { mockDeckData, mockQuizzData } from "@/lib/mockData";
-// import Pagin from "@/components/pagination";
 import { useAuth } from "@/contexts/AuthContext";
 import { fetchApi } from "@/utils/api";
 import { Deck } from "@/types/deck.type";
 import { motion } from "framer-motion";
-import PageTitle from "@/components/pageTitle";
+import { QuizzType } from "@/types/QuizzContext.type";
+import FilterBar from "@/components/FilterBar";
+import { ClassNames } from "@emotion/react";
+import FilterBarMobile from "@/components/FilterBarMobile";
 
 const getDecksUser = async (accessToken: string) => {
-  const response = await fetchApi("GET", `decks`, null, accessToken);
+  const response = await fetchApi("GET", `decks?myDecks`, null, accessToken);
+  console.log("Decks response: ", response);
   return response;
 };
 
 const getquizzesUser = async (accessToken: string) => {
-  const response = await fetchApi("GET", `quizzes`, null, accessToken);
+  const response = await fetchApi(
+    "GET",
+    `quizzes?myQuizzes`,
+    null,
+    accessToken
+  );
+  console.log("Quizzes response: ", response);
   return response;
 };
 
@@ -38,54 +45,18 @@ const cardVariants = {
 const BoardPage = () => {
   const { accessToken, isReady } = useAuth();
   const [decks, setDecks] = useState<Deck[]>([]);
-  const [quizzes, setQuizzes] = useState([]);
+  const [quizzes, setQuizzes] = useState<QuizzType[]>([]);
+  const [allCards, setAllCards] = useState<any[]>([]);
   const [loading, isLoading] = useState(true);
-  // const [activeButton, setActiveButton] = useState("All");
-  // const [isFavActive, setIsFavActive] = useState(false);
-  // const [currentPage, setCurrentPage] = useState(1);
-  // const itemsPerPage = 9;
-
-  // // handle click for filter btn
-  // const handleButtonClick = (buttonName: string) => {
-  //   setActiveButton(buttonName);
-  //   setCurrentPage(1);
-  // };
-
-  // // handle click for fav button
-  // const toggleHeartButton = () => {
-  //   setIsFavActive((prevState) => !prevState);
-  //   setCurrentPage(1);
-  // };
-
-  // // combine quizz and deck data
-  // const combinedData = [...mockQuizzData, ...mockDeckData];
-
-  // // Function to filter combined data
-  // const filteredData = combinedData.filter((item) => {
-  //   if (isFavActive && item.likes === 0) {
-  //     return false;
-  //   }
-
-  //   return activeButton === "All" || activeButton.toLowerCase() === item.type;
-  // });
-
-  // // method to set the number of page for pagination
-  // const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  // const displayedItems = filteredData.slice(
-  //   (currentPage - 1) * itemsPerPage,
-  //   currentPage * itemsPerPage
-  // );
-
-  // // handle click for pagination button
-  // const handlePageChange = (page) => {
-  //   setCurrentPage(page);
-  // };
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const getDataDecks = async () => {
     const response = await getDecksUser(accessToken);
     if (response.status === 200) {
       const decks: Deck[] = response.data?.decks as Deck[];
       setDecks(decks);
+      setAllCards((prev) => [...prev, ...decks]);
     } else {
       console.log(response.message);
     }
@@ -94,8 +65,9 @@ const BoardPage = () => {
   const getDataQuizzes = async () => {
     const response = await getquizzesUser(accessToken);
     if (response.status === 200) {
-      const quizzes = response.data;
+      const quizzes: QuizzType[] = response.data?.quizzes as QuizzType;
       setQuizzes(quizzes);
+      setAllCards((prev) => [...prev, ...quizzes]);
     } else {
       console.log(response.message);
     }
@@ -113,10 +85,16 @@ const BoardPage = () => {
     }
   };
 
+  const handleDeleteCard = (id: number) => {
+    setAllCards((prev) => prev.filter((card) => card.id !== id));
+  };
+
+  const handleSearch = (searchValues: any) => {
+    console.log("Search values from FilterBar:", searchValues);
+  };
+
   useEffect(() => {
     getAllData();
-    console.log("Decks: ", decks);
-    console.log("Quizzes: ", quizzes);
   }, [isReady, accessToken]);
 
   if (loading) {
@@ -125,6 +103,12 @@ const BoardPage = () => {
 
   return (
     <>
+      <div className="md:hidden">
+        <FilterBarMobile onSearch={handleSearch} />
+      </div>
+      <div className="hidden md:block">
+        <FilterBar onSearch={handleSearch} />
+      </div>
       <div className="hidden md:flex justify-around p-10 items-center">
         <div>
           <CreateSetBtn />
@@ -132,14 +116,6 @@ const BoardPage = () => {
         <div>
           <p>My board</p>
         </div>
-        {/* <div>
-          <FilterBtnsBar
-            activeButton={activeButton}
-            isFavActive={isFavActive}
-            onButtonClick={handleButtonClick}
-            onToggleHeart={toggleHeartButton}
-          />
-        </div> */}
       </div>
       <div className="md:hidden flex flex-col items-center p-10">
         <div className="mb-4">
@@ -148,53 +124,37 @@ const BoardPage = () => {
         <div className="mb-4">
           <CreateSetBtn />
         </div>
-        {/* <div className="">
-          <FilterBtnsBar
-            activeButton={activeButton}
-            isFavActive={isFavActive}
-            onButtonClick={handleButtonClick}
-            onToggleHeart={toggleHeartButton}
-          />
-        </div> */}
       </div>
-        <motion.div
-          className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4"
-          initial="initial"
-          animate="visible"
-          variants={{
-            visible: {
-              transition: {
-                staggerChildren: 0.1, 
-              },
+      <motion.div
+        className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4"
+        initial="initial"
+        animate="visible"
+        variants={{
+          visible: {
+            transition: {
+              staggerChildren: 0.1,
             },
-          }}
-        >
-          {decks && (
-            <>
-              {decks.map((deck, index) => (
-                <motion.div variants={cardVariants} key={deck.id}>
-                  <QuizzDeckCard
-                    key={index}
-                    id={deck.id}
-                    name={deck.name}
-                    tag={deck.tag}
-                    likes={deck.likes}
-                    type={deck.type}
-                    is_public={deck.is_public}
-                    is_organization={deck.is_organization}
-                  />
-                </motion.div>
-              ))}
-            </>
-          )}
-        </motion.div>
-      {/* <div className="flex justify-center my-4">
-        <Pagin
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-        /> 
-      </div> */}
+          },
+        }}
+      >
+        {allCards && (
+          <>
+            {allCards.map((item, index) => (
+              <motion.div variants={cardVariants} key={item.id}>
+                <QuizzDeckCard
+                  key={index}
+                  id={item.id}
+                  name={item.name}
+                  tag={item.tag}
+                  likes={item.likes}
+                  type={item.type}
+                  onDeleteCard={handleDeleteCard}
+                />
+              </motion.div>
+            ))}
+          </>
+        )}
+      </motion.div>
     </>
   );
 };

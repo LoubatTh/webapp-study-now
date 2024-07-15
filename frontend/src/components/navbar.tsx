@@ -17,6 +17,7 @@ import {
   LogOut,
   User,
   Home,
+  Search,
 } from "lucide-react";
 
 import {
@@ -70,6 +71,15 @@ const Navbar = () => {
               >
                 <Home className="mr-2 h-4 w-4" />
                 Home
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+            <NavigationMenuItem className="cursor-pointer">
+              <NavigationMenuLink
+                className={navigationMenuTriggerStyle()}
+                onClick={() => handleNavigate("/explore")}
+              >
+                <Search className="mr-2 h-4 w-4" />
+                Explore
               </NavigationMenuLink>
             </NavigationMenuItem>
 
@@ -182,9 +192,7 @@ const Navbar = () => {
                 <p>Statistics</p>
               </DropdownMenuItem>
 
-              <DropdownMenuItem
-                onClick={() => handleNavigate("/premium")}
-              >
+              <DropdownMenuItem onClick={() => handleNavigate("/premium")}>
                 <CreditCard className="mr-2 h-4 w-4" />
                 <p>Premium</p>
               </DropdownMenuItem>
@@ -193,6 +201,10 @@ const Navbar = () => {
             <DropdownMenuSeparator />
 
             <DropdownMenuGroup>
+              <DropdownMenuItem onClick={() => handleNavigate("/explore")}>
+                <Search className="mr-2 h-4 w-4" />
+                <p>Explore</p>
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleNavigate("/board")}>
                 <ClipboardList className="mr-2 h-4 w-4" />
                 <p>My Boards</p>

@@ -5,7 +5,7 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Switch } from "../components/ui/switch";
 import { useAuth } from "@/contexts/AuthContext";
-import { PostQuizz } from "@/types/quizz.type";
+import { PostQuizz, Quizz } from "@/types/quizz.type";
 import { fetchApi } from "@/utils/api";
 import CreateQCM from "../components/quizz/CreateQCM";
 import useQCMStore from "../lib/stores/quizzStore";
@@ -20,16 +20,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useUser } from "@/contexts/UserContext";
+import { Tag } from "@/types/tag.type";
 
 const postQuizz = async (quizz: PostQuizz, accessToken: string) => {
   const response = await fetchApi("POST", "quizzes", quizz, accessToken);
-  console.log(response);
   return response;
 };
 
 const editQuizz = async (id: string, quizz: PostQuizz, accessToken: string) => {
   const response = await fetchApi("PUT", `quizzes/${id}`, quizz, accessToken);
-  console.log(response);
   return response;
 };
 
@@ -40,7 +39,6 @@ const getLabels = async () => {
 
 const getQuizz = async (id: string, accessToken: string) => {
   const response = await fetchApi("GET", `quizzes/${id}`, null, accessToken);
-  console.log(response);
   return response;
 };
 
@@ -64,7 +62,7 @@ const CreateQuizzPage = () => {
   //State to manage the visibility of the quizz
   const [isPublic, setIsPublic] = useState<boolean>(false);
   //State to store the labels
-  const [labels, setLabels] = useState<string[]>([]);
+  const [labels, setLabels] = useState<Tag[]>([]);
   //State to manage the error message
   const [errorMessage, setErrorMessage] = useState<string>("");
   //State to manage the list of QCMs
@@ -78,6 +76,7 @@ const CreateQuizzPage = () => {
   //Function to delete a QCM from the list
   const deleteQCM = (id: number): void => {
     setQcmList(qcmList.filter((qcm) => qcm.id !== id));
+    removeQCM(id);
   };
 
   //Function to toggle the collapse of a QCM
@@ -87,18 +86,6 @@ const CreateQuizzPage = () => {
         qcm.id === id ? { ...qcm, collapsed: !qcm.collapsed } : qcm
       )
     );
-  };
-
-  //Function to get the labels for the select input
-  const labelArray = async () => {
-    const response = await getLabels();
-    if (response.status === 200) {
-      const data = await response.data;
-      setLabels(data);
-    } else {
-      const data = await response.data;
-      toast({ description: data.message });
-    }
   };
 
   //Function to create the quizz with the QCMs and send it to the backend
@@ -125,7 +112,7 @@ const CreateQuizzPage = () => {
         let response;
         if (id) {
           response = await editQuizz(id, createdQuizz, accessToken);
-          if (response.status === 204) {
+          if (response.status === 200) {
             toast({ description: "Quizz edited successfully" });
           } else {
             throw new Error(response.error || "Failed to edit quiz");
@@ -148,48 +135,60 @@ const CreateQuizzPage = () => {
     }
   };
 
-  const getQuizzData = async (id: string, accessToken: string) => {
-    const response = await getQuizz(id, accessToken);
-    if (response.status === 401 || response.status === 403) {
-      navigate("/");
-    }
-    if (response.status === 200) {
-      const data = (await response.data) as PostDeck;
-      if (data.owner !== name) {
-        navigate("/");
+  const fetchLabelsAndQuizzData = async (
+    id: string | undefined,
+    accessToken: string
+  ) => {
+    try {
+      const labelsResponse = await getLabels();
+      if (labelsResponse.status === 200) {
+        setLabels(labelsResponse.data as Tag[]);
+
+        if (id) {
+          const quizzResponse = await getQuizz(id, accessToken);
+          if (quizzResponse.status === 200) {
+            const data = quizzResponse.data as Quizz;
+            if (data.owner !== name) {
+              navigate("/");
+              return;
+            }
+            setNameQuizz(data.name);
+            const foundLabel = (labelsResponse.data as Tag[]).find(
+              (label: Tag) => label.name === data.tag
+            );
+            setLabel(foundLabel.id);
+            setIsPublic(data.is_public);
+
+            const copiedQcms = data.qcms.map((qcm) => ({
+              ...qcm,
+              question: qcm.question,
+              answers: qcm.answers,
+              collapsed: true,
+            }));
+
+            copiedQcms.forEach((qcm) => {
+              saveQCM(qcm);
+            });
+            setQcmList(copiedQcms);
+          } else {
+            toast({ description: quizzResponse.data.message });
+          }
+        }
+      } else {
+        toast({ description: labelsResponse.data.message });
       }
-      console.log(name);
-      console.log(data);
-      setNameQuizz(data.name);
-      setLabel(() => {
-        const label = labels.find((label) => label.name === data.tag);
-        return label ? label.id : null;
-      });
-      setIsPublic(data.is_public);
-
-      const copiedQcms = data.qcms.map((qcm) => ({
-        ...qcm,
-        question: qcm.question,
-        answers: qcm.answers,
-        collapsed: true,
-      }));
-
-      copiedQcms.forEach((qcm) => {
-        saveQCM(qcm);
-      });
-
-      setQcmList(copiedQcms);
+    } catch (error) {
+      toast({ description: error.message });
     }
     setLoading(false);
   };
 
   useEffect(() => {
-    labelArray();
-    if (id && accessToken && loading && name) {
-      getQuizzData(id, accessToken);
+    if (accessToken && name) {
+      fetchLabelsAndQuizzData(id, accessToken);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, accessToken, loading, name]);
+  }, [id, accessToken, name, loading]);
   return (
     <div className="flex flex-col items-center gap-4">
       <h1 className="mx-auto my-4">Create Quizz</h1>
@@ -257,7 +256,7 @@ const CreateQuizzPage = () => {
         </Button>
         <Separator className="my-2" />
         <Button onClick={createQuizzHandler} variant="default">
-          Create Quizz
+          {id ? "Edit Quizz" : "Create Quizz"}
         </Button>
       </div>
     </div>

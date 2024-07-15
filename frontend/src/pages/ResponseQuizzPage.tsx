@@ -59,19 +59,16 @@ const ResponseQuizzPage = () => {
 
       // Si la requête est bien effectué, on stocke le quizz dans le state quizz
       if (status == 200) {
-      if (status == 200) {
         const data = await response.data;
         setQuizz(data);
       }
 
       // Si le quizz est privé, on stocke la variable isForbidden à true
       if (status == 403) {
-      if (status == 403) {
         setIsForbidden(true);
       }
 
       // Si le quizz n'existe pas, on stocke la variable isNotFound à true
-      if (status == 404 || status == 500) {
       if (status == 404 || status == 500) {
         setIsNotFound(true);
       }
@@ -170,12 +167,8 @@ const ResponseQuizzPage = () => {
   };
 
   if (isNotFound) {
-  if (isNotFound) {
     return <ResourceNotFound type="quizz" />;
   }
-
-  if (isForbidden) {
-    return <ResourceForbidden type="quizz " />;
   if (isForbidden) {
     return <ResourceForbidden type="quizz " />;
   }

@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import CreateSetBtn from "@/components/createSetBtn";
-// import FilterBtnsBar from "@/components/filterBtnsBar";
 import QuizzDeckCard from "@/components/quizzDeckCard";
 import { useAuth } from "@/contexts/AuthContext";
 import { fetchApi } from "@/utils/api";
 import { Deck } from "@/types/deck.type";
 import { motion } from "framer-motion";
 import { QuizzType } from "@/types/QuizzContext.type";
+import FilterBar from "@/components/FilterBar";
+import { ClassNames } from "@emotion/react";
+import FilterBarMobile from "@/components/FilterBarMobile";
 
 const getDecksUser = async (accessToken: string) => {
   const response = await fetchApi("GET", `decks?myDecks`, null, accessToken);
@@ -46,6 +48,8 @@ const BoardPage = () => {
   const [quizzes, setQuizzes] = useState<QuizzType[]>([]);
   const [allCards, setAllCards] = useState<any[]>([]);
   const [loading, isLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const getDataDecks = async () => {
     const response = await getDecksUser(accessToken);
@@ -60,7 +64,6 @@ const BoardPage = () => {
 
   const getDataQuizzes = async () => {
     const response = await getquizzesUser(accessToken);
-    console.log(response);
     if (response.status === 200) {
       const quizzes: QuizzType[] = response.data?.quizzes as QuizzType;
       setQuizzes(quizzes);
@@ -75,7 +78,6 @@ const BoardPage = () => {
       try {
         await getDataDecks();
         await getDataQuizzes();
-        console.log("All cards: ", allCards);
         isLoading(false);
       } catch (err) {
         console.log(err);
@@ -83,10 +85,16 @@ const BoardPage = () => {
     }
   };
 
+  const handleDeleteCard = (id: number) => {
+    setAllCards((prev) => prev.filter((card) => card.id !== id));
+  };
+
+  const handleSearch = (searchValues: any) => {
+    console.log("Search values from FilterBar:", searchValues);
+  };
+
   useEffect(() => {
     getAllData();
-    console.log("Decks: ", decks);
-    console.log("Quizzes: ", quizzes);
   }, [isReady, accessToken]);
 
   if (loading) {
@@ -95,6 +103,12 @@ const BoardPage = () => {
 
   return (
     <>
+      <div className="md:hidden">
+        <FilterBarMobile onSearch={handleSearch} />
+      </div>
+      <div className="hidden md:block">
+        <FilterBar onSearch={handleSearch} />
+      </div>
       <div className="hidden md:flex justify-around p-10 items-center">
         <div>
           <CreateSetBtn />
@@ -134,6 +148,7 @@ const BoardPage = () => {
                   tag={item.tag}
                   likes={item.likes}
                   type={item.type}
+                  onDeleteCard={handleDeleteCard}
                 />
               </motion.div>
             ))}

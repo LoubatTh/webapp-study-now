@@ -31,15 +31,17 @@ const CreateOrganizations = ({ onOrganizationCreated }) => {
     resolver: zodResolver(OrganizationFormSchema),
     defaultValues: {
       name: "",
+      description: "",
     },
   });
 
   const onSubmit = async (data) => {
     const organizationName = data.name;
+    const organizationDescription = data.description;
     const response = await fetchApi(
       "POST",
       "organizations",
-      { name: organizationName },
+      { name: organizationName, description: organizationDescription },
       accessToken
     );
 
@@ -51,7 +53,13 @@ const CreateOrganizations = ({ onOrganizationCreated }) => {
 
       if (onOrganizationCreated) {
         onOrganizationCreated();
-      }
+      } 
+    } else {
+      toast({
+        title: "Failed to create organization",
+        description: response.data.message,
+        variant: "destructive",
+      });
     }
   };
 
@@ -64,7 +72,7 @@ const CreateOrganizations = ({ onOrganizationCreated }) => {
         </DialogDescription>
       </DialogHeader>
       <FormProvider {...organizationForm}>
-        <form onSubmit={organizationForm.handleSubmit(onSubmit)}>
+        <form className="flex flex-col gap-2" onSubmit={organizationForm.handleSubmit(onSubmit)}>
           <FormField
             control={organizationForm.control}
             name="name"
@@ -72,16 +80,29 @@ const CreateOrganizations = ({ onOrganizationCreated }) => {
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} placeholder="College Saint Expury" />
                 </FormControl>
-                <FormDescription />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={organizationForm.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description (optional)</FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder="A school in Paris" />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
           <DialogClose asChild>
-            <Button className="mt-3" type="submit">
+            <Button className="mt-3 w-fit" type="submit">
               Submit
             </Button>
           </DialogClose>

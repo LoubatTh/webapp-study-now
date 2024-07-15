@@ -1,11 +1,9 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { Heart } from 'lucide-react';
 import { Organization } from '@/types/organization.type';
-import { getFormattedDate } from '@/utils/dateparser';
-import { useNavigate } from 'react-router-dom';
 import { getColorClass } from '@/utils/tagscolor';
+import { useNavigate } from 'react-router-dom';
 
 const OrganizationsCard = ( organization: Organization  ) => {
 
@@ -15,16 +13,23 @@ const OrganizationsCard = ( organization: Organization  ) => {
     navigation(`/organizations/${organization.id}`);
   };
 
+  console.log(organization);
+
   return (
     <div onClick={handleClick} className="cursor-pointer">
       <Card className="transition duration-200 shadow-lg transform hover:shadow-2xl hover:scale-105">
         <CardHeader>
           <CardTitle>{organization.name}</CardTitle>
-          <CardDescription></CardDescription>
+          <CardDescription>{organization.description}</CardDescription>
 
         </CardHeader>
-        <CardContent>
+        <CardContent className='flex flex-col gap-1'>
 
+          {organization.tags.map((tag, index) => (
+            <p key={index} className={cn("p-1 ps-2 pe-2 rounded-lg font-medium text-sm", getColorClass(tag))}>
+              {tag}
+            </p>
+          ))}
           
         </CardContent>
         <CardFooter className="justify-between">

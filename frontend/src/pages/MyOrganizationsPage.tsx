@@ -64,11 +64,11 @@ const MyOrganizationsPage = () => {
           <p className="text-2xl text-gray-600 mt-4">
             You don't have any organizations
           </p>
-          <p className="text-gray-500 mt-2">
+          <p className="text-gray-500 mt-4">
             {is_subscribed ? (
               <Dialog>
                 <DialogTrigger>
-                  <Button className="mt-4">
+                  <Button>
                     Create your first organization
                   </Button>
                 </DialogTrigger>
@@ -125,6 +125,7 @@ const MyOrganizationsPage = () => {
                 created_at={organization.created_at}
                 updated_at={organization.updated_at}
                 name={organization.name}
+                description={organization.description}
                 owner_id={organization.owner_id}
                 tags={organization.tags}
               />
@@ -145,6 +146,8 @@ const MyOrganizationsPage = () => {
                 created_at={organization.created_at}
                 updated_at={organization.updated_at}
                 name={organization.name}
+                description={organization.description}
+                tags={organization.tags}
                 owner_id={organization.owner_id}
               />
             ))}

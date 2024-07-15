@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\TestCase;
+use Illuminate\Testing\Fluent\AssertableJson;
 use App\Models\User;
 use App\Models\Quiz;
 use App\Models\Tag;
@@ -25,8 +26,7 @@ class QuizTest extends TestCase
 
         // INIT USER
         $this->user = User::factory()->create();
-        $this->actingAs($this->user);
-
+        // INIT TAG
         $this->tag = Tag::factory()->create();
 
         // INIT PUBLIC QUIZ
@@ -81,24 +81,47 @@ class QuizTest extends TestCase
                 ]
             ]
         ];
+
+
+        // INIT PRIVATE QUIZ
+        $this->privateQuizData = [
+            "name" => 'quiz 1',
+            'is_public' => false,
+            'is_organization' => false,
+            'tag_id' => $this->tag->id,
+            'user_id' => $this->user->id,
+            'qcms' => [
+                [
+                    'question' => 'question 1',
+                    'answers' => [
+                        [
+                            "answer" => "AB",
+                            "isValid" => true
+                        ],
+                        [
+                            "answer" => "BC",
+                            "isValid" => true
+                        ],
+                        [
+                            "answer" => "CD",
+                            "isValid" => false
+                        ],
+                        [
+                            "answer" => "DE",
+                            "isValid" => false
+                        ]
+                    ]
+                ]
+            ]
+        ];
     }
 
 
-    // User is authenticated
+    // AUTHENTICATED USER
 
-    public function test_creates_quiz(): void
+    public function test_create_quiz(): void
     {
-        // $user = User::factory()->create();
-        // $this->actingAs($user);
-
-        // $tag = Tag::factory()->create();
-
-        $quizDetails = [
-            "name" => 'quiz 1',
-            'is_public' => true,
-            'is_organization' => false
-        ];
-
+        $this->actingAs($this->user);
         $response = $this->post('/api/quizzes', $this->quizData);
 
         $response->assertStatus(201);
@@ -117,91 +140,164 @@ class QuizTest extends TestCase
         }
     }
 
-    public function test_deletes_quiz(): void
+    public function test_get_my_quizzes(): void
     {
-        $user = User::factory()->create();
-        $this->actingAs($user);
+        $this->actingAs($this->user);
+        $response = $this->get('/api/quizzes?myQuizzes');
+
+
+        $response->assertStatus(200);
+        $this->assertNotNull($response->json());
+    }
+
+    public function test_update_quiz(): void
+    {
+        $this->actingAs($this->user);
 
         $quiz = Quiz::factory()->hasQcms(2)->create([
             "name" => 'Quiz Test',
             'is_public' => true,
             'is_organization' => false,
-            'user_id' => $user->id
+            'user_id' => $this->user->id
         ]);
 
-        $response = $this->delete('/api/quizzes/' . $quiz->id);
-        $response->assertStatus(204);
+
+        $quizData = [
+            'name' => 'Quiz updated',
+            'is_public' => false,
+            'is_organization' => true,
+            'qcms' => [
+                [
+                    'question' => 'Question updated',
+                    'answers' => [
+                        [
+                            'answer' => 'Answer 1 updated',
+                            'isValid' => true
+                        ],
+                        [
+                            'answer' => 'Answer 2 updated',
+                            'isValid' => false
+                        ],
+                        [
+                            'answer' => 'Answer 3 updated',
+                            'isValid' => false
+                        ],
+                        [
+                            'answer' => 'Answer 4 updated',
+                            'isValid' => true
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $response = $this->put('/api/quizzes/' . $quiz->id, $quizData);
+
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('quizzes', ['name' => 'Quiz updated']);
     }
 
-    public function test_gets_my_quizzes(): void
+    public function test_delete_quiz(): void
     {
-        $user = User::factory()->create();
-        $this->actingAs($user);
+        $this->actingAs($this->user);
 
-        // $quiz = Quiz::factory()->hasQcms(2)->create([
-        //     "name" => 'Quiz Test',
-        //     'isPublic' => true,
-        //     'isOrganization' => false,
-        //     'owner' => $user->id
-        // ]);
+        $quiz = Quiz::factory()->hasQcms(2)->create([
+            "name" => 'Quiz Test',
+            'is_public' => true,
+            'is_organization' => false,
+            'user_id' => $this->user->id
+        ]);
+        
+        
+        $response = $this->delete('/api/quizzes/' . $quiz->id);
+    
+        $response->assertStatus(204);
+        $this->assertDatabaseMissing('quizzes', [
+            'name' => 'Quiz Test',
+            'id' => $quiz->id,
+        ]);
+        
+    }
 
-        $response = $this->get('/api/quizzes', [
+
+
+
+    // UNAUTHENTICATED USER
+
+    public function test_create_quiz_unauthenticated(): void
+    {
+
+        $response = $this->post('/api/quizzes', $this->quizData, [
             'Accept' => 'application/json',
             'Content-Type' => 'application/json'
         ]);
-        $response->assertStatus(200);
-        
-        $this->assertNotNull($response->json());
+
+        $response->assertJson(["message" => "Unauthenticated."]);
+        $response->assertUnauthorized();
+        $response->assertStatus(401);
     }
 
+    public function test_get_my_quizzes_unauthenticated(): void
+    {
+
+        $response = $this->get('/api/quizzes?myQuizzes');
+        
+        $response->assertJson(["message" => "Unauthorized"]);
+        $response->assertUnauthorized();
+        $response->assertStatus(401);
+    }
+
+    public function test_update_quiz_unauthenticated(): void
+    {
+
+        $quiz = Quiz::factory()->hasQcms(2)->create([
+            "name" => 'Quiz Test',
+            'is_public' => true,
+            'is_organization' => false,
+            'user_id' => $this->user->id
+        ]);
 
 
+        $quizData = [
+            'name' => 'Quiz updated',
+            'is_public' => false,
+            'is_organization' => true,
+            'qcms' => [
+                [
+                    'question' => 'Question updated',
+                    'answers' => [
+                        [
+                            'answer' => 'Answer 1 updated',
+                            'isValid' => true
+                        ],
+                        [
+                            'answer' => 'Answer 2 updated',
+                            'isValid' => false
+                        ],
+                        [
+                            'answer' => 'Answer 3 updated',
+                            'isValid' => false
+                        ],
+                        [
+                            'answer' => 'Answer 4 updated',
+                            'isValid' => true
+                        ]
+                    ]
+                ]
+            ]
+        ];
 
-    // public function test_updates_quiz(): void
-    // {
+        $response = $this->put('/api/quizzes/' . $quiz->id, $quizData, [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json'
+        ]);
 
-    //     $user = User::factory()->create();
-    //     $this->actingAs($user);
+        $response->assertStatus(401);
+        $response->assertUnauthorized();
+        $response->assertJson([
+            'message' => 'Unauthenticated.'
+        ]);
+    }
+    
 
-    //     $quiztest = Quiz::factory()->hasQcms(2)->create([
-    //         "name" => 'Quiz Test',
-    //         'is_public' => true,
-    //         'is_organization' => false,
-    //         'user_id' => $user->id
-    //     ]);
-
-
-    //     $quizData = [
-    //         'name' => 'Quiz updated',
-    //         'is_public' => false,
-    //         'is_organization' => true,
-    //         'qcms' => [
-    //             [
-    //                 'question' => 'Question updated',
-    //                 'answers' => [
-    //                     [
-    //                         'answer' => 'Answer 1 updated',
-    //                         'isValid' => true
-    //                     ],
-    //                     [
-    //                         'answer' => 'Answer 2 updated',
-    //                         'isValid' => false
-    //                     ],
-    //                     [
-    //                         'answer' => 'Answer 3 updated',
-    //                         'isValid' => false
-    //                     ],
-    //                     [
-    //                         'answer' => 'Answer 4 updated',
-    //                         'isValid' => true
-    //                     ]
-    //                 ]
-    //             ]
-    //         ]
-    //     ];
-
-    //     $response = $this->put('/api/quizzes/' . $quiztest->id, $quizData);
-    //     // $response->assertStatus(200);
-    //     $this->assertDatabaseHas('quizzes', ['name' => 'Quiz updated']);
-    // }
 }

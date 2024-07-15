@@ -38,7 +38,7 @@ for (let i = 0; i < 3; i++) {
 
       expect(screen.getByText(`${defaultProps.question}`)).toBeInTheDocument();
       expect(screen.getByText(`${defaultProps.answer}`)).toBeInTheDocument();
-      expect(screen.getByText("My Rating")).toBeInTheDocument();
+      expect(screen.getByText("My rating")).toBeInTheDocument();
 
       const flashcardRating = screen.getByTestId(`flashcard-rating-${i}`);
 
@@ -49,20 +49,20 @@ for (let i = 0; i < 3; i++) {
     it("Flashcards rating", async () => {
       render(<FlashcardComponent {...defaultProps} />);
 
-      const flashcardRating = screen.getByTestId(`flashcard-rating-${i}`);
-      const emptyStars = screen.getByTestId("StarBorderIcon");
+      const fourthStar = screen.getByDisplayValue("4");
+      let emptyStars = screen.getAllByTestId("StarBorderIcon");
 
-      expect(emptyStars).length;
+      expect(emptyStars.length).toBe(5);
 
-      const starIndex = 4;
-      const starWidth = flashcardRating.clientWidth / 5;
+      fireEvent.click(fourthStar);
 
-      const clickX = starWidth * starIndex - starWidth / 2;
-      const clickY = flashcardRating.clientHeight / 2;
+      await waitFor(() => {
+        const filledStars = screen.getAllByTestId("StarIcon");
+        emptyStars = screen.getAllByTestId("StarBorderIcon");
 
-      fireEvent.click(flashcardRating, { clientX: clickX, clientY: clickY });
-
-      expect(emptyStars).length;
+        expect(filledStars.length).toBe(4);
+        expect(emptyStars.length).toBe(1);
+      });
     });
   });
 }

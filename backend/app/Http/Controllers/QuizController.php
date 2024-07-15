@@ -153,8 +153,8 @@ class QuizController extends Controller
                 return response()->json(["message" => "Unauthorized"], 401);
             }
 
-            $quizzes = Quiz::where("user_id", $user->id)->get();
-            if ($quizzes->isEmpty()) {
+            $quizzes = Quiz::where("user_id", $user->id);
+            if (!$quizzes) {
                 return response()->json(['message' => "You haven't created any quiz yet"], 200);
             }
 

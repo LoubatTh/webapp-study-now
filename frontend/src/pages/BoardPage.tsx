@@ -7,6 +7,7 @@ import QuizzDeckCard from "@/components/quizzDeckCard";
 import { useAuth } from "@/contexts/AuthContext";
 import { fetchApi } from "@/utils/api";
 import { Deck } from "@/types/deck.type";
+import { QuizzType } from "@/types/QuizzContext.type";
 
 const getDecksUser = async (accessToken: string) => {
   const response = await fetchApi("GET", `decks?myDecks`, null, accessToken);
@@ -80,8 +81,9 @@ const BoardPage = () => {
 
   const getDataQuizzes = async () => {
     const response = await getquizzesUser(accessToken);
+    console.log(response);
     if (response.status === 200) {
-      const quizzes = response.data;
+      const quizzes: QuizzType = response.data?.data as QuizzType;
       setQuizzes(quizzes);
     } else {
       console.log(response.message);
@@ -145,9 +147,9 @@ const BoardPage = () => {
         </div> */}
       </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4">
-        {decks && (
+        {quizzes && (
           <>
-            {decks.map((deck, index) => (
+            {quizzes.map((deck, index) => (
               <QuizzDeckCard
                 key={index}
                 id={deck.id}

@@ -34,7 +34,6 @@ const ResponseQuizzPage = () => {
   // Permet de stocker l'état de la soumission du formulaire
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-
   /*
   Ce UseEffect permet de premièrement vérifier si l'utilisateur est prêt à 
   utiliser l'application (en attendant que le AuthContext soit initialisé)
@@ -50,10 +49,10 @@ const ResponseQuizzPage = () => {
         null,
         accessToken
       );
-      const data = await response.data; 
+      const data = await response.data;
       if (data === undefined && response.message === "Forbidden") {
         setIsForbidden(true);
-      } else if(response.message === "Quizz not found"){
+      } else if (response.message === "Quizz not found") {
         setIsNotFound(true);
       }
 
@@ -152,61 +151,58 @@ const ResponseQuizzPage = () => {
     console.log(correctAnswers);
   };
 
-  if(isNotFound){
+  if (isNotFound) {
     return <ResourceNotFound type="quizz" />;
   }
 
-  if(isForbidden){
-    return <ResourceForbidden type="quizz "/>;
+  if (isForbidden) {
+    return <ResourceForbidden type="quizz " />;
   }
-  
 
   return (
-      <>
-        <div className="flex flex-col items-center gap-4">
-          {quizz ? (
-            <div>
-              <h1 className="my-4 text-center text-lg	font-bold">
-                {quizz.name}
-              </h1>
+    <>
+      <div className="flex flex-col items-center gap-4">
+        {quizz ? (
+          <div>
+            <h1 className="my-4 text-center text-lg	font-bold">{quizz.name}</h1>
 
-              {quizz.qcms.map((qcm) => (
-                <div
-                  key={qcm.id}
-                  className="border-gray-300 border-b-2 m-3 mb-5 p-3 pb-10"
-                >
-                  <QuestionQCM
-                    question={qcm}
-                    onAnswerSelect={(answers) =>
-                      handleAnswerSelect(qcm.id, answers)
-                    }
-                    answeredCorrectly={answeredCorrectly[qcm.id]}
-                    isSubmitting={isSubmitting}
-                  />
-                  {errors[qcm.id] && (
-                    <p className="text-red-500">{errors[qcm.id]}</p>
-                  )}
-                </div>
-              ))}
-              <div className="flex items-center gap-2 m-3">
-                <Button
-                  className="w-1/2"
-                  onClick={handleSubmit}
-                  variant="default"
-                >
-                  Valider
-                </Button>
-                <p className="">
-                  Vous avez eu {correctPercentage}% de bonnes réponses
-                </p>
+            {quizz.qcms.map((qcm) => (
+              <div
+                key={qcm.id}
+                className="border-gray-300 border-b-2 m-3 mb-5 p-3 pb-10"
+              >
+                <QuestionQCM
+                  question={qcm}
+                  onAnswerSelect={(answers) =>
+                    handleAnswerSelect(qcm.id, answers)
+                  }
+                  answeredCorrectly={answeredCorrectly[qcm.id]}
+                  isSubmitting={isSubmitting}
+                />
+                {errors[qcm.id] && (
+                  <p className="text-red-500">{errors[qcm.id]}</p>
+                )}
               </div>
+            ))}
+            <div className="flex items-center gap-2 m-3">
+              <Button
+                className="w-1/2"
+                onClick={handleSubmit}
+                variant="default"
+              >
+                Valider
+              </Button>
+              <p className="">
+                Vous avez eu {correctPercentage}% de bonnes réponses
+              </p>
             </div>
-          ) : (
-            <p>Chargement...</p>
-          )}
-        </div>
-      </>
-    );
+          </div>
+        ) : (
+          <p>Chargement...</p>
+        )}
+      </div>
+    </>
+  );
 };
 
 export default ResponseQuizzPage;

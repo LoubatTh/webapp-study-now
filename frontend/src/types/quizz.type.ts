@@ -4,6 +4,13 @@ export type Answer = {
 };
 
 export type QCM = {
+  id: number;
+  question: string;
+  answers: Answer[];
+  collapsed?: boolean;
+};
+
+export type PostQCM = {
   question: string;
   answers: Answer[];
 };
@@ -13,12 +20,37 @@ export type Quizz = {
   name: string;
   is_public: boolean;
   qcms: QCM[];
+  owner: string;
+  tag: string;
 };
 
 export type PostQuizz = {
   name: string;
   is_public: boolean;
   qcms: QCM[];
+  tag_id: number;
+};
+
+export type GetQuizzResponse = {
+  data: {
+    links: {
+      first: string;
+      last: string;
+      next: string | null;
+      prev: string | null;
+    };
+    meta: {
+      current_page: number;
+      from: number;
+      last_page: number;
+      path: string;
+      per_page: number;
+      to: number;
+      total: number;
+    };
+    quizzes: Quizz[];
+  };
+  status: number;
 };
 
 export type Questions = {

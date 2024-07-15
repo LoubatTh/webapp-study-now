@@ -1,58 +1,53 @@
-import PageTitle from '@/components/pageTitle'
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAuth } from '@/contexts/AuthContext';
-import { cn } from '@/lib/utils';
-import { fetchApi } from '@/utils/api';
-import clsx from 'clsx';
-import { motion } from 'framer-motion';
-import { BookMarked, CheckCircle, Star, StarsIcon, XCircle } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import PageTitle from "@/components/pageTitle";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAuth } from "@/contexts/AuthContext";
+import { cn } from "@/lib/utils";
+import { fetchApi } from "@/utils/api";
+import clsx from "clsx";
+import { motion } from "framer-motion";
+import { BookMarked, CheckCircle, StarsIcon, XCircle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const advantages = [
-    { name: "Advantage 1", basic: true, premium: true },
-    { name: "Advantage 2", basic: true, premium: true },
-    { name: "Advantage 3", basic: true, premium: true },
-    { name: "Advantage 4", basic: false, premium: true },
-    { name: "Advantage 5", basic: false, premium: true },
-    { name: "Advantage 6", basic: false, premium: true },
-    { name: "Advantage 7", basic: false, premium: true },
-    { name: "Advantage 8", basic: false, premium: true },
-    { name: "Advantage 9", basic: false, premium: true },
-    { name: "Advantage 10", basic: false, premium: true },
-
-]
-
+  { name: "Advantage 1", basic: true, premium: true },
+  { name: "Advantage 2", basic: true, premium: true },
+  { name: "Advantage 3", basic: true, premium: true },
+  { name: "Advantage 4", basic: false, premium: true },
+  { name: "Advantage 5", basic: false, premium: true },
+  { name: "Advantage 6", basic: false, premium: true },
+  { name: "Advantage 7", basic: false, premium: true },
+  { name: "Advantage 8", basic: false, premium: true },
+  { name: "Advantage 9", basic: false, premium: true },
+  { name: "Advantage 10", basic: false, premium: true },
+];
 
 const PremiumPage = () => {
-
   const navigation = useNavigate();
   const { accessToken } = useAuth();
 
   const handleNavigation = (path: string) => {
     navigation(path);
-  }
+  };
 
   const handlePremiumSubscription = async () => {
-    
     document.body.style.cursor = "wait";
 
     try {
-        const response = await fetchApi(
-          "POST",
-          "stripe/checkout",
-          null,
-          accessToken
-        );
-        const stripeUrl = await response.data.url;
+      const response = await fetchApi(
+        "POST",
+        "stripe/checkout",
+        null,
+        accessToken
+      );
+      const stripeUrl = await response.data.url;
 
-        window.open(stripeUrl, "_self");
+      window.open(stripeUrl, "_self");
     } catch (error) {
-        console.error("Error during the subscription process", error);
+      console.error("Error during the subscription process", error);
     } finally {
-        document.body.style.cursor = "default";
+      document.body.style.cursor = "default";
     }
-
   };
 
   return (
@@ -60,7 +55,7 @@ const PremiumPage = () => {
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ type: "spring", duration: 0.5}}
+        transition={{ type: "spring", duration: 0.5 }}
       >
         <PageTitle title="Subscriptions plans" />
       </motion.div>
@@ -111,7 +106,12 @@ const PremiumPage = () => {
                   ))}
                 </ul>
 
-                <Button onClick={() => handleNavigation("/profile")} className="mt-5 w-full">Get Started</Button>
+                <Button
+                  onClick={() => handleNavigation("/profile")}
+                  className="mt-5 w-full"
+                >
+                  Get Started
+                </Button>
               </CardContent>
             </Card>
           </motion.div>
@@ -154,7 +154,12 @@ const PremiumPage = () => {
                   ))}
                 </ul>
 
-                <Button onClick={handlePremiumSubscription} className={cn("mt-5 w-full")}>Subscribe</Button>
+                <Button
+                  onClick={handlePremiumSubscription}
+                  className={cn("mt-5 w-full")}
+                >
+                  Subscribe
+                </Button>
               </CardContent>
             </Card>
           </motion.div>
@@ -162,6 +167,6 @@ const PremiumPage = () => {
       </div>
     </>
   );
-}
+};
 
-export default PremiumPage
+export default PremiumPage;

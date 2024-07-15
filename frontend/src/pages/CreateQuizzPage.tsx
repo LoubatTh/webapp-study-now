@@ -5,12 +5,12 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Switch } from "../components/ui/switch";
 import { useAuth } from "@/contexts/AuthContext";
-import { PostQuizz } from "@/types/quizz.type";
+import { PostQuizz, Quizz } from "@/types/quizz.type";
 import { fetchApi } from "@/utils/api";
 import CreateQCM from "../components/quizz/CreateQCM";
 import useQCMStore from "../lib/stores/quizzStore";
 import { toast } from "@/components/ui/use-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Select,
   SelectContent,
@@ -19,10 +19,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useUser } from "@/contexts/UserContext";
+import { Tag } from "@/types/tag.type";
 
 const postQuizz = async (quizz: PostQuizz, accessToken: string) => {
   const response = await fetchApi("POST", "quizzes", quizz, accessToken);
-  console.log(response);
+  return response;
+};
+
+const editQuizz = async (id: string, quizz: PostQuizz, accessToken: string) => {
+  const response = await fetchApi("PUT", `quizzes/${id}`, quizz, accessToken);
   return response;
 };
 
@@ -31,21 +37,32 @@ const getLabels = async () => {
   return response;
 };
 
+const getQuizz = async (id: string, accessToken: string) => {
+  const response = await fetchApi("GET", `quizzes/${id}`, null, accessToken);
+  return response;
+};
+
 const CreateQuizzPage = () => {
   //Get the access token from the AuthContext
   const navigate = useNavigate();
   //Get the access token from the AuthContext
   const { accessToken } = useAuth();
+  //Get the user from the AuthUser
+  const { name } = useUser();
+  //Check if its a creation page or an edition page
+  const { id } = useParams();
   //Use the useQCMStore store to get the QCMs
-  const { qcms, resetQCMs } = useQCMStore();
+  const { qcms, saveQCM, removeQCM, resetQCMs } = useQCMStore();
+  //loading state
+  const [loading, setLoading] = useState<boolean>(true);
   //State to manage the name of the quizz
-  const [name, setName] = useState<string>("");
+  const [nameQuizz, setNameQuizz] = useState<string>("");
   //State to manage the lable of the deck
   const [label, setLabel] = useState<string>("");
   //State to manage the visibility of the quizz
   const [isPublic, setIsPublic] = useState<boolean>(false);
   //State to store the labels
-  const [labels, setLabels] = useState<string[]>([]);
+  const [labels, setLabels] = useState<Tag[]>([]);
   //State to manage the error message
   const [errorMessage, setErrorMessage] = useState<string>("");
   //State to manage the list of QCMs
@@ -59,6 +76,7 @@ const CreateQuizzPage = () => {
   //Function to delete a QCM from the list
   const deleteQCM = (id: number): void => {
     setQcmList(qcmList.filter((qcm) => qcm.id !== id));
+    removeQCM(id);
   };
 
   //Function to toggle the collapse of a QCM
@@ -70,63 +88,107 @@ const CreateQuizzPage = () => {
     );
   };
 
-  //Function to get the labels for the select input
-  const labelArray = async () => {
-    const response = await getLabels();
-    if (response.status === 200) {
-      const data = await response.data.json();
-      setLabels(data);
-    } else {
-      const data = await response.data.json();
-      toast({ description: data.message });
-    }
-  };
-
   //Function to create the quizz with the QCMs and send it to the backend
-  async function createQuizzHandler(): Promise<void> {
+  const createQuizzHandler = async (): Promise<void> => {
     if (name.length < 1) {
       setErrorMessage("The name field is required.");
-      return;
-    } else if (label === "") {
-      setErrorMessage("The label field is required.");
       return;
     } else if (qcms.length < 1) {
       setErrorMessage("You need to add at least one QCM.");
       return;
+    } else if (label === "") {
+      setErrorMessage("You need to select a label.");
+      return;
     } else {
       setErrorMessage("");
-      const quizz = {
+      const createdQuizz = {
         name,
         is_public: isPublic,
         tag_id: parseInt(label),
-        qcms: [
-          ...qcms.map((qcm) => ({
-            question: qcm.question,
-            answers: qcm.answers,
-          })),
-        ],
+        qcms: qcms,
       };
-      console.log(quizz);
-      const response = await postQuizz(quizz, accessToken);
-      if (response.status === 201) {
-        setName("");
+
+      try {
+        let response;
+        if (id) {
+          response = await editQuizz(id, createdQuizz, accessToken);
+          if (response.status === 200) {
+            toast({ description: "Quizz edited successfully" });
+          } else {
+            throw new Error(response.error || "Failed to edit quiz");
+          }
+        } else {
+          response = await postQuizz(createdQuizz, accessToken);
+          if (response.status === 201) {
+            toast({ description: "Quizz created successfully" });
+          } else {
+            throw new Error(response.error || "Failed to create quizz");
+          }
+        }
+        setNameQuizz("");
         setQcmList([{ id: 0, collapsed: false }]);
         resetQCMs();
-        toast({
-          description: "Quizz created successfully",
-        });
-        navigate("/");
-      } else {
-        const data = await response.data.json();
-        toast({ description: data.message });
+        navigate("/board");
+      } catch (error: any) {
+        toast({ description: error.message });
       }
     }
-  }
+  };
+
+  const fetchLabelsAndQuizzData = async (
+    id: string | undefined,
+    accessToken: string
+  ) => {
+    try {
+      const labelsResponse = await getLabels();
+      if (labelsResponse.status === 200) {
+        setLabels(labelsResponse.data as Tag[]);
+
+        if (id) {
+          const quizzResponse = await getQuizz(id, accessToken);
+          if (quizzResponse.status === 200) {
+            const data = quizzResponse.data as Quizz;
+            if (data.owner !== name) {
+              navigate("/");
+              return;
+            }
+            setNameQuizz(data.name);
+            const foundLabel = (labelsResponse.data as Tag[]).find(
+              (label: Tag) => label.name === data.tag
+            );
+            setLabel(foundLabel.id);
+            setIsPublic(data.is_public);
+
+            const copiedQcms = data.qcms.map((qcm) => ({
+              ...qcm,
+              question: qcm.question,
+              answers: qcm.answers,
+              collapsed: true,
+            }));
+
+            copiedQcms.forEach((qcm) => {
+              saveQCM(qcm);
+            });
+            setQcmList(copiedQcms);
+          } else {
+            toast({ description: quizzResponse.data.message });
+          }
+        }
+      } else {
+        toast({ description: labelsResponse.data.message });
+      }
+    } catch (error) {
+      toast({ description: error.message });
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
-    labelArray();
-  }, []);
-
+    if (accessToken && name) {
+      fetchLabelsAndQuizzData(id, accessToken);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, accessToken, name, loading]);
   return (
     <div className="flex flex-col items-center gap-4">
       <h1 className="mx-auto my-4">Create Quizz</h1>
@@ -136,8 +198,8 @@ const CreateQuizzPage = () => {
           id="name"
           type="text"
           placeholder="My Quizz name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={nameQuizz}
+          onChange={(e) => setNameQuizz(e.target.value)}
         />
         {errorMessage && (
           <div className="text-sm font-medium text-destructive">
@@ -152,11 +214,11 @@ const CreateQuizzPage = () => {
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectItem value="1">Apple</SelectItem>
-              <SelectItem value="2">Banana</SelectItem>
-              <SelectItem value="3">Blueberry</SelectItem>
-              <SelectItem value="4">Grapes</SelectItem>
-              <SelectItem value="5">Pineapple</SelectItem>
+              {labels.map((label) => (
+                <SelectItem key={label.id} value={label.id}>
+                  {label.name}
+                </SelectItem>
+              ))}
             </SelectGroup>
           </SelectContent>
         </Select>
@@ -180,6 +242,7 @@ const CreateQuizzPage = () => {
             </div>
             <CreateQCM
               id={qcm.id}
+              quizz={qcm}
               index={i + 1}
               qcmsSize={qcmList.length}
               collapsed={qcm.collapsed}
@@ -193,7 +256,7 @@ const CreateQuizzPage = () => {
         </Button>
         <Separator className="my-2" />
         <Button onClick={createQuizzHandler} variant="default">
-          Create Quizz
+          {id ? "Edit Quizz" : "Create Quizz"}
         </Button>
       </div>
     </div>

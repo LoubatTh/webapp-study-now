@@ -126,6 +126,7 @@ const MyOrganizationsPage = () => {
                 updated_at={organization.updated_at}
                 name={organization.name}
                 owner_id={organization.owner_id}
+                tags={organization.tags}
               />
               </motion.div>
             ))}

@@ -4,4 +4,5 @@ export type Organization = {
   updated_at: string;
   name: string;
   owner_id: number;
+  tags: string[];
 };

@@ -5,6 +5,7 @@ import { Heart } from 'lucide-react';
 import { Organization } from '@/types/organization.type';
 import { getFormattedDate } from '@/utils/dateparser';
 import { useNavigate } from 'react-router-dom';
+import { getColorClass } from '@/utils/tagscolor';
 
 const OrganizationsCard = ( organization: Organization  ) => {
 
@@ -20,15 +21,13 @@ const OrganizationsCard = ( organization: Organization  ) => {
         <CardHeader>
           <CardTitle>{organization.name}</CardTitle>
           <CardDescription></CardDescription>
+
         </CardHeader>
         <CardContent>
-          ID: {organization.id}
-          <span>
-            Creation : {getFormattedDate(organization.created_at)} <br />
-          </span>
-          <span>Last Update : {getFormattedDate(organization.updated_at)}</span>
+
+          
         </CardContent>
-        {/* <CardFooter className="justify-between">
+        <CardFooter className="justify-between">
           <div className="flex items-center">
             <Avatar>
               <AvatarImage src="https://github.com/shadcn.png" />
@@ -36,7 +35,7 @@ const OrganizationsCard = ( organization: Organization  ) => {
             </Avatar>
             <p className="ml-2">Professeur</p>
           </div>
-        </CardFooter> */}
+        </CardFooter>
       </Card>
     </div>
   );

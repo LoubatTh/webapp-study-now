@@ -4,16 +4,25 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Heart } from 'lucide-react';
 import { Organization } from '@/types/organization.type';
 import { getFormattedDate } from '@/utils/dateparser';
+import { useNavigate } from 'react-router-dom';
 
 const OrganizationsCard = ( organization: Organization  ) => {
+
+  const navigation = useNavigate();
+
+  const handleClick = () => {
+    navigation(`/organizations/${organization.id}`);
+  };
+
   return (
-    <div className="cursor-pointer">
+    <div onClick={handleClick} className="cursor-pointer">
       <Card className="transition duration-200 shadow-lg transform hover:shadow-2xl hover:scale-105">
         <CardHeader>
           <CardTitle>{organization.name}</CardTitle>
           <CardDescription></CardDescription>
         </CardHeader>
         <CardContent>
+          ID: {organization.id}
           <span>
             Creation : {getFormattedDate(organization.created_at)} <br />
           </span>

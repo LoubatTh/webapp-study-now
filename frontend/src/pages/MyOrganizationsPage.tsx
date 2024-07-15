@@ -5,7 +5,7 @@ import { Organization } from "@/types/organization.type";
 import { fetchApi } from "@/utils/api";
 import { useEffect, useState } from "react";
 
-const OrganizationsPage = () => {
+const MyOrganizationsPage = () => {
 
   const [ownedOrganizations, setOwnedOrganizations] = useState([]);
   const [organizations, setOrganizations] = useState([]);
@@ -74,4 +74,4 @@ const OrganizationsPage = () => {
   );
 };
 
-export default OrganizationsPage;
+export default MyOrganizationsPage;

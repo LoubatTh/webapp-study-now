@@ -45,7 +45,7 @@ class UserTest extends TestCase
             [
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
-                'Authorization' => 'Bearer ' . $this->token
+                'Authorization' => "Bearer {$this->token}"
             ]
         );
 
@@ -66,7 +66,30 @@ class UserTest extends TestCase
             [
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
-                'Authorization' => 'Bearer ' . $this->token
+                'Authorization' => "Bearer {$this->token}"
+            ]
+        );
+
+        $response->assertStatus(200)->assertJson(
+            fn(AssertableJson $json) =>
+            $json->hasAll(['message'])
+        );
+    }
+
+    public function test_update_user_password_with_token(): void
+    {
+        $this->actingAs($this->user);
+        $response = $this->putJson(
+            '/api/user',
+            [
+                'name' => 'testUserUpdated' . date_create()->format('m-d-Y'),
+                'password' => 'testPassword',
+                'new_password' => 'newTestPassword'
+            ],
+            [
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+                'Authorization' => "Bearer {$this->token}"
             ]
         );
 
@@ -85,7 +108,7 @@ class UserTest extends TestCase
             [
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
-                'Authorization' => 'Bearer ' . $this->token
+                'Authorization' => "Bearer {$this->token}"
             ]
         );
 

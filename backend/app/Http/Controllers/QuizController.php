@@ -58,11 +58,16 @@ class QuizController extends Controller
 
         $user = $request->user();
 
-        $quiz = Quiz::where("id", $id)->where("user_id", $user->id)->first();
+        $quiz = Quiz::find($id);
 
         if (!$quiz) {
-            return response()->json(['message' => 'Quizz not found'], 404);
+            return response()->json(['message' => 'Quiz not found'], 404);
         }
+
+        if ($quiz->user_id != $user->id) {
+            return response()->json(['message' => 'Forbidden'], 403);
+        }
+        
 
         Quiz::destroy($id);
         return response()->json(null, 204);
@@ -115,11 +120,14 @@ class QuizController extends Controller
             'qcms.*.answers.*.isValid' => 'required|boolean',
         ]);
 
-        $quiz = Quiz::where("id", $id)->where("user_id", $user->id)->first();
-
+        $quiz = Quiz::find($id);
 
         if (!$quiz) {
-            return response()->json(['message' => 'Quizz not found'], 404);
+            return response()->json(['message' => 'Quiz not found'], 404);
+        }
+
+        if ($quiz->user_id != $user->id) {
+            return response()->json(['message' => 'Forbidden'], 403);
         }
 
         $quiz->name = $data["name"];

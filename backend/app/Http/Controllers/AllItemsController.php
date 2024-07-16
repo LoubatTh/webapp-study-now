@@ -38,8 +38,8 @@ class AllItemsController extends Controller
                     return response()->json(["message" => "Unauthorized"], 401);
                 }
 
-                $decks = $decks->where("user_id", $user->id)->orWhereIn("id", $user->likedDecks()->pluck("id"));
-                $quizzes = $quizzes->where("user_id", $user->id)->orWhereIn("id", $user->likedQuizzes()->pluck("id"));
+                $decks = $decks->where("user_id", $user->id)->orWhereIn("id", $user->likedDecks()->pluck("decks.id"));
+                $quizzes = $quizzes->where("user_id", $user->id)->orWhereIn("id", $user->likedQuizzes()->pluck("quizzes.id"));
             } else {
                 $decks = $decks->where("is_public", true);
                 $quizzes = $quizzes->where("is_public", true);

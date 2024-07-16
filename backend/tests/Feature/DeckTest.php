@@ -90,6 +90,7 @@ class DeckTest extends TestCase
                     'likes',
                     'tag',
                     'owner',
+                    'is_liked',
                     'flashcards' => [
                         '*' => [
                             'question',
@@ -124,6 +125,7 @@ class DeckTest extends TestCase
                     'likes',
                     'tag',
                     'owner',
+                    'is_liked',
                     'flashcards' => [
                         '*' => [
                             'question',
@@ -152,7 +154,7 @@ class DeckTest extends TestCase
 
         $response->assertStatus(200)->assertJson(
             fn(AssertableJson $json) =>
-            $json->hasAll(['id', 'name', 'is_public', 'type', 'likes', 'tag', 'owner', 'flashcards'])
+            $json->hasAll(['id', 'name', 'is_public', 'type', 'likes', 'tag', 'owner', 'is_liked', 'flashcards'])
                 ->has(
                     'flashcards',
                     fn($json) =>
@@ -186,7 +188,7 @@ class DeckTest extends TestCase
 
         $response->assertStatus(200)->assertJson(
             fn(AssertableJson $json) =>
-            $json->hasAll(['id', 'name', 'is_public', 'type', 'likes', 'tag', 'owner', 'flashcards'])
+            $json->hasAll(['id', 'name', 'is_public', 'type', 'likes', 'tag', 'owner', 'is_liked', 'flashcards'])
                 ->has(
                     'flashcards',
                     fn($json) =>

@@ -83,15 +83,6 @@ const Navbar = () => {
                 Explore
               </NavigationMenuLink>
             </NavigationMenuItem>
-            <NavigationMenuItem className="cursor-pointer">
-              <NavigationMenuLink
-                className={navigationMenuTriggerStyle()}
-                onClick={() => handleNavigate("/explore")}
-              >
-                <Earth className="mr-2 h-4 w-4" />
-                Explore
-              </NavigationMenuLink>
-            </NavigationMenuItem>
 
             {accessToken ? (
               <>
@@ -261,9 +252,9 @@ const Navbar = () => {
             </DropdownMenuGroup>
 
             <DropdownMenuSeparator />
-
             <DropdownMenuGroup>
               <DropdownMenuItem onClick={() => handleNavigate("/explore")}>
+                <Earth className="mr-2 h-4 w-4" />
                 <Earth className="mr-2 h-4 w-4" />
                 <p>Explore</p>
               </DropdownMenuItem>
@@ -271,7 +262,6 @@ const Navbar = () => {
                 <ClipboardList className="mr-2 h-4 w-4" />
                 <p>My Boards</p>
               </DropdownMenuItem>
-
               <DropdownMenuItem
                 onClick={() => handleNavigate("/organizations")}
               >
@@ -279,9 +269,7 @@ const Navbar = () => {
                 <p>My Organizations</p>
               </DropdownMenuItem>
             </DropdownMenuGroup>
-
             <DropdownMenuSeparator />
-
             <DropdownMenuItem
               className="bg-red-100 text-red-400"
               onClick={() => {

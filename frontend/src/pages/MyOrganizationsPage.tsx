@@ -111,7 +111,7 @@ const MyOrganizationsPage = () => {
           <p className="text-2xl text-gray-600 mt-4">
             You don't have any organizations
             <br />
-            {invitations?.length === 0 ? (
+            {!invitations || invitations?.length === 0 ? (
               "or invitations"
             ) : (
               <>

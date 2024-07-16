@@ -219,7 +219,7 @@ const BoardOrganizationPage= () => {
                         id={member.id}
                         name={member.name}
                         pending={false}
-                        is_owner={member.id === organization?.owner_id}
+                        is_owner={id === organization?.owner_id}
                       />
                     ))}
                   </div>

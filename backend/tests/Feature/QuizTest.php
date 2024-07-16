@@ -14,13 +14,10 @@ use App\Models\Tag;
 class QuizTest extends TestCase
 {   
 
-    use RefreshDatabase;
-
     private $user;
     private $tag;
     private $quizData;
     private $updatedQuizData;
-    // SET_UP
 
     protected function setUp(): void
     {
@@ -32,22 +29,6 @@ class QuizTest extends TestCase
         // INIT TAG
         $this->tag = Tag::factory()->create();
 
-
-
-
-
-        // ÏNIT QUIZ
-        $this->quiz = Quiz::factory()->hasQcms(10)->create(
-            [
-                'id' => 1,
-                'name' => 'Test',
-                'is_public' => true,
-                'is_organization' => false,
-                'likes' => 2,
-                'tag_id' => 1,
-                'user_id' => self::$user->id,
-            ]
-        );
 
         // PUBLIC QUIZ
         $this->quizData = [
@@ -103,7 +84,7 @@ class QuizTest extends TestCase
     public function test_create_quiz(): void
     {
         $this->actingAs($this->user);
-        $response = $this->post('/api/quizzes', $this->quizData);
+        $response = $this->postJson('/api/quizzes', $this->quizData);
 
         $response->assertStatus(201);
         $this->assertDatabaseHas('quizzes', ['name' => 'quiz 1']);
@@ -121,13 +102,10 @@ class QuizTest extends TestCase
         }
     }
 
-    public function test_create_quiz_unauthenticated(): void
+    public function test_create_quiz_unauthorized(): void
     {
 
-        $response = $this->post('/api/quizzes', $this->quizData, [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json'
-        ]);
+        $response = $this->postJson('/api/quizzes', $this->quizData);
 
         $response->assertJson(["message" => "Unauthenticated."]);
         $response->assertUnauthorized();
@@ -148,13 +126,13 @@ class QuizTest extends TestCase
             'user_id' => $this->user->id
         ]);
 
-        $response = $this->put('/api/quizzes/' . $quiz->id, $this->updatedQuizData);
+        $response = $this->putJson('/api/quizzes/' . $quiz->id, $this->updatedQuizData);
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('quizzes', ['name' => 'Quiz updated']);
     }
 
-    public function test_update_quiz_unauthenticated(): void
+    public function test_update_quiz_unauthorized(): void
     {
 
         $quiz = Quiz::factory()->hasQcms(2)->create([
@@ -164,10 +142,7 @@ class QuizTest extends TestCase
             'user_id' => $this->user->id
         ]);
 
-        $response = $this->put('/api/quizzes/' . $quiz->id, $this->updatedQuizData, [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json'
-        ]);
+        $response = $this->putJson('/api/quizzes/' . $quiz->id, $this->updatedQuizData);
 
         $response->assertStatus(401);
         $response->assertUnauthorized();
@@ -176,23 +151,11 @@ class QuizTest extends TestCase
         ]);
     }
 
-
-
-    // AUTHENTICATED USER
-
-    public function test_get_my_quizzes(): void
+    public function test_update_quiz_forbidden(): void
     {
-        $this->actingAs($this->user);
-        $response = $this->get('/api/quizzes?myQuizzes');
 
-
-        $response->assertStatus(200);
-        $this->assertNotNull($response->json());
-    }
-
-    public function test_delete_quiz(): void
-    {
-        $this->actingAs($this->user);
+        $user = User::factory()->create();
+        $this->actingAs($user);
 
         $quiz = Quiz::factory()->hasQcms(2)->create([
             "name" => 'Quiz Test',
@@ -200,9 +163,32 @@ class QuizTest extends TestCase
             'is_organization' => false,
             'user_id' => $this->user->id
         ]);
+
+        $response = $this->putJson('/api/quizzes/' . $quiz->id, $this->updatedQuizData);
+
+        $response->assertStatus(403);
+        $response->assertJson([
+            'message' => 'Forbidden'
+        ]);
+    }
+
+
+    // DELETE QUIZ
+
+
+    public function test_delete_quiz(): void
+    {
+        $this->actingAs($this->user);
+
+        $quiz = Quiz::factory()->hasQcms(2)->create([
+            "name" => 'Quiz DELTED IT WILL BE',
+            'is_public' => true,
+            'is_organization' => false,
+            'user_id' => $this->user->id
+        ]);
         
         
-        $response = $this->delete('/api/quizzes/' . $quiz->id);
+        $response = $this->deleteJson('/api/quizzes/' . $quiz->id);
     
         $response->assertStatus(204);
         $this->assertDatabaseMissing('quizzes', [
@@ -212,15 +198,97 @@ class QuizTest extends TestCase
         
     }
 
-
-
-
-    // UNAUTHENTICATED USER
-
-    public function test_get_my_quizzes_unauthenticated(): void
+    public function test_delete_quiz_unauthorized(): void
     {
 
-        $response = $this->get('/api/quizzes?myQuizzes');
+        $quiz = Quiz::factory()->hasQcms(2)->create([
+            "name" => 'Quiz DELETE UNAUTH',
+            'is_public' => true,
+            'is_organization' => false,
+            'user_id' => $this->user->id
+        ]);
+        
+        
+        $response = $this->deleteJson('/api/quizzes/' . $quiz->id);
+    
+        $response->assertStatus(401);
+        $response->assertUnauthorized();
+        $response->assertJson([
+            'message' => 'Unauthenticated.'
+        ]);
+        
+    }
+
+    public function test_delete_quiz_forbidden(): void
+    {
+
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $quiz = Quiz::factory()->hasQcms(2)->create([
+            "name" => 'Quiz Test',
+            'is_public' => true,
+            'is_organization' => false,
+            'user_id' => $this->user->id
+        ]);
+
+        $response = $this->deleteJson('/api/quizzes/' . $quiz->id);
+
+        $response->assertStatus(403);
+        $response->assertJson([
+            'message' => 'Forbidden'
+        ]);
+    }
+
+
+    // GET QUIZ
+
+    public function test_get_quiz_by_id(): void
+    {
+
+        $this->actingAs($this->user);
+
+        $quiz = Quiz::factory()->hasQcms(2)->create([
+            "name" => 'Quiz Test',
+            'is_public' => true,
+            'is_organization' => false,
+            'user_id' => $this->user->id
+        ]);
+
+        $response = $this->getJson('/api/quizzes/' . $quiz->id);
+        $response->assertStatus(200);
+        $this->assertNotNull($response->json());
+    }
+
+    public function test_get_quiz_by_id_unauthenticated(): void
+    {
+
+        $quiz = Quiz::factory()->hasQcms(2)->create([
+            "name" => 'Quiz Test',
+            'is_public' => true,
+            'is_organization' => false,
+            'user_id' => $this->user->id
+        ]);
+
+        $response = $this->getJson('/api/quizzes/' . $quiz->id);
+        $response->assertStatus(200);
+        $this->assertNotNull($response->json());
+    }
+
+    public function test_get_my_quizzes(): void
+    {
+        $this->actingAs($this->user);
+        $response = $this->getJson('/api/quizzes?myQuizzes');
+
+
+        $response->assertStatus(200);
+        $this->assertNotNull($response->json());
+    }
+
+    public function test_get_my_quizzes_unauthorized(): void
+    {
+
+        $response = $this->getJson('/api/quizzes?myQuizzes');
         
         $response->assertJson(["message" => "Unauthorized"]);
         $response->assertUnauthorized();

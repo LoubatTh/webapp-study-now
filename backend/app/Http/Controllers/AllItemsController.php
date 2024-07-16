@@ -25,6 +25,7 @@ class AllItemsController extends Controller
             $isSearchName = $request->has("name");
             $isSearchTag = $request->has("tag");
             $isSearchOwner = $request->has("owner");
+            $isSearchType = $request->has("type");
             $isSearchPublic = $request->has("isPublic");
             $isSearchLiked = $request->has("isLiked");
 
@@ -38,8 +39,15 @@ class AllItemsController extends Controller
                     return response()->json(["message" => "Unauthorized"], 401);
                 }
 
-                $decks = $decks->where("user_id", $user->id)->orWhereIn("id", $user->likedDecks()->pluck("decks.id"));
-                $quizzes = $quizzes->where("user_id", $user->id)->orWhereIn("id", $user->likedQuizzes()->pluck("quizzes.id"));
+                $decks = $decks->where(function ($query) use ($user) {
+                    $query->where('user_id', $user->id)
+                        ->orWhereIn('id', $user->likedDecks()->pluck('decks.id'));
+                });
+                $quizzes = $quizzes->where(function ($query) use ($user) {
+                    $query->where('user_id', $user->id)
+                        ->orWhereIn('id', $user->likedQuizzes()->pluck('quizzes.id'));
+                });
+                \Log::info("Test1: ", ["decks", $decks->count()]);
             } else {
                 $decks = $decks->where("is_public", true);
                 $quizzes = $quizzes->where("is_public", true);
@@ -70,6 +78,7 @@ class AllItemsController extends Controller
 
                     $decks = $decks->where("tag_id", $tag_ids);
                     $quizzes = $quizzes->where("tag_id", $tag_ids);
+                    \Log::info("Test1: ", ["decks", $decks->count()]);
                 } else {
                     $decks = $decks->where("tag_id", 0);
                     $quizzes = $quizzes->where("tag_id", 0);
@@ -89,6 +98,16 @@ class AllItemsController extends Controller
                 } else {
                     $decks = $decks->where("user_id", 0);
                     $quizzes = $quizzes->where("user_id", 0);
+                }
+            }
+
+            if ($isSearchType) {
+                $search = $request->input("type");
+
+                if ($search == "Deck") {
+                    $quizzes = $quizzes->where("id", 0);
+                } else {
+                    $decks = $decks->where("id", 0);
                 }
             }
 
@@ -127,7 +146,7 @@ class AllItemsController extends Controller
             $currentPage = $request->has("page") ? intval($request->input("page")) : 1;
             $prevPage = $currentPage - 1;
             $nextPage = $currentPage + 1;
-            $lastPage = ceil($totalItems / $numberPerPage);
+            $lastPage = ceil($totalItems / $numberPerPage) > 0 ? ceil($totalItems / $numberPerPage) : 1;
 
             $firstElement = ($currentPage - 1) * $numberPerPage + 1;
 
@@ -172,17 +191,17 @@ class AllItemsController extends Controller
                 "data" => $data,
                 "links" => [
                     "first" => "http://localhost:8000/api/all?page=1",
-                    "last" => "http://localhost:8000/api/decks?page={$lastPage}",
-                    "prev" => $currentPage != 1 ? "http://localhost:8000/api/decks?page={$prevPage}" : null,
-                    "next" => $currentPage < $lastPage ? "http://localhost:8000/api/decks?page={$nextPage}" : null,
+                    "last" => "http://localhost:8000/api/all?page={$lastPage}",
+                    "prev" => $currentPage != 1 ? "http://localhost:8000/api/all?page={$prevPage}" : null,
+                    "next" => $currentPage < $lastPage ? "http://localhost:8000/api/all?page={$nextPage}" : null,
                 ],
                 "meta" => [
                     "current_page" => $currentPage,
-                    "from" => $firstElement,
+                    "from" => $totalItems == 0 ? null : $firstElement,
                     "last_page" => $lastPage,
                     "path" => "http://localhost:8000/api/all",
                     "per_page" => $numberPerPage,
-                    "to" => $firstElement + $numberPerPage - 1 > $totalItems ? $totalItems : $firstElement + $numberPerPage - 1,
+                    "to" => $totalItems == 0 ? null : ($firstElement + $numberPerPage - 1 > $totalItems ? $totalItems : $firstElement + $numberPerPage - 1),
                     "total" => $totalItems,
                 ],
             ];

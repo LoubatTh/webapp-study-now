@@ -130,6 +130,8 @@ const BoardPage = () => {
                   tag={item.tag}
                   likes={item.likes}
                   type={item.type}
+                  flashcards={item.flashcards}
+                  qcms={item.qcms}
                   onDeleteCard={handleDeleteCard}
                 />
               </motion.div>

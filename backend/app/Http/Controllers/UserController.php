@@ -49,6 +49,7 @@ class UserController extends Controller
             $response = [
                 'id' => $organization['id'],
                 'name' => $organization['name'],
+                'description' => $organization['description'],
                 'created_at' => $organization['created_at'],
                 'updated_at' => $organization['updated_at'],
                 'owner_id' => $organization['owner_id'],
@@ -62,6 +63,7 @@ class UserController extends Controller
             $response = [
                 'id' => $organization['id'],
                 'name' => $organization['name'],
+                'description' => $organization['description'],
                 'created_at' => $organization['created_at'],
                 'updated_at' => $organization['updated_at'],
                 'owner_id' => $organization['owner_id'],

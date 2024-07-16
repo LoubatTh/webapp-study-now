@@ -122,7 +122,6 @@ class QuizTest extends TestCase
         $quiz = Quiz::factory()->hasQcms(2)->create([
             "name" => 'Quiz Test',
             'is_public' => true,
-            'is_organization' => false,
             'user_id' => $this->user->id
         ]);
 
@@ -138,7 +137,6 @@ class QuizTest extends TestCase
         $quiz = Quiz::factory()->hasQcms(2)->create([
             "name" => 'Quiz Test',
             'is_public' => true,
-            'is_organization' => false,
             'user_id' => $this->user->id
         ]);
 
@@ -160,7 +158,6 @@ class QuizTest extends TestCase
         $quiz = Quiz::factory()->hasQcms(2)->create([
             "name" => 'Quiz Test',
             'is_public' => true,
-            'is_organization' => false,
             'user_id' => $this->user->id
         ]);
 
@@ -183,7 +180,6 @@ class QuizTest extends TestCase
         $quiz = Quiz::factory()->hasQcms(2)->create([
             "name" => 'Quiz DELTED IT WILL BE',
             'is_public' => true,
-            'is_organization' => false,
             'user_id' => $this->user->id
         ]);
         
@@ -204,7 +200,6 @@ class QuizTest extends TestCase
         $quiz = Quiz::factory()->hasQcms(2)->create([
             "name" => 'Quiz DELETE UNAUTH',
             'is_public' => true,
-            'is_organization' => false,
             'user_id' => $this->user->id
         ]);
         
@@ -228,7 +223,6 @@ class QuizTest extends TestCase
         $quiz = Quiz::factory()->hasQcms(2)->create([
             "name" => 'Quiz Test',
             'is_public' => true,
-            'is_organization' => false,
             'user_id' => $this->user->id
         ]);
 
@@ -251,7 +245,6 @@ class QuizTest extends TestCase
         $quiz = Quiz::factory()->hasQcms(2)->create([
             "name" => 'Quiz Test',
             'is_public' => true,
-            'is_organization' => false,
             'user_id' => $this->user->id
         ]);
 
@@ -268,7 +261,6 @@ class QuizTest extends TestCase
         $quiz = Quiz::factory()->hasQcms(2)->create([
             "name" => 'Quiz Test',
             'is_public' => false,
-            'is_organization' => false,
             'user_id' => $this->user->id
         ]);
 
@@ -285,7 +277,6 @@ class QuizTest extends TestCase
         $quiz = Quiz::factory()->hasQcms(2)->create([
             "name" => 'Quiz Test',
             'is_public' => false,
-            'is_organization' => false,
             'user_id' => $this->user->id
         ]);
 
@@ -299,7 +290,6 @@ class QuizTest extends TestCase
         $quiz = Quiz::factory()->hasQcms(2)->create([
             "name" => 'Quiz Test',
             'is_public' => true,
-            'is_organization' => false,
             'user_id' => $this->user->id
         ]);
 
@@ -314,7 +304,6 @@ class QuizTest extends TestCase
         $quiz = Quiz::factory()->hasQcms(2)->create([
             "name" => 'Quiz Test',
             'is_public' => false,
-            'is_organization' => false,
             'user_id' => $this->user->id
         ]);
 

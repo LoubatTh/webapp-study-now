@@ -103,7 +103,14 @@ const CreateQuizzPage = () => {
   const createQuizzHandler = async (): Promise<void> => {
 
     console.log("selected organizations")
-    console.log(selectedOrganizations)
+
+    let organizationsBody = {
+      "organisations": [] as number[]
+    };
+    
+    if (selectedOrganizations.length > 0) {
+      organizationsBody.organisations = selectedOrganizations.map((org) => org.id);
+    }
 
     if (name.length < 1) {
       setErrorMessage("The name field is required.");
@@ -120,6 +127,7 @@ const CreateQuizzPage = () => {
         name,
         is_public: isPublic,
         tag_id: parseInt(label),
+        organizations: organizationsBody.organisations,
         qcms: qcms,
       };
 
@@ -128,14 +136,20 @@ const CreateQuizzPage = () => {
         if (id) {
           response = await editQuizz(id, createdQuizz, accessToken);
           if (response.status === 200) {
-            toast({ description: "Quizz edited successfully" });
+            toast({ 
+                description: "Quizz edited successfully",
+                className: "bg-green-400"
+              });
           } else {
             throw new Error(response.error || "Failed to edit quiz");
           }
         } else {
           response = await postQuizz(createdQuizz, accessToken);
           if (response.status === 201) {
-            toast({ description: "Quizz created successfully" });
+            toast({
+              description: "Quizz created successfully",
+              className: "bg-green-400",
+            });
           } else {
             throw new Error(response.error || "Failed to create quizz");
           }
@@ -143,18 +157,6 @@ const CreateQuizzPage = () => {
         setNameQuizz("");
         setQcmList([{ id: 0, collapsed: false }]);
         resetQCMs();
-
-        if(selectedOrganizations.length > 0){
-
-          // fetchApi(
-          //   "POST",
-          //   `/organizations/${quizz}/quizzes`,
-          //   { organizations: selectedOrganizations.map((org) => org.id) },
-          //   accessToken
-          // );
-
-        }
-        // Put the quizz into the organizations 
 
         navigate("/board");
       } catch (error: any) {
@@ -277,6 +279,7 @@ const CreateQuizzPage = () => {
               <div>{isPublic ? "Public" : "Private"}</div>
             </div>
           </div>
+          {organizations.length > 0 && (
           <div className="min-w-40">
             {/* <Label htmlFor="name">Organizations</Label> */}
             <Autocomplete
@@ -310,6 +313,7 @@ const CreateQuizzPage = () => {
               )}
             />
           </div>
+          )}
         </div>
       </div>
       <div className="flex flex-col gap-2 p-2 max-w-3xl min-w-full md:min-w-[768px]">

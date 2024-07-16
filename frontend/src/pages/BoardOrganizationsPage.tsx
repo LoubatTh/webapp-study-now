@@ -8,7 +8,7 @@ import { fetchApi } from '@/utils/api';
 import { motion, MotionConfig } from 'framer-motion';
 import React, { useEffect, useState } from 'react'
 import { set } from 'react-hook-form';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import ReactLoading from "react-loading";
 import { Organization } from '@/types/organization.type';
 import { useUser } from '@/contexts/UserContext';
@@ -23,6 +23,11 @@ const BoardOrganizationPage= () => {
     const [decks, setDecks] = useState<Deck[]>([]);
     const [quizzes, setQuizzes] = useState<Quizz[]>([]);
     const [loading, setLoading] = useState(true);
+    const navigation = useNavigate();
+
+    const handleNavigation = (path: string) => {
+      navigation(path);
+    }
 
     useEffect(() => {
         if(!isReady) return;
@@ -67,18 +72,32 @@ const BoardOrganizationPage= () => {
             <p className="text-2xl text-gray-600 mt-4">
               This organization doesn't have any quizzes or decks
             </p>
-            <div className='flex justify-center gap-2 mt-4'>
+            <div className="flex justify-center gap-2 mt-4">
               {organization?.owner_id === id ? (
                 <>
-                  <Button>
+                  <Button
+                    onClick={() =>
+                      handleNavigation(
+                        `/create-quizz?organization=${organization.name}`
+                      )
+                    }
+                  >
                     Create Quizz
                   </Button>
-                  <Button>
+                  <Button
+                    onClick={() =>
+                      handleNavigation(
+                        `/create-deck?organization=${organization.name}`
+                      )
+                    }
+                  >
                     Create Deck
                   </Button>
                 </>
-              ): ("")}
-              </div>
+              ) : (
+                ""
+              )}
+            </div>
           </div>
         </div>
       );

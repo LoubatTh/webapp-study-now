@@ -24,11 +24,13 @@ import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 import useQCMStore from "../../lib/stores/quizzStore";
-import type { QCM } from "../../types/quizz.type";
+import type { QCM, Quizz } from "../../types/quizz.type";
 import { DialogClose, DialogFooter } from "../ui/dialog";
+import { useEffect } from "react";
 
 type CreateQCMProps = {
   id: number;
+  quizz?: Quizz;
   index: number;
   qcmsSize: number;
   collapsed: boolean;
@@ -38,6 +40,7 @@ type CreateQCMProps = {
 
 const CreateQCM = ({
   id,
+  quizz,
   index,
   qcmsSize,
   collapsed,
@@ -89,6 +92,18 @@ const CreateQCM = ({
     saveQCM(body);
     onToggleCollapse();
   }
+
+  useEffect(() => {
+    if (quizz) {
+      form.setValue("question", quizz.question);
+      if (quizz.answers) {
+        quizz.answers.map((answer, i) => {
+          form.setValue(`answer${i + 1}`, answer.answer);
+          form.setValue(`isValidAnswer${i + 1}`, answer.isValid);
+        });
+      }
+    }
+  }, []);
 
   return (
     <div className="flex flex-col border rounded-md p-2">

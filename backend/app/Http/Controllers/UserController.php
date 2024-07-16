@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Deck;
 use App\Models\Organization;
+use App\Models\OrganizationDeck;
+use App\Models\OrganizationQuiz;
+use App\Models\Quiz;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -38,16 +42,32 @@ class UserController extends Controller
     public function showOrganizations(Request $request)
     {
         $user = $request->user();
-        $ownedOrganizations = Organization::where('owner_id', $user->id)->get();
+        $ownedOrganizations = [];
         $organizations = [];
+        
+        foreach (Organization::where('owner_id', $user->id)->get() as $organization) {
+            $response = [
+                'id' => $organization['id'],
+                'name' => $organization['name'],
+                'description' => $organization['description'],
+                'created_at' => $organization['created_at'],
+                'updated_at' => $organization['updated_at'],
+                'owner_id' => $organization['owner_id'],
+                'tags' => $this->getOrganizationTags($organization['id']),
+            ];
+            
+            array_push($ownedOrganizations, $response);
+        }
 
         foreach ($user->organizations as $organization) {
             $response = [
                 'id' => $organization['id'],
                 'name' => $organization['name'],
+                'description' => $organization['description'],
                 'created_at' => $organization['created_at'],
                 'updated_at' => $organization['updated_at'],
                 'owner_id' => $organization['owner_id'],
+                'tags' => $this->getOrganizationTags($organization['id']),
             ];
 
             array_push($organizations, $response);
@@ -77,7 +97,7 @@ class UserController extends Controller
         $user = $request->user();
         $fields = [];
 
-        if(isset($data['name'])) {
+        if (isset($data['name'])) {
             $fields['name'] = $data['name'];
         }
 
@@ -109,5 +129,24 @@ class UserController extends Controller
         return response()->json([
             'message' => 'User deleted'
         ]);
+    }
+
+    public function getOrganizationTags(int $organizationId)
+    {
+        $organizationDecks = OrganizationDeck::where('organization_id', $organizationId)->get();
+        $organizationQuizzes = OrganizationQuiz::where('organization_id', $organizationId)->get();
+        $tags = [];
+
+        foreach ($organizationDecks as $organizationDeck) {
+            $deck = Deck::where('id', $organizationDeck['deck_id'])->first();
+            array_push($tags, $deck->tag->name);
+        }
+
+        foreach ($organizationQuizzes as $organizationQuiz) {
+            $quiz = Quiz::where('id', $organizationQuiz['quiz_id'])->first();
+            array_push($tags, $quiz->tag->name);
+        }
+
+        return array_unique($tags);
     }
 }

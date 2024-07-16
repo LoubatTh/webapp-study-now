@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils"
-import React from 'react'
+import { cn } from "@/lib/utils";
+import React from "react";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -7,11 +7,9 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu"
-
+} from "@/components/ui/navigation-menu";
 
 const CreateSetBtn = () => {
-
   return (
     <div className="">
       <NavigationMenu>
@@ -20,16 +18,20 @@ const CreateSetBtn = () => {
             <NavigationMenuTrigger>Create</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="flex flex-col gap-3 p-4 w-[300px]">
-                <ListItem key="deck" title="Deck" href="/create-deck">Create a set of flashcards</ListItem>
-                <ListItem key="quizz" title="quizz" href="create-quizz">Create a set of QCM</ListItem>
+                <ListItem key="deck" title="Deck" href="/create-deck">
+                  Create a set of flashcards
+                </ListItem>
+                <ListItem key="quizz" title="Quizz" href="create-quizz">
+                  Create a set of QCM
+                </ListItem>
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
     </div>
-  )
-}
+  );
+};
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
@@ -53,8 +55,8 @@ const ListItem = React.forwardRef<
         </a>
       </NavigationMenuLink>
     </li>
-  )
-})
-ListItem.displayName = "ListItem"
+  );
+});
+ListItem.displayName = "ListItem";
 
-export default CreateSetBtn
+export default CreateSetBtn;

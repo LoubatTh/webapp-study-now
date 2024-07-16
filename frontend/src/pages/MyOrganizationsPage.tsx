@@ -3,6 +3,7 @@ import OrganizationsCard from "@/components/organizationsCard";
 import PageTitle from "@/components/pageTitle";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { useToast } from "@/components/ui/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUser } from "@/contexts/UserContext";
 import { cardVariants } from "@/lib/animations/cardVariants";
@@ -13,11 +14,14 @@ import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 
 const MyOrganizationsPage = () => {
-  const [ownedOrganizations, setOwnedOrganizations] = useState([]);
-  const [organizations, setOrganizations] = useState([]);
+  const [organizations, setOrganizations] = useState({
+    owned_organizations: [],
+    organizations: [],
+  });
   const [isLoading, setIsLoading] = useState(true);
   const { isReady, accessToken } = useAuth();
   const { is_subscribed } = useUser();
+  const { toast } = useToast();
   const navigation = useNavigate();
 
   const fetchOrganizations = async () => {
@@ -29,9 +33,39 @@ const MyOrganizationsPage = () => {
       null,
       accessToken
     );
-    setOwnedOrganizations(await response.data.owned_organizations);
-    setOrganizations(await response.data.organizations);
+    setOrganizations(await response.data as any);
     setIsLoading(false);
+  };
+
+  const removeOrganization = async (id: number) => {
+    const response = await fetchApi(
+      "DELETE",
+      `organizations/${id}`,
+      null,
+      accessToken
+    );
+
+    if (response.status !== 204) {
+      toast({
+        title: "Error",
+        description: "Failed to delete organization",
+        variant: "destructive",
+      });
+      return;
+    } 
+
+    setOrganizations((prev) => ({
+      owned_organizations: prev.owned_organizations.filter(
+        (org) => org.id !== id
+      ),
+      organizations: prev.organizations.filter((org) => org.id !== id),
+    }));
+
+    toast({
+      title: "Success",
+      description: "Organization deleted",
+      className: "bg-green-400",
+    })
   };
 
   useEffect(() => {
@@ -42,7 +76,10 @@ const MyOrganizationsPage = () => {
     return <div>Loading...</div>;
   }
 
-  if (organizations.length == 0 && ownedOrganizations.length == 0) {
+  if (
+    organizations.organizations.length == 0 &&
+    organizations.owned_organizations.length == 0
+  ) {
     return (
       <div className="flex-grow flex flex-col items-center justify-center">
         <div className="text-center">
@@ -54,9 +91,7 @@ const MyOrganizationsPage = () => {
             {is_subscribed ? (
               <Dialog>
                 <DialogTrigger>
-                  <Button>
-                    Create your first organization
-                  </Button>
+                  <Button>Create your first organization</Button>
                 </DialogTrigger>
                 <CreateOrganizations
                   onOrganizationCreated={fetchOrganizations}
@@ -68,7 +103,7 @@ const MyOrganizationsPage = () => {
                   onClick={() => navigation("/premium")}
                   className="cursor-pointer text-blue-600 mr-1"
                 >
-                  Subscribe 
+                  Subscribe
                 </span>
                 to create your first organization
               </>
@@ -81,7 +116,7 @@ const MyOrganizationsPage = () => {
 
   return (
     <>
-      {ownedOrganizations.length !== 0 && (
+      {organizations.owned_organizations.length !== 0 && (
         <>
           <div className="flex justify-around items-center p-4">
             <PageTitle title="Owned Organizations" />
@@ -99,33 +134,36 @@ const MyOrganizationsPage = () => {
             variants={{
               visible: {
                 transition: {
-                  staggerChildren: 0.1, 
+                  staggerChildren: 0.1,
                 },
               },
-            }}>
-            {ownedOrganizations.map((organization: Organization, index) => (
-              <motion.div variants={cardVariants}>
-              <OrganizationsCard
-                key={index}
-                id={organization.id}
-                created_at={organization.created_at}
-                updated_at={organization.updated_at}
-                name={organization.name}
-                description={organization.description}
-                owner_id={organization.owner_id}
-                tags={organization.tags}
-              />
-              </motion.div>
-            ))}
+            }}
+          >
+            {organizations.owned_organizations.map(
+              (organization: Organization, index) => (
+                <motion.div variants={cardVariants} key={index}>
+                  <OrganizationsCard
+                    id={organization.id}
+                    created_at={organization.created_at}
+                    updated_at={organization.updated_at}
+                    name={organization.name}
+                    description={organization.description}
+                    owner_id={organization.owner_id}
+                    tags={organization.tags}
+                    removeOrganization={removeOrganization}
+                  />
+                </motion.div>
+              )
+            )}
           </motion.div>
         </>
       )}
 
-      {organizations.length !== 0 && (
+      {organizations.organizations.length !== 0 && (
         <>
           <PageTitle title="Joined Organizations" />
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4">
-            {organizations.map((organization: Organization, index) => (
+            {organizations.organizations.map((organization: Organization, index) => (
               <OrganizationsCard
                 key={index}
                 id={organization.id}
@@ -133,8 +171,9 @@ const MyOrganizationsPage = () => {
                 updated_at={organization.updated_at}
                 name={organization.name}
                 description={organization.description}
-                tags={organization.tags}
                 owner_id={organization.owner_id}
+                tags={organization.tags}
+                removeOrganization={removeOrganization}
               />
             ))}
           </div>

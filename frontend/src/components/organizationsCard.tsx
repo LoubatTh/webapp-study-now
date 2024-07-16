@@ -6,6 +6,7 @@ import { getColorClass } from '@/utils/tagscolor';
 import { useNavigate } from 'react-router-dom';
 import { SquareDashedMousePointer } from 'lucide-react';
 import { ScrollArea, ScrollBar } from './ui/scroll-area';
+import DeleteOrganizations from './deleteOrganizations';
 
 const OrganizationsCard = ( organization: Organization  ) => {
 
@@ -15,13 +16,19 @@ const OrganizationsCard = ( organization: Organization  ) => {
     navigation(`/organizations/${organization.id}`);
   };
 
-  console.log(organization);
-
   return (
     <div>
       <Card className="transition duration-200 shadow-lg transform hover:shadow-2xl hover:scale-105">
-        <CardHeader onClick={handleClick} className="cursor-pointer">
-          <CardTitle>{organization.name}</CardTitle>
+        <CardHeader>
+          <div className="flex justify-between items-center">
+            <CardTitle onClick={handleClick} className="cursor-pointer">
+              {organization.name}
+            </CardTitle>
+            <DeleteOrganizations
+              org_id={organization.id}
+              removeOrganization={organization.removeOrganization}
+            />
+          </div>
           <CardDescription>{organization.description}</CardDescription>
         </CardHeader>
         <CardContent>

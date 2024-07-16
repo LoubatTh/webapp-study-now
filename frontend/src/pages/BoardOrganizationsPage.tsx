@@ -90,7 +90,7 @@ const BoardOrganizationPage= () => {
         <PageTitle title={organization?.name + "'s board"} />
         <p className="text-center">{organization?.description}</p>
 
-        {quizzes.length == 0}
+
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4">
           {quizzes.map((quizz, index) => (
             <QuizzDeckCard
@@ -105,18 +105,6 @@ const BoardOrganizationPage= () => {
             />
           ))}
 
-          {/* {decks.map((deck, index) => (
-            <QuizzDeckCard
-              key={index}
-              id={deck.deck.id}
-              name={deck.deck.name}
-              tag={deck.deck.tag}
-              likes={quizz.quiz.likes}
-              type={quizz.quiz.type}
-              is_public={quizz.quiz.is_public}
-              is_organization={quizz.quiz.is_organization}
-            />
-          ))} */}
         </div>
       </>
     );

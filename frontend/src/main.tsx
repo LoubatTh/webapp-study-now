@@ -18,7 +18,7 @@ import MyOrganizationsPage from "./pages/MyOrganizationsPage";
 import Error404 from "./pages/errors/Error404";
 import PremiumPage from "./pages/PremiumPage";
 import ExplorePage from "./pages/Explorepage";
-import QuizzOrganizationsPage from "./pages/BoardOrganizationsPage";
+import BoardOrganizationsPage from "./pages/BoardOrganizationsPage";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
@@ -38,7 +38,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <Route path="/deck/:deckId" element={<DeckPlayPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/organizations" element={<MyOrganizationsPage />} />
-            <Route path="/organizations/:organizationId" element={<QuizzOrganizationsPage />} />
+            <Route path="/organizations/:organizationId" element={<BoardOrganizationsPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/explore" element={<ExplorePage />} />
             <Route path="/premium" element={<PremiumPage />} />

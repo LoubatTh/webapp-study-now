@@ -5,6 +5,8 @@ import Pagin from "@/components/pagination";
 import { fetchApi } from "@/utils/api";
 import { Deck } from "@/types/deck.type";
 import { Quizz } from "@/types/quizz.type";
+import { motion, MotionConfig } from "framer-motion";
+import { cardVariants } from "@/lib/animations/cardVariants";
 
 
 const getDecks = async () => {
@@ -122,24 +124,37 @@ const ExplorePage = () => {
           />
         </div>
       </div>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4">
+      <motion.div
+        className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4"
+        initial="initial"
+        animate="visible"
+        variants={{
+          visible: {
+            transition: {
+              staggerChildren: 0.1,
+            },
+          },
+        }}
+      >
         {displayedItems && (
           <>
             {displayedItems.map((deck, index) => (
-              <QuizzDeckCard
-                key={index}
-                id={deck.id}
-                name={deck.name}
-                tag={deck.tag}
-                likes={deck.likes}
-                type={deck.type}
-                is_public={deck.is_public}
-                is_organization={deck.is_organization}
-              />
+              <motion.div variants={cardVariants}>
+                <QuizzDeckCard
+                  key={index}
+                  id={deck.id}
+                  name={deck.name}
+                  tag={deck.tag}
+                  likes={deck.likes}
+                  type={deck.type}
+                  is_public={deck.is_public}
+                  is_organization={deck.is_organization}
+                />
+              </motion.div>
             ))}
           </>
         )}
-      </div>
+      </motion.div>
       <div className="flex justify-center my-4">
         <Pagin
           currentPage={currentPage}

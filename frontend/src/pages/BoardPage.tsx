@@ -10,6 +10,7 @@ import { QuizzType } from "@/types/QuizzContext.type";
 import FilterBar from "@/components/FilterBar";
 import { ClassNames } from "@emotion/react";
 import FilterBarMobile from "@/components/FilterBarMobile";
+import { cardVariants } from "@/lib/animations/cardVariants";
 
 const getDecksUser = async (accessToken: string) => {
   const response = await fetchApi("GET", `decks?myDecks`, null, accessToken);
@@ -26,21 +27,6 @@ const getquizzesUser = async (accessToken: string) => {
   );
   console.log("Quizzes response: ", response);
   return response;
-};
-
-const cardVariants = {
-  initial: {
-    opacity: 0,
-    y: 50,
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      type: "spring",
-      stiffness: 120,
-    },
-  },
 };
 
 const BoardPage = () => {

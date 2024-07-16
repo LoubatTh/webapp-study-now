@@ -5,26 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUser } from "@/contexts/UserContext";
+import { cardVariants } from "@/lib/animations/cardVariants";
 import { Organization } from "@/types/organization.type";
 import { fetchApi } from "@/utils/api";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-
-const cardVariants = {
-  initial: {
-    opacity: 0,
-    y: 50,
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      type: "spring",
-      stiffness: 120,
-    },
-  },
-};
 
 const MyOrganizationsPage = () => {
   const [ownedOrganizations, setOwnedOrganizations] = useState([]);

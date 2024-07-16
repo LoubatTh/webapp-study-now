@@ -45,6 +45,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         </Routes>
       </UserProvider>
     </AuthProvider>
-
   </BrowserRouter>
 );

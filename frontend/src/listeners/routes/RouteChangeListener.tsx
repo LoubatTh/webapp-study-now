@@ -5,11 +5,7 @@ import { useAuth } from "../../contexts/AuthContext";
 /*
 Mettre ici toutes les routes que l'on souhaite exclure de la vérification d'authentification
 */
-const excludedRoutes = [
-  '/',
-  '/login',
-  '/explore',
-];
+const excludedRoutes = ["/", "/login", "/explore"];
 
 const RouteChangeListener = () => {
   const location = useLocation();
@@ -35,11 +31,11 @@ const RouteChangeListener = () => {
       /*
           Si le token n'est plus valide alors on redirige vers la page de login
           */
-        if (!tokenIsValid) {
-          logout();
-          navigate("/login");
-        }
-      };
+      if (!tokenIsValid) {
+        logout();
+        navigate("/login");
+      }
+    };
 
     verifyAccess();
   }, [location, isReady]);

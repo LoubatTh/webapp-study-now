@@ -107,24 +107,8 @@ const BoardPage = () => {
       <div className="md:hidden">
         <FilterBarMobile onSearch={handleSearch} />
       </div>
-      <div className="hidden md:block">
+      <div className="hidden md:block md:mb-2">
         <FilterBar onSearch={handleSearch} />
-      </div>
-      <div className="hidden md:flex justify-around p-10 items-center">
-        <div>
-          <CreateSetBtn />
-        </div>
-        <div>
-          <p>My board</p>
-        </div>
-      </div>
-      <div className="md:hidden flex flex-col items-center p-10">
-        <div className="mb-4">
-          <h3>My board</h3>
-        </div>
-        <div className="mb-4">
-          <CreateSetBtn />
-        </div>
       </div>
       <motion.div
         className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4"

@@ -66,7 +66,7 @@ const Navbar = () => {
       <div className="hidden md:flex">
         <NavigationMenu>
           <NavigationMenuList>
-            <NavigationMenuItem className="cursor-pointer">
+            <NavigationMenuItem className="cursor-pointer ${}">
               <NavigationMenuLink
                 className={navigationMenuTriggerStyle()}
                 onClick={() => handleNavigate("/")}

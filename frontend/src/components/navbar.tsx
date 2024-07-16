@@ -210,6 +210,11 @@ const Navbar = () => {
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DropdownMenuItem onClick={() => handleNavigate("/explore")}>
+                  <Home className="mr-2 h-4 w-4" />
+                  <p>Home</p>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => handleNavigate("/explore")}>
                   <Earth className="mr-2 h-4 w-4" />
                   <p>Explore</p>
                 </DropdownMenuItem>
@@ -235,23 +240,10 @@ const Navbar = () => {
               <DropdownMenuLabel>Menu</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem onClick={() => handleNavigate("/profile")}>
-                  <User className="mr-2 h-4 w-4" />
-                  <p>Profile</p>
+                <DropdownMenuItem onClick={() => handleNavigate("/explore")}>
+                  <Home className="mr-2 h-4 w-4" />
+                  <p>Home</p>
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handleNavigate("/profil/statistics")}
-                >
-                  <BarChart3 className="mr-2 h-4 w-4" />
-                  <p>Statistics</p>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleNavigate("/premium")}>
-                  <CreditCard className="mr-2 h-4 w-4" />
-                  <p>Premium</p>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
                 <DropdownMenuItem onClick={() => handleNavigate("/explore")}>
                   <Earth className="mr-2 h-4 w-4" />
                   <p>Explore</p>
@@ -276,6 +268,23 @@ const Navbar = () => {
                 <DropdownMenuItem onClick={() => handleNavigate("/create-quizz")}>
                   <BookPlus className="mr-2 h-4 w-4" />
                   <p>Create Quizz</p>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem onClick={() => handleNavigate("/profile")}>
+                  <User className="mr-2 h-4 w-4" />
+                  <p>Profile</p>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleNavigate("/profil/statistics")}
+                >
+                  <BarChart3 className="mr-2 h-4 w-4" />
+                  <p>Statistics</p>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleNavigate("/premium")}>
+                  <CreditCard className="mr-2 h-4 w-4" />
+                  <p>Premium</p>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />

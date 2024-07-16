@@ -4,7 +4,8 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Organization } from '@/types/organization.type';
 import { getColorClass } from '@/utils/tagscolor';
 import { useNavigate } from 'react-router-dom';
-import { CircleOff } from 'lucide-react';
+import { SquareDashedMousePointer } from 'lucide-react';
+import { ScrollArea, ScrollBar } from './ui/scroll-area';
 
 const OrganizationsCard = ( organization: Organization  ) => {
 
@@ -17,32 +18,37 @@ const OrganizationsCard = ( organization: Organization  ) => {
   console.log(organization);
 
   return (
-    <div onClick={handleClick} className="cursor-pointer">
+    <div>
       <Card className="transition duration-200 shadow-lg transform hover:shadow-2xl hover:scale-105">
-        <CardHeader>
+        <CardHeader onClick={handleClick} className="cursor-pointer">
           <CardTitle>{organization.name}</CardTitle>
           <CardDescription>{organization.description}</CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-col gap-1">
+        <CardContent>
           {organization.tags.length == 0 && (
             <>
-              <p className="text-amber-400 font-medium flex gap-3">
-                <CircleOff /> This organization is empty.
+              <p className="text-amber-400 bg-amber-100 w-fit p-1 pr-2 pl-2 rounded-lg font-medium flex gap-3">
+                <SquareDashedMousePointer /> This organization is empty.
               </p>
             </>
           )}
 
-          {organization.tags.map((tag, index) => (
-            <p
-              key={index}
-              className={cn(
-                "p-1 ps-2 pe-2 rounded-lg font-medium text-sm",
-                getColorClass(tag)
-              )}
-            >
-              {tag}
-            </p>
-          ))}
+          <ScrollArea>
+            <div className="flex w-max space-x-2 pb-5">
+              {organization.tags.map((tag, index) => (
+                <p
+                  key={index}
+                  className={cn(
+                    "flex items-center p-1 ps-2 pe-2 rounded-lg font-medium text-sm",
+                    getColorClass(tag)
+                  )}
+                >
+                  {tag}
+                </p>
+              ))}
+            </div>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
         </CardContent>
         <CardFooter className="justify-between">
           <div className="flex items-center">

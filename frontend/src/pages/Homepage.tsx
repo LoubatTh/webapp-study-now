@@ -9,10 +9,10 @@ const Homepage = () => {
   };
   return (
     <>
-      <div className="flex justify-center items-center min-h-[80vh] mx-auto">
+      <div className="flex justify-center items-center min-h-[80vh]">
         <div className="max-w-md my-auto">
           <h1 className="text-5xl md:text-3xl lg:text-5xl m-4">
-            Study smarter, share easily
+            Study smarter,<br></br> share easily
           </h1>
           <p className="text-base md:text-sm lg:text-base m-4">
             Our app lets you create custom flashcard decks and quizzes sets to
@@ -20,17 +20,17 @@ const Homepage = () => {
             friends, and revolutionize your study habits for greater success
           </p>
           <button
-            className="items-center bg-black p-3 text-white rounded-md hover:bg-slate-800 cursor-pointer m-4"
+            className="items-center bg-black p-3 text-white rounded-md hover:bg-slate-800 cursor-pointer m-4 shadow-md"
             onClick={() => handleNavigate("/explore")}
           >
             Get started
           </button>
         </div>
-        <div className="hidden md:flex items-center max-w-md">
+        <div className="hidden md:flex items-center max-w-md lg:max-w-lg">
           <img
             src={StudyImg}
             alt="Image de valerian qui embrasse matteo"
-            className="rounded-md"
+            className="rounded-md shadow-md"
           />
         </div>
       </div>

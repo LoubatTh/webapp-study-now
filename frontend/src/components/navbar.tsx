@@ -66,7 +66,7 @@ const Navbar = () => {
       <div className="hidden md:flex">
         <NavigationMenu>
           <NavigationMenuList>
-            <NavigationMenuItem className="cursor-pointer">
+            <NavigationMenuItem className="cursor-pointer ${}">
               <NavigationMenuLink
                 className={navigationMenuTriggerStyle()}
                 onClick={() => handleNavigate("/")}
@@ -261,11 +261,15 @@ const Navbar = () => {
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem onClick={() => handleNavigate("/create-deck")}>
+                <DropdownMenuItem
+                  onClick={() => handleNavigate("/create-deck")}
+                >
                   <BookPlus className="mr-2 h-4 w-4" />
                   <p>Create deck</p>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleNavigate("/create-quizz")}>
+                <DropdownMenuItem
+                  onClick={() => handleNavigate("/create-quizz")}
+                >
                   <BookPlus className="mr-2 h-4 w-4" />
                   <p>Create Quizz</p>
                 </DropdownMenuItem>

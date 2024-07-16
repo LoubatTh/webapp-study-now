@@ -14,10 +14,11 @@ use App\Models\Tag;
 class QuizTest extends TestCase
 {   
 
+    use RefreshDatabase;
+
     private $user;
-    private $user2;
-    private $quizData;
     private $tag;
+    private $quizData;
     private $updatedQuizData;
     // SET_UP
 
@@ -26,13 +27,29 @@ class QuizTest extends TestCase
 
         parent::setUp();
 
-        // INIT USERS
+        // INIT USER
         $this->user = User::factory()->create();
-        $this->user2 = User::factory()->create();
         // INIT TAG
         $this->tag = Tag::factory()->create();
 
-        // INIT PUBLIC QUIZ
+
+
+
+
+        // ÏNIT QUIZ
+        $this->quiz = Quiz::factory()->hasQcms(10)->create(
+            [
+                'id' => 1,
+                'name' => 'Test',
+                'is_public' => true,
+                'is_organization' => false,
+                'likes' => 2,
+                'tag_id' => 1,
+                'user_id' => self::$user->id,
+            ]
+        );
+
+        // PUBLIC QUIZ
         $this->quizData = [
             "name" => 'quiz 1',
             'is_public' => true,
@@ -74,27 +91,6 @@ class QuizTest extends TestCase
                         ['answer' => 'Answer 2 updated', 'isValid' => false],
                         ['answer' => 'Answer 3 updated', 'isValid' => false],
                         ['answer' => 'Answer 4 updated', 'isValid' => true]
-                    ]
-                ]
-            ]
-        ];
-
-
-        // INIT PRIVATE QUIZ
-        $this->privateQuizData = [
-            "name" => 'quiz 1',
-            'is_public' => false,
-            'is_organization' => false,
-            'tag_id' => $this->tag->id,
-            'user_id' => $this->user->id,
-            'qcms' => [
-                [
-                    'question' => 'question 1',
-                    'answers' => [
-                        ["answer" => "AB", "isValid" => true],
-                        ["answer" => "BC", "isValid" => true],
-                        ["answer" => "CD", "isValid" => false],
-                        ["answer" => "DE", "isValid" => false]
                     ]
                 ]
             ]

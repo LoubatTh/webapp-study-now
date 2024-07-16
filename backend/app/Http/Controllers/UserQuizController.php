@@ -3,18 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\StatsController;
+use App\Http\Requests\LikeRequest;
 use App\Http\Requests\SaveGradeRequest;
 use App\Models\Quiz;
 use App\Models\UserQuiz;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\JsonResponse;
-use App\Http\Resources\QuizResource;
 use App\Http\Resources\QuizCollection;
 
 class UserQuizController extends Controller
 {
-    public function likeOrDislikeQuizById(Request $request, int $id)
+    public function likeOrDislikeQuizById(LikeRequest $request, int $id)
     {
         try {
             $user = $request->user();
@@ -37,9 +37,9 @@ class UserQuizController extends Controller
                 ]
             );
 
-            $userQuiz->update([
-                "is_liked" => !$userQuiz->is_liked,
-            ]);
+            if ($request->isLiked == $userQuiz->is_liked) {
+                return response()->noContent();
+            }
 
             $quiz->update([
                 "likes" => $userQuiz->is_liked ?
@@ -47,6 +47,10 @@ class UserQuizController extends Controller
                     ($quiz->likes > 0 ?
                         $quiz->likes - 1 :
                         0),
+            ]);
+
+            $userQuiz->update([
+                "is_liked" => !$userQuiz->is_liked,
             ]);
 
             return response()->noContent();
@@ -102,7 +106,6 @@ class UserQuizController extends Controller
         $user = $request->user();
 
         $likedQuizzes = $user->likedQuizzes;
-        
 
         if ($likedQuizzes->isEmpty()) {
             return response()->json(['message' => "You haven't liked any quiz yet"], 200);

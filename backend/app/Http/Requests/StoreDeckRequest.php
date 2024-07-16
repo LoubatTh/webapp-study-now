@@ -26,6 +26,7 @@ class StoreDeckRequest extends FormRequest
             "name" => "required|string|max:255",
             "is_public" => "boolean",
             "is_organization" => "boolean",
+            "organizations" => "array",
             "tag_id" => "required|integer",
             "flashcards" => "required|array",
             "flashcards.*.question" => "required|string|max:255",

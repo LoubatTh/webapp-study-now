@@ -51,7 +51,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="flex justify-between p-2 items-center">
+    <div className="flex justify-between p-2 items-center z-20">
       <div
         onClick={() => handleNavigate("/")}
         className="flex items-center cursor-pointer"
@@ -66,7 +66,7 @@ const Navbar = () => {
       <div className="hidden md:flex">
         <NavigationMenu>
           <NavigationMenuList>
-            <NavigationMenuItem className="cursor-pointer ${}">
+            <NavigationMenuItem className="cursor-pointer">
               <NavigationMenuLink
                 className={navigationMenuTriggerStyle()}
                 onClick={() => handleNavigate("/")}

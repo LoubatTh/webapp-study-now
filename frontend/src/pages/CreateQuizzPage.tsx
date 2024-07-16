@@ -10,7 +10,7 @@ import { fetchApi } from "@/utils/api";
 import CreateQCM from "../components/quizz/CreateQCM";
 import useQCMStore from "../lib/stores/quizzStore";
 import { toast } from "@/components/ui/use-toast";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import {
   Select,
   SelectContent,
@@ -45,7 +45,6 @@ const getQuizz = async (id: string, accessToken: string) => {
   return response;
 };
 
-
 const CreateQuizzPage = () => {
   //Get the access token from the AuthContext
   const navigate = useNavigate();
@@ -55,6 +54,10 @@ const CreateQuizzPage = () => {
   const { name } = useUser();
   //Check if its a creation page or an edition page
   const { id } = useParams();
+  //Get the search params
+  const [searchParams] = useSearchParams();
+  //Get the name of the organization from the search params
+  const organizationName = searchParams.get("organization");
   //Use the useQCMStore store to get the QCMs
   const { qcms, saveQCM, removeQCM, resetQCMs } = useQCMStore();
   //loading state
@@ -78,7 +81,6 @@ const CreateQuizzPage = () => {
     Organization[]
   >([]);
 
-
   //Function to add a new QCM to the list
   const addNewQCM = (): void => {
     setQcmList([...qcmList, { id: qcmList.length, collapsed: false }]);
@@ -101,16 +103,19 @@ const CreateQuizzPage = () => {
 
   //Function to create the quizz with the QCMs and send it to the backend
   const createQuizzHandler = async (): Promise<void> => {
-
-    console.log("selected organizations")
+    console.log("selected organizations");
 
     let organizationsBody = {
-      "organisations": [] as number[]
+      organisations: [] as number[],
     };
-    
+
     if (selectedOrganizations.length > 0) {
-      organizationsBody.organisations = selectedOrganizations.map((org) => org.id);
+      organizationsBody.organisations = selectedOrganizations.map(
+        (org) => org.id
+      );
     }
+
+    console.log(organizationsBody);
 
     if (name.length < 1) {
       setErrorMessage("The name field is required.");
@@ -136,10 +141,10 @@ const CreateQuizzPage = () => {
         if (id) {
           response = await editQuizz(id, createdQuizz, accessToken);
           if (response.status === 200) {
-            toast({ 
-                description: "Quizz edited successfully",
-                className: "bg-green-400"
-              });
+            toast({
+              description: "Quizz edited successfully",
+              className: "bg-green-400",
+            });
           } else {
             throw new Error(response.error || "Failed to edit quiz");
           }
@@ -158,7 +163,12 @@ const CreateQuizzPage = () => {
         setQcmList([{ id: 0, collapsed: false }]);
         resetQCMs();
 
-        navigate("/board");
+        if(organizationName){
+          navigate(`/organizations`);
+        } else {
+          navigate("/board"); 
+        }
+
       } catch (error: any) {
         toast({ description: error.message });
       }
@@ -167,16 +177,33 @@ const CreateQuizzPage = () => {
 
   const fetchAllOwnedOrganizations = async (accessToken: string) => {
     try {
-      const response = await fetchApi( "GET","user/organizations", null,accessToken );
+      const response = await fetchApi(
+        "GET",
+        "user/organizations",
+        null,
+        accessToken
+      );
       if (response.status === 200) {
-        setOrganizations(response.data.owned_organizations as Organization[]);
+        const allOrganizations = response.data
+          .owned_organizations as Organization[];
+        setOrganizations(allOrganizations);
+
+        // Find the default organization based on organizationName
+        if (organizationName) {
+          const defaultOrganization = allOrganizations.find(
+            (org) => org.name === organizationName
+          );
+          if (defaultOrganization) {
+            setSelectedOrganizations([defaultOrganization]);
+          }
+        }
       } else {
         toast({ description: response.data.message });
       }
     } catch (error) {
       toast({ description: error.message });
     }
-  }
+  };
 
   const fetchLabelsAndQuizzData = async (
     id: string | undefined,
@@ -280,39 +307,41 @@ const CreateQuizzPage = () => {
             </div>
           </div>
           {organizations.length > 0 && (
-          <div className="min-w-40">
-            {/* <Label htmlFor="name">Organizations</Label> */}
-            <Autocomplete
-              multiple
-              id="organizations"
-              options={organizations}
-              disableCloseOnSelect
-              getOptionLabel={(option) => option.name}
-              onChange={(event, newValue) => setSelectedOrganizations(newValue)}
-              renderOption={(props, option, { selected }) => {
-                const { key, ...optionProps } = props;
-                return (
-                  <li key={key} {...optionProps}>
-                    <Checkbox
-                      icon={<Square />}
-                      checkedIcon={<SquareCheck />}
-                      style={{ marginRight: 4 }}
-                      checked={selected}
-                    />
-                    {option.name}
-                  </li>
-                );
-              }}
-              className="min-w-48 max-w-96"
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Organizations"
-                  placeholder="College Saint Exupery"
-                />
-              )}
-            />
-          </div>
+            <div className="min-w-40">
+              <Autocomplete
+                multiple
+                id="organizations"
+                options={organizations}
+                disableCloseOnSelect
+                defaultValue={selectedOrganizations} // Set default values here
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) =>
+                  setSelectedOrganizations(newValue)
+                }
+                renderOption={(props, option, { selected }) => {
+                  const { key, ...optionProps } = props;
+                  return (
+                    <li key={key} {...optionProps}>
+                      <Checkbox
+                        icon={<Square />}
+                        checkedIcon={<SquareCheck />}
+                        style={{ marginRight: 4 }}
+                        checked={selected}
+                      />
+                      {option.name}
+                    </li>
+                  );
+                }}
+                className="min-w-48 max-w-96"
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Organizations"
+                    placeholder="College Saint Exupery"
+                  />
+                )}
+              />
+            </div>
           )}
         </div>
       </div>

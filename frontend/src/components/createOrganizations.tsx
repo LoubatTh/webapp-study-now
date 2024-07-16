@@ -92,7 +92,7 @@ const CreateOrganizations = ({ onOrganizationCreated }) => {
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description (optional)</FormLabel>
+                <FormLabel>Description</FormLabel>
                 <FormControl>
                   <Input {...field} placeholder="A school in Paris" />
                 </FormControl>

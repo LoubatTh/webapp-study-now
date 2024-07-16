@@ -17,7 +17,7 @@ import LayoutNavbarPage from "./pages/LayoutNavbarPage";
 import MyOrganizationsPage from "./pages/MyOrganizationsPage";
 import Error404 from "./pages/errors/Error404";
 import PremiumPage from "./pages/PremiumPage";
-import ExplorePage from "./pages/Explorepage";
+import ExplorePage from "./pages/ExplorePage";
 import BoardOrganizationsPage from "./pages/BoardOrganizationsPage";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -47,6 +47,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         </Routes>
       </UserProvider>
     </AuthProvider>
-
   </BrowserRouter>
 );

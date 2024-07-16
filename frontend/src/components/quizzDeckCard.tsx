@@ -33,9 +33,9 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
   onDeleteCard,
 }: CommonCardProps) => {
   const navigate = useNavigate();
-
+  const cards = type === "Quiz" ? "quizz" : "deck";
+  console.log(cards);
   const handleClick = () => {
-    const cards = type === "Quiz" ? "quizz" : "deck";
     navigate(`/${cards}/${id}`);
   };
 
@@ -43,7 +43,11 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
     <div onClick={handleClick} className="cursor-pointer">
       <Card
         className={cn(
-          "transition duration-200 shadow-lg transform hover:shadow-2xl hover:scale-105"
+          `transition duration-200 shadow-lg transform hover:shadow-2xl hover:scale-105 ${
+            cards === "quizz"
+              ? "ring-1 ring-electricalPurple"
+              : "ring-1 ring-electricalBlue"
+          }`
         )}
       >
         <CardHeader>

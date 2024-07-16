@@ -10,20 +10,14 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('decks', function (Blueprint $table) {
+        Schema::create('organization_invitations', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->boolean('is_public');
-            $table->integer('likes')->nullable();
-            $table->string('type');
-            $table->foreignId('tag_id');
-            $table->foreignId('user_id');
             $table->timestamps();
+            $table->foreignId('user_id');
+            $table->foreignId('organization_id');
 
-            $table->foreign('tag_id')->references('id')->on('tags');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-
-            $table->fullText('name');
+            $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
         });
     }
 
@@ -32,6 +26,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('decks');
+        Schema::dropIfExists('organization_invitations');
     }
 };

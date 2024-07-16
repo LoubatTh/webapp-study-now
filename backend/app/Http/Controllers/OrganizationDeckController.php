@@ -19,7 +19,7 @@ class OrganizationDeckController
      */
     public function index(Request $request, int $id)
     {
-        $decks = OrganizationDeck::with('deck')->where('organization_id', $id)->get();
+        $decks = OrganizationDeck::with('deck.flashcards', 'deck.tag', 'deck.user')->where('organization_id', $id)->get();
 
         return response()->json(OrganizationDeckResource::collection($decks));
     }
@@ -91,7 +91,7 @@ class OrganizationDeckController
      */
     public function show(Request $request, int $id, int $deckId)
     {
-        $organizationDeck = OrganizationDeck::with('deck.flashcards')
+        $organizationDeck = OrganizationDeck::with('deck.flashcards', 'deck.tag', 'deck.user')
             ->where('organization_id', $id)
             ->where('deck_id', $deckId)
             ->first();

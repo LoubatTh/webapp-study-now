@@ -107,8 +107,8 @@ const FilterBar = ({ onSearch, board }: FilterBarProps) => {
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectItem value="quizzes">Quizzes</SelectItem>
-              <SelectItem value="decks">Decks</SelectItem>
+              <SelectItem value="Quiz">Quizzes</SelectItem>
+              <SelectItem value="Deck">Decks</SelectItem>
               <SelectItem value="none">None</SelectItem>
             </SelectGroup>
           </SelectContent>

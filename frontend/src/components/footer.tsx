@@ -11,8 +11,8 @@ const Footer = () => {
     navigate(path);
   };
   return (
-    <div className="flex flex-col items-center mb-3.5 mt-20">
-      <div className="flex justify-around w-full max-w-screen-lg mb-2.5">
+    <div className="flex flex-col items-center mb-3.5 mt-20 border-t border-shadow-xl">
+      <div className="flex justify-around w-full max-w-screen-lg mb-2.5 pt-6">
         <div className="">
           <h4 className="font-bold mb-2">Navigation</h4>
           <ul className="text-sm">
@@ -37,7 +37,7 @@ const Footer = () => {
           <ul className="text-sm">
             <li className="cursor-pointer mt-2">
               <a className="flex items-center" href="" target="_blank">
-                <Github className="w-4 mr-2"/>
+                <Github className="w-4 mr-2" />
                 GitHub
               </a>
             </li>
@@ -75,7 +75,7 @@ const Footer = () => {
       </div>
       <hr className="m-4 h-1 w-2/3" />
       <div className="flex justify-center items-center">
-        <img className="w-10"src={Logo} alt="logo" />
+        <img className="w-10" src={Logo} alt="logo" />
         <h4>StudyNow</h4>
       </div>
     </div>

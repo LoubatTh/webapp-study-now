@@ -39,7 +39,6 @@ class DeckTest extends TestCase
                 'id' => 1,
                 'name' => 'Test',
                 'is_public' => true,
-                'is_organization' => false,
                 'likes' => 2,
                 'tag_id' => 1,
                 'user_id' => self::$user->id,
@@ -51,7 +50,6 @@ class DeckTest extends TestCase
                 'id' => 2,
                 'name' => 'TestPrivate',
                 'is_public' => false,
-                'is_organization' => false,
                 'likes' => 20,
                 'tag_id' => 1,
                 'user_id' => self::$userPrivate->id,
@@ -88,11 +86,11 @@ class DeckTest extends TestCase
                     'id',
                     'name',
                     'is_public',
-                    'is_organization',
                     'type',
                     'likes',
                     'tag',
                     'owner',
+                    'is_liked',
                     'flashcards' => [
                         '*' => [
                             'question',
@@ -123,11 +121,11 @@ class DeckTest extends TestCase
                     'id',
                     'name',
                     'is_public',
-                    'is_organization',
                     'type',
                     'likes',
                     'tag',
                     'owner',
+                    'is_liked',
                     'flashcards' => [
                         '*' => [
                             'question',
@@ -156,7 +154,7 @@ class DeckTest extends TestCase
 
         $response->assertStatus(200)->assertJson(
             fn(AssertableJson $json) =>
-            $json->hasAll(['id', 'name', 'is_public', 'is_organization', 'type', 'likes', 'tag', 'owner', 'flashcards'])
+            $json->hasAll(['id', 'name', 'is_public', 'type', 'likes', 'tag', 'owner', 'is_liked', 'flashcards'])
                 ->has(
                     'flashcards',
                     fn($json) =>
@@ -171,7 +169,6 @@ class DeckTest extends TestCase
 
         $this->assertTrue($response['name'] == 'Test');
         $this->assertTrue($response['is_public'] == true);
-        $this->assertTrue($response['is_organization'] == false);
         $this->assertTrue($response['type'] == 'Deck');
         $this->assertTrue($response['tag'] == 'Mathematics');
         $this->assertTrue($response['likes'] == 2);
@@ -191,7 +188,7 @@ class DeckTest extends TestCase
 
         $response->assertStatus(200)->assertJson(
             fn(AssertableJson $json) =>
-            $json->hasAll(['id', 'name', 'is_public', 'is_organization', 'type', 'likes', 'tag', 'owner', 'flashcards'])
+            $json->hasAll(['id', 'name', 'is_public', 'type', 'likes', 'tag', 'owner', 'is_liked', 'flashcards'])
                 ->has(
                     'flashcards',
                     fn($json) =>
@@ -206,7 +203,6 @@ class DeckTest extends TestCase
 
         $this->assertTrue($response['name'] == 'TestPrivate');
         $this->assertTrue($response['is_public'] == false);
-        $this->assertTrue($response['is_organization'] == false);
         $this->assertTrue($response['type'] == 'Deck');
         $this->assertTrue($response['tag'] == 'Mathematics');
         $this->assertTrue($response['likes'] == 20);
@@ -254,7 +250,6 @@ class DeckTest extends TestCase
         $deckData = [
             'name' => 'Test2',
             'is_public' => false,
-            'is_organization' => false,
             'tag_id' => 3,
             'flashcards' => [
                 [
@@ -280,7 +275,6 @@ class DeckTest extends TestCase
         $this->assertDatabaseHas('decks', [
             'name' => $deckData['name'],
             'is_public' => $deckData['is_public'],
-            'is_organization' => $deckData['is_organization'],
             'type' => 'Deck',
             'tag_id' => 3
         ]);
@@ -301,7 +295,6 @@ class DeckTest extends TestCase
         $deckData = [
             'name' => 'Test2',
             'is_public' => true,
-            'is_organization' => false,
             'tag_id' => 4,
             'flashcards' => [
                 [
@@ -332,7 +325,6 @@ class DeckTest extends TestCase
         $deckData = [
             'name' => 'Test3',
             'is_public' => false,
-            'is_organization' => true,
             'likes' => 14,
             'tag_id' => 8,
             'flashcards' => [
@@ -359,7 +351,6 @@ class DeckTest extends TestCase
         $this->assertDatabaseHas('decks', [
             'name' => $deckData['name'],
             'is_public' => $deckData['is_public'],
-            'is_organization' => $deckData['is_organization'],
             'type' => 'Deck',
             'tag_id' => 8
         ]);
@@ -380,7 +371,6 @@ class DeckTest extends TestCase
         $deckData = [
             'name' => 'Test3',
             'is_public' => false,
-            'is_organization' => true,
             'likes' => 14,
             'flashcards' => [
                 [
@@ -411,7 +401,6 @@ class DeckTest extends TestCase
         $deckData = [
             'name' => 'Test3',
             'is_public' => false,
-            'is_organization' => true,
             'likes' => 14,
             'flashcards' => [
                 [

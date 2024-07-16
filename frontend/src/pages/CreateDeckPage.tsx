@@ -255,7 +255,7 @@ const CreateDeckPage = () => {
         </Button>
         <Separator className="my-2" />
         <Button onClick={createDeckHandler} variant="default">
-          Create Deck
+          {id ? "Edit Deck" : "Create Deck"}
         </Button>
       </div>
     </div>

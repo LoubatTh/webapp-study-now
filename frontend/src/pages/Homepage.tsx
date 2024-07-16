@@ -2,14 +2,13 @@ import StudyImg from "@/assets/images/study_img.jpg";
 import { useNavigate } from "react-router-dom";
 
 const Homepage = () => {
-
   const navigate = useNavigate();
   const handleNavigate = (path: string) => {
     navigate(path);
   };
   return (
     <>
-      <div className="flex justify-center items-center min-h-[80vh]">
+      <div className="flex justify-center items-center my-auto">
         <div className="max-w-md my-auto">
           <h1 className="text-5xl md:text-3xl lg:text-5xl m-4">
             Study smarter,<br></br> share easily

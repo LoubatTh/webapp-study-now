@@ -1,94 +1,82 @@
-import ImageLink from "./imageLink";
-import logo from "../assets/images/Logo-T-YEP.png";
+import { useAuth } from "@/contexts/AuthContext";
+import { Github } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import Logo from "@/assets/images/Logo-T-YEP.png";
 
 const Footer = () => {
+  const { accessToken, logout } = useAuth();
+  // handle click for navigation btn
+  const navigate = useNavigate();
+  const handleNavigate = (path: string) => {
+    navigate(path);
+  };
   return (
-    <div className="border-t">
-      <div className="hidden sm:block h-200 text-sm">
-        <div className="flex content-center justify-between">
-          <div className="">
-            <div className="p-2">
-              <div className="flex items-center">
-                <div>
-                  <ImageLink
-                    href="/"
-                    src={logo}
-                    alt="logo du site"
-                    width="w-12"
-                    height="h-12"
-                  />
-                </div>
-                <div>
-                  <h3>StudyNow</h3>
-                </div>
-              </div>
-            </div>
-            <div className="px-1 py-4">
-              {/* <p>Rendre l'apprentissage plus simple</p> */}
-              <p>
-                Elle est dispo, moi aussi, j'crois qu'on va réviser grâce à
-                StudyNow
-              </p>
-            </div>
-          </div>
-          <div className="flex">
-            <div className="p-2 content-center">
-              <ul>
-                <a className="p-1 underline" href="">
-                  github
-                </a>
-                <a className="p-1 underline" href="">
-                  contact
-                </a>
-              </ul>
-            </div>
-          </div>
+    <div className="flex flex-col items-center mb-3.5 mt-20">
+      <div className="flex justify-around w-full max-w-screen-lg mb-2.5">
+        <div className="">
+          <h4 className="font-bold mb-2">Navigation</h4>
+          <ul className="text-sm">
+            <li className="cursor-pointer mt-2">
+              <a onClick={() => handleNavigate("/")}>Home</a>
+            </li>
+            <li className="cursor-pointer mt-2">
+              <a onClick={() => handleNavigate("/explore")}>Explore</a>
+            </li>
+            <li className="cursor-pointer mt-2">
+              <a onClick={() => handleNavigate("/board")}>Board</a>
+            </li>
+            <li className="cursor-pointer mt-2">
+              <a onClick={() => handleNavigate("/organization")}>
+                Organization
+              </a>
+            </li>
+          </ul>
         </div>
-        <hr className="border-t border-gray-300"></hr>
-        <div className="px-1 py-4">
-          <p className="text-xs">© 2024 StudyNow, Inc. Tout droit réservé.</p>
+        <div className="">
+          <h4 className="font-bold mb-2">Contribute</h4>
+          <ul className="text-sm">
+            <li className="cursor-pointer mt-2">
+              <a className="flex items-center" href="" target="_blank">
+                <Github className="w-4 mr-2"/>
+                GitHub
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div className="">
+          <h4 className="font-bold mb-2">Account</h4>
+          {!accessToken ? (
+            <ul className="text-sm">
+              <li className="cursor-pointer mt-2">
+                <a onClick={() => handleNavigate("/login")}>Login</a>
+              </li>
+            </ul>
+          ) : (
+            <ul className="text-sm">
+              <li className="cursor-pointer mt-2">
+                <a onClick={() => handleNavigate("/profile")}>Profile</a>
+              </li>
+              <li className="cursor-pointer mt-2">
+                <a onClick={() => handleNavigate("/premium")}>Premium</a>
+              </li>
+              <li className="cursor-pointer mt-2">
+                <a
+                  onClick={() => {
+                    handleNavigate("/");
+                    logout();
+                  }}
+                >
+                  Logout
+                </a>
+              </li>
+            </ul>
+          )}
         </div>
       </div>
-      <div className="sm:hidden h-200 py-4 px-10 text-sm shadow-md">
-        <div className="flex content-center justify-between">
-          <div className="">
-            <div className="flex items-center">
-              <div>
-                <ImageLink
-                  href="/"
-                  src={logo}
-                  alt="logo du site"
-                  width="w-12"
-                  height="h-12"
-                />
-              </div>
-              <div>
-                <h3>StudyNow</h3>
-              </div>
-            </div>
-            <div className="p-2">
-              {/* <p>Rendre l'apprentissage plus simple</p> */}
-              <p>
-                Elle est dispo, moi aussi, j'crois qu'on va réviser grâce à
-                StudyNow
-              </p>
-            </div>
-            <div className="px-1 pt-1 pb-4">
-              <ul>
-                <a className="p-1 underline" href="">
-                  github
-                </a>
-                <a className="p-1 underline" href="">
-                  contact
-                </a>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <hr className="border-t border-gray-300"></hr>
-        <div className="px-1 py-4">
-          <p className="text-xs">© 2024 StudyNow, Inc. Tout droit réservé.</p>
-        </div>
+      <hr className="m-4 h-1 w-2/3" />
+      <div className="flex justify-center items-center">
+        <img className="w-10"src={Logo} alt="logo" />
+        <h4>StudyNow</h4>
       </div>
     </div>
   );

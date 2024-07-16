@@ -17,6 +17,7 @@ import LayoutNavbarPage from "./pages/LayoutNavbarPage";
 import MyOrganizationsPage from "./pages/MyOrganizationsPage";
 import Error404 from "./pages/errors/Error404";
 import PremiumPage from "./pages/PremiumPage";
+import ExplorePage from "./pages/Explorepage";
 import QuizzOrganizationsPage from "./pages/BoardOrganizationsPage";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -39,11 +40,13 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <Route path="/organizations" element={<MyOrganizationsPage />} />
             <Route path="/organizations/:organizationId" element={<QuizzOrganizationsPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/explore" element={<ExplorePage />} />
             <Route path="/premium" element={<PremiumPage />} />
             <Route path="*" element={<Error404 />} />
           </Route>
         </Routes>
       </UserProvider>
     </AuthProvider>
+
   </BrowserRouter>
 );

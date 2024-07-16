@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\Organization;
+use App\Models\OrganizationQuiz;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Models\Quiz;
@@ -25,6 +27,7 @@ class QuizController extends Controller
             'is_public' => 'boolean',
             'is_organization' => 'boolean',
             'tag_id' => 'required|integer',
+            'organizations' => 'array',
             'qcms' => 'required|array',
             'qcms.*.question' => 'required|string',
             'qcms.*.answers' => 'required|array|size:4',
@@ -41,6 +44,21 @@ class QuizController extends Controller
             'likes' => 0,
             'tag_id' => $request->tag_id
         ]);
+
+        if (isset($data['organizations'])) {
+            foreach ($data['organizations'] as $organization) {
+                if (!Organization::where('id', $organization)->where('owner_id', $request->user()->first())) {
+                    return response()->json([
+                        'error' => 'Organization not found'
+                    ], 404);
+                }
+
+                OrganizationQuiz::create([
+                    'quiz_id' => $quiz['id'],
+                    'organization_id' => $organization,
+                ]);
+            }
+        }
 
         foreach ($data['qcms'] as $qcmData) {
             $quiz->qcms()->create([

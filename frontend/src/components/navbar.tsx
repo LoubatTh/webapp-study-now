@@ -17,7 +17,9 @@ import {
   LogOut,
   User,
   Home,
-  Search,
+  Earth,
+  FilePlus2,
+  BookPlus,
 } from "lucide-react";
 
 import {
@@ -78,7 +80,7 @@ const Navbar = () => {
                 className={navigationMenuTriggerStyle()}
                 onClick={() => handleNavigate("/explore")}
               >
-                <Search className="mr-2 h-4 w-4" />
+                <Earth className="mr-2 h-4 w-4" />
                 Explore
               </NavigationMenuLink>
             </NavigationMenuItem>
@@ -103,6 +105,32 @@ const Navbar = () => {
                     <LayoutDashboard className="mr-2 h-4 w-4" />
                     My Organizations
                   </NavigationMenuLink>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger>
+                    <FilePlus2 className="mr-2 h-4 w-4" />
+                    Create Card
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="flex flex-col gap-3 p-4 w-[300px]">
+                      <ListItem
+                        className="cursor-pointer"
+                        key="createDeck"
+                        title="Deck"
+                        onClick={() => handleNavigate("/create-deck")}
+                      >
+                        Create a new Deck
+                      </ListItem>
+                      <ListItem
+                        className="cursor-pointer"
+                        key="createQuizz"
+                        title="Quizz"
+                        onClick={() => handleNavigate("/create-quizz")}
+                      >
+                        Create a new Quizz
+                      </ListItem>
+                    </ul>
+                  </NavigationMenuContent>
                 </NavigationMenuItem>
               </>
             ) : (
@@ -170,68 +198,109 @@ const Navbar = () => {
         </NavigationMenu>
       </div>
       <div className="md:hidden">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline">
-              <AlignJustify />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem onClick={() => handleNavigate("/profile")}>
-                <User className="mr-2 h-4 w-4" />
-                <p>Profile</p>
-              </DropdownMenuItem>
-
+        {!accessToken ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">
+                <AlignJustify />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <DropdownMenuLabel>Menu</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem onClick={() => handleNavigate("/explore")}>
+                  <Home className="mr-2 h-4 w-4" />
+                  <p>Home</p>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => handleNavigate("/explore")}>
+                  <Earth className="mr-2 h-4 w-4" />
+                  <p>Explore</p>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  className="bg-green-100 text-green-400"
+                  onClick={() => handleNavigate("/login")}
+                >
+                  <LogIn className="mr-2 h-4 w-4" />
+                  <p>Login</p>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">
+                <AlignJustify />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <DropdownMenuLabel>Menu</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem onClick={() => handleNavigate("/explore")}>
+                  <Home className="mr-2 h-4 w-4" />
+                  <p>Home</p>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleNavigate("/explore")}>
+                  <Earth className="mr-2 h-4 w-4" />
+                  <p>Explore</p>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleNavigate("/board")}>
+                  <ClipboardList className="mr-2 h-4 w-4" />
+                  <p>My Boards</p>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleNavigate("/organizations")}
+                >
+                  <LayoutDashboard className="mr-2 h-4 w-4" />
+                  <p>My Organizations</p>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem onClick={() => handleNavigate("/create-deck")}>
+                  <BookPlus className="mr-2 h-4 w-4" />
+                  <p>Create deck</p>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleNavigate("/create-quizz")}>
+                  <BookPlus className="mr-2 h-4 w-4" />
+                  <p>Create Quizz</p>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem onClick={() => handleNavigate("/profile")}>
+                  <User className="mr-2 h-4 w-4" />
+                  <p>Profile</p>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleNavigate("/profil/statistics")}
+                >
+                  <BarChart3 className="mr-2 h-4 w-4" />
+                  <p>Statistics</p>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleNavigate("/premium")}>
+                  <CreditCard className="mr-2 h-4 w-4" />
+                  <p>Premium</p>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
               <DropdownMenuItem
-                onClick={() => handleNavigate("/profil/statistics")}
+                className="bg-red-100 text-red-400"
+                onClick={() => {
+                  handleNavigate("/");
+                  logout();
+                }}
               >
-                <BarChart3 className="mr-2 h-4 w-4" />
-                <p>Statistics</p>
+                <LogOut className="mr-2 h-4 w-4" />
+                <p>Logout</p>
               </DropdownMenuItem>
-
-              <DropdownMenuItem onClick={() => handleNavigate("/premium")}>
-                <CreditCard className="mr-2 h-4 w-4" />
-                <p>Premium</p>
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-
-            <DropdownMenuSeparator />
-
-            <DropdownMenuGroup>
-              <DropdownMenuItem onClick={() => handleNavigate("/explore")}>
-                <Search className="mr-2 h-4 w-4" />
-                <p>Explore</p>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleNavigate("/board")}>
-                <ClipboardList className="mr-2 h-4 w-4" />
-                <p>My Boards</p>
-              </DropdownMenuItem>
-
-              <DropdownMenuItem
-                onClick={() => handleNavigate("/organizations")}
-              >
-                <LayoutDashboard className="mr-2 h-4 w-4" />
-                <p>My Organizations</p>
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-
-            <DropdownMenuSeparator />
-
-            <DropdownMenuItem
-              className="bg-red-100 text-red-400"
-              onClick={() => {
-                handleNavigate("/");
-                logout();
-              }}
-            >
-              <LogOut className="mr-2 h-4 w-4" />
-              <p>Logout</p>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
     </div>
   );

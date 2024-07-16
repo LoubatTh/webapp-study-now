@@ -21,7 +21,11 @@ const EditButton = ({ id, type }: EditButtonProps) => {
 
   return (
     <div>
-      <Button className="p-3" onClick={(event) => editHandler(event)}>
+      <Button
+        className="p-3"
+        variant="ghost"
+        onClick={(event) => editHandler(event)}
+      >
         <FilePen size={14} />
       </Button>
     </div>

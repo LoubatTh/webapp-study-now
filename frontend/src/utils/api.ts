@@ -8,7 +8,6 @@ export async function fetchApi<T>(
     "Content-Type": "application/json",
     Accept: "application/json",
   });
-
   if (token) {
     headers.set("Authorization", `Bearer ${token}`);
   }

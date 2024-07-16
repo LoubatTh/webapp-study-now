@@ -34,7 +34,6 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
 }: CommonCardProps) => {
   const navigate = useNavigate();
   const cards = type === "Quiz" ? "quizz" : "deck";
-  console.log(cards);
   const handleClick = () => {
     navigate(`/${cards}/${id}`);
   };

@@ -19,7 +19,12 @@ const getLabels = async () => {
   return response;
 };
 
-const FilterBar = ({ onSearch }) => {
+type FilterBarProps = {
+  onSearch: (searchValues: any) => void;
+  board?: boolean;
+};
+
+const FilterBar = ({ onSearch, board }: FilterBarProps) => {
   const [labels, setLabels] = useState<any[]>([]);
   const [name, setName] = useState("");
   const [owner, setOwner] = useState("");
@@ -44,7 +49,7 @@ const FilterBar = ({ onSearch }) => {
     const searchValues = {
       name,
       owner,
-      label: label === "none" ? "" : label,
+      tag: label === "none" ? "" : label,
       type: type === "none" ? "" : type,
       isPublic:
         isPublic === "public" ? true : isPublic === "private" ? false : null,
@@ -79,7 +84,7 @@ const FilterBar = ({ onSearch }) => {
           onChange={(e) => setOwner(e.target.value)}
         />
       </div>
-      <div className="flex-1 w-full md:w-auto">
+      <div className={`flex-1 w-full md:w-auto ${board ? "" : "hidden"}`}>
         <Label htmlFor="isPublic">Visibility</Label>
         <Select value={isPublic} onValueChange={setIsPublic}>
           <SelectTrigger>
@@ -110,10 +115,10 @@ const FilterBar = ({ onSearch }) => {
         </Select>
       </div>
       <div className="flex-1 w-full md:w-auto">
-        <Label htmlFor="label">Label</Label>
+        <Label htmlFor="label">Tag</Label>
         <Select value={label} onValueChange={(e) => setLabel(e)}>
           <SelectTrigger>
-            <SelectValue placeholder="Select a label" />
+            <SelectValue placeholder="Select a tag" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>

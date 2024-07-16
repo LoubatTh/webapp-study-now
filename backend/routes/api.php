@@ -43,6 +43,7 @@ Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->valu
     // User routes
     Route::get('user', [UserController::class, 'show']);
     Route::get('user/organizations', [UserController::class, 'showOrganizations']);
+    Route::get('user/invites', [OrganizationUserController::class, 'showInvite']);
     Route::put('user', [UserController::class, 'update']);
     Route::delete('user', [UserController::class, 'destroy']);
 
@@ -52,8 +53,9 @@ Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->valu
     Route::post('stripe/resume', [StripeController::class, 'resume']);
 
     // Organization routes
-    Route::get('organizations/{id}', [OrganizationController::class, 'show']);
+    Route::post('organizations/invites/{id}', [OrganizationUserController::class, 'invite']);
     Route::middleware([EnsureOrganizationExist::class])->group(function () {
+        Route::get('organizations/{id}', [OrganizationController::class, 'show']);
         Route::middleware([EnsureIsOrganizationMember::class])->group(function () {
             Route::get('organizations/{id}/users', [OrganizationUserController::class, 'show']);
             Route::get('organizations/{id}/decks', [OrganizationDeckController::class, 'index']);

@@ -21,6 +21,9 @@ import {
 } from "@/components/ui/select";
 import { useUser } from "@/contexts/UserContext";
 import { Tag } from "@/types/tag.type";
+import { Organization } from "@/types/organization.type";
+import { Autocomplete, Checkbox, TextField } from "@mui/material";
+import { Check, Cross, Square, SquareCheck } from "lucide-react";
 
 const postQuizz = async (quizz: PostQuizz, accessToken: string) => {
   const response = await fetchApi("POST", "quizzes", quizz, accessToken);
@@ -41,6 +44,7 @@ const getQuizz = async (id: string, accessToken: string) => {
   const response = await fetchApi("GET", `quizzes/${id}`, null, accessToken);
   return response;
 };
+
 
 const CreateQuizzPage = () => {
   //Get the access token from the AuthContext
@@ -67,6 +71,13 @@ const CreateQuizzPage = () => {
   const [errorMessage, setErrorMessage] = useState<string>("");
   //State to manage the list of QCMs
   const [qcmList, setQcmList] = useState([{ id: 0, collapsed: false }]);
+  //State to manage selected organizations
+  const [organizations, setOrganizations] = useState<Organization[]>([]);
+  // State to manage the selected organizations
+  const [selectedOrganizations, setSelectedOrganizations] = useState<
+    Organization[]
+  >([]);
+
 
   //Function to add a new QCM to the list
   const addNewQCM = (): void => {
@@ -90,6 +101,10 @@ const CreateQuizzPage = () => {
 
   //Function to create the quizz with the QCMs and send it to the backend
   const createQuizzHandler = async (): Promise<void> => {
+
+    console.log("selected organizations")
+    console.log(selectedOrganizations)
+
     if (name.length < 1) {
       setErrorMessage("The name field is required.");
       return;
@@ -128,12 +143,38 @@ const CreateQuizzPage = () => {
         setNameQuizz("");
         setQcmList([{ id: 0, collapsed: false }]);
         resetQCMs();
+
+        if(selectedOrganizations.length > 0){
+
+          // fetchApi(
+          //   "POST",
+          //   `/organizations/${quizz}/quizzes`,
+          //   { organizations: selectedOrganizations.map((org) => org.id) },
+          //   accessToken
+          // );
+
+        }
+        // Put the quizz into the organizations 
+
         navigate("/board");
       } catch (error: any) {
         toast({ description: error.message });
       }
     }
   };
+
+  const fetchAllOwnedOrganizations = async (accessToken: string) => {
+    try {
+      const response = await fetchApi( "GET","user/organizations", null,accessToken );
+      if (response.status === 200) {
+        setOrganizations(response.data.owned_organizations as Organization[]);
+      } else {
+        toast({ description: response.data.message });
+      }
+    } catch (error) {
+      toast({ description: error.message });
+    }
+  }
 
   const fetchLabelsAndQuizzData = async (
     id: string | undefined,
@@ -186,6 +227,7 @@ const CreateQuizzPage = () => {
   useEffect(() => {
     if (accessToken && name) {
       fetchLabelsAndQuizzData(id, accessToken);
+      fetchAllOwnedOrganizations(accessToken);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, accessToken, name, loading]);
@@ -224,13 +266,50 @@ const CreateQuizzPage = () => {
         </Select>
       </div>
       <div className="flex flex-col gap-3 p-2 max-w-3xl min-w-full md:min-w-[768px]">
-        <Label htmlFor="name">Visibility</Label>
-        <div className="flex gap-2">
-          <Switch
-            checked={isPublic}
-            onCheckedChange={() => setIsPublic(!isPublic)}
-          />
-          <div>{isPublic ? "Public" : "Private"}</div>
+        <div className="flex justify-between">
+          <div>
+            <Label htmlFor="name">Visibility</Label>
+            <div className="flex gap-2 mt-2">
+              <Switch
+                checked={isPublic}
+                onCheckedChange={() => setIsPublic(!isPublic)}
+              />
+              <div>{isPublic ? "Public" : "Private"}</div>
+            </div>
+          </div>
+          <div className="min-w-40">
+            {/* <Label htmlFor="name">Organizations</Label> */}
+            <Autocomplete
+              multiple
+              id="organizations"
+              options={organizations}
+              disableCloseOnSelect
+              getOptionLabel={(option) => option.name}
+              onChange={(event, newValue) => setSelectedOrganizations(newValue)}
+              renderOption={(props, option, { selected }) => {
+                const { key, ...optionProps } = props;
+                return (
+                  <li key={key} {...optionProps}>
+                    <Checkbox
+                      icon={<Square />}
+                      checkedIcon={<SquareCheck />}
+                      style={{ marginRight: 4 }}
+                      checked={selected}
+                    />
+                    {option.name}
+                  </li>
+                );
+              }}
+              className="min-w-48 max-w-96"
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Organizations"
+                  placeholder="College Saint Exupery"
+                />
+              )}
+            />
+          </div>
         </div>
       </div>
       <div className="flex flex-col gap-2 p-2 max-w-3xl min-w-full md:min-w-[768px]">

@@ -8,6 +8,8 @@ use App\Http\Requests\UpdateDeckRequest;
 use App\Http\Resources\DeckCollection;
 use App\Http\Resources\DeckResource;
 use App\Models\Deck;
+use App\Models\Organization;
+use App\Models\OrganizationDeck;
 use App\Models\Tag;
 use App\Models\User;
 use App\Models\UserDeck;
@@ -125,6 +127,21 @@ class DeckController extends Controller
                 "tag_id" => $request->tag_id,
                 "user_id" => $user->id,
             ]);
+
+            if (isset($request['organizations'])) {
+                foreach ($request['organizations'] as $organization) {
+                    if (!Organization::where('id', $organization)->where('owner_id', $request->user()->first())) {
+                        return response()->json([
+                            'error' => 'Organization not found'
+                        ], 404);
+                    }
+
+                    OrganizationDeck::create([
+                        'deck_id' => $deck['id'],
+                        'organization_id' => $organization,
+                    ]);
+                }
+            }
 
             foreach ($request->flashcards as $flashcard) {
                 $flashcardController->createFlashcard($flashcard, $deck->id);

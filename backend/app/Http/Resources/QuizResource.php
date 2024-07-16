@@ -24,6 +24,7 @@ class QuizResource extends JsonResource
             "likes" => $this->likes,
             "tag" => $this->tag->name,
             "owner" => $this->user->name,
+            "is_liked" => $this->getAttribute("is_liked"),
             "qcms" => QcmResource::collection($this->qcms),
         ];
     }

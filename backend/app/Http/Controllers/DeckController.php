@@ -8,128 +8,15 @@ use App\Http\Requests\UpdateDeckRequest;
 use App\Http\Resources\DeckCollection;
 use App\Http\Resources\DeckResource;
 use App\Models\Deck;
-use App\Models\Quiz;
 use App\Models\Tag;
 use App\Models\User;
+use App\Models\UserDeck;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class DeckController extends Controller
 {
-    /**
-     * Display a listing of two resources by page.
-     */
-    public function getDecksAndQuizzesByPage(Request $request)
-    {
-        try {
-            $numberPerPage = 18;
-            $private = $request->has("me");
-            $isSearch = $request->has("search");
-            $decks = Deck::with("tag", "user", "flashcards");
-            $quizzes = Quiz::with("tag", "user", "qcms");
-
-            if ($private) {
-                $user = Auth::guard('sanctum')->user();
-                if (!$user) {
-                    return response()->json(["message" => "Unauthorized"], 401);
-                }
-
-                $decks = $decks->where("user_id", $user->id);
-                $quizzes = $quizzes->where("user_id", $user->id);
-            } else {
-                $decks = $decks->where("is_public", true);
-                $quizzes = $quizzes->where("is_public", true);
-            }
-
-            if ($isSearch) {
-                $search = $request->input("search");
-                $searchTerm = "%{$search}%";
-
-                $decks = $decks->where('name', 'ILIKE', $searchTerm);
-                $quizzes = $quizzes->where('name', 'ILIKE', $searchTerm);
-
-                $tag_ids = Tag::where('name', 'ILIKE', $searchTerm)->pluck('id');
-
-                $user_ids = User::where('name', 'ILIKE', $searchTerm)->pluck('id');
-
-                $decks = $decks->orWhereIn("tag_id", $tag_ids)->orWhereIn("user_id", $user_ids);
-                $quizzes = $quizzes->orWhereIn("tag_id", $tag_ids)->orWhereIn("user_id", $user_ids);
-            }
-
-            $decks = $decks->get();
-            $quizzes = $quizzes->get();
-
-            $all = $decks->merge($quizzes);
-            $all = $all->shuffle();
-
-            $totalItems = $all->count();
-            $currentPage = $request->has("page") ? intval($request->input("page")) : 1;
-            $lastPage = ceil($totalItems / $numberPerPage);
-
-            $firstElement = ($currentPage - 1) * $numberPerPage + 1;
-
-            $dataPaged = $all->slice($firstElement - 1, $numberPerPage)->values();
-
-            $data = $dataPaged->map(function ($item) {
-                $mappedItem = [
-                    'id' => $item->id,
-                    'name' => $item->name,
-                    'is_public' => $item->is_public,
-                    'likes' => $item->likes,
-                    'type' => $item->type,
-                    'tag' => $item->tag->name,
-                    'owner' => $item->user->name,
-                ];
-
-                if ($item->relationLoaded('flashcards')) {
-                    $mappedItem['flashcards'] = $item->flashcards->map(function ($flashcard) {
-                        return [
-                            'id' => $flashcard->id,
-                            'question' => $flashcard->question,
-                            'answer' => $flashcard->answer,
-                        ];
-                    });
-                }
-
-                if ($item->relationLoaded('qcms')) {
-                    $mappedItem['qcms'] = $item->qcms->map(function ($qcm) {
-                        return [
-                            'id' => $qcm->id,
-                            'question' => $qcm->question,
-                            'answers' => $qcm->answers,
-                        ];
-                    });
-                }
-
-                return $mappedItem;
-            });
-
-            $response = [
-                'data' => $data,
-                'links' => [
-                    'first' => "http://localhost:8000/api/all?page=1",
-                    'last' => "http://localhost:8000/api/decks?page=" . $lastPage,
-                    'prev' => $currentPage != 1 ? "http://localhost:8000/api/decks?page=" . $currentPage - 1 : null,
-                    'next' => $currentPage < $lastPage ? "http://localhost:8000/api/decks?page=" . $currentPage + 1 : null,
-                ],
-                'meta' => [
-                    'current_page' => $currentPage,
-                    'from' => $firstElement,
-                    'last_page' => $lastPage,
-                    'path' => "http://localhost:8000/api/all",
-                    'per_page' => $numberPerPage,
-                    'to' => $firstElement + $numberPerPage - 1 > $totalItems ? $totalItems : $firstElement + $numberPerPage - 1,
-                    'total' => $totalItems,
-                ],
-            ];
-
-            return response()->json($response, 200);
-        } catch (\Exception $e) {
-            return response()->json(["error" => $e->getMessage()], 400);
-        }
-    }
-
     /**
      * Display a listing of the resource by page.
      */
@@ -141,13 +28,14 @@ class DeckController extends Controller
             $isSearch = $request->has("search");
             $decks = Deck::with("tag", "user", "flashcards");
 
+            $user = Auth::guard("sanctum")->user();
+
             if ($myDecks) {
-                $user = Auth::guard('sanctum')->user();
                 if (!$user) {
                     return response()->json(["message" => "Unauthorized"], 401);
                 }
 
-                $decks = $decks->where("user_id", $user->id);
+                $decks = $decks->where("user_id", $user->id)->orWhereIn("id", $user->likedDecks()->pluck("id"));
             } else {
                 $decks = $decks->where("is_public", true);
             }
@@ -156,16 +44,27 @@ class DeckController extends Controller
                 $search = $request->input("search");
                 $searchTerm = "%{$search}%";
 
-                $decks = $decks->where('name', 'ILIKE', $searchTerm);
+                $decks = $decks->where("name", "ILIKE", $searchTerm);
 
-                $tag_ids = Tag::where('name', 'ILIKE', $searchTerm)->pluck('id');
+                $tag_ids = Tag::where("name", "ILIKE", $searchTerm)->pluck("id");
 
-                $user_ids = User::where('name', 'ILIKE', $searchTerm)->pluck('id');
+                $user_ids = User::where("name", "ILIKE", $searchTerm)->pluck("id");
 
                 $decks = $decks->orWhereIn("tag_id", $tag_ids)->orWhereIn("user_id", $user_ids);
             }
 
-            return response()->json(new DeckCollection($decks->paginate($numberPerPage)), 200);
+            $decks = $decks->paginate($numberPerPage);
+
+            foreach ($decks as $deck) {
+                if (!$user) {
+                    $deck->setAttribute("is_liked", false);
+                } else {
+                    $userDeck = UserDeck::where(["user_id" => $user->id, "deck_id" => $deck->id])->first();
+                    $deck->setAttribute("is_liked", $userDeck ? $userDeck->is_liked : false);
+                }
+            }
+
+            return response()->json(new DeckCollection($decks), 200);
         } catch (\Exception $e) {
             return response()->json(["error" => $e->getMessage()], 400);
         }
@@ -182,7 +81,7 @@ class DeckController extends Controller
                 return response()->json(["message" => "Deck not found"], 404);
             }
 
-            $user = Auth::guard('sanctum')->user();
+            $user = Auth::guard("sanctum")->user();
 
             if ($deck->is_public == false) {
                 if (!$user) {
@@ -192,6 +91,13 @@ class DeckController extends Controller
                 if ($user->id != $deck->user_id) {
                     return response()->json(["message" => "Forbidden"], 403);
                 }
+            }
+
+            if (!$user) {
+                $deck->setAttribute("is_liked", false);
+            } else {
+                $userDeck = UserDeck::where(["user_id" => $user->id, "deck_id" => $deck->id])->first();
+                $deck->setAttribute("is_liked", $userDeck ? $userDeck->is_liked : false);
             }
 
             return response()->json(new DeckResource($deck), 200);

@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use App\Models\Quiz;
 use App\Models\Tag;
 use App\Models\User;
+use App\Models\UserQuiz;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\QuizResource;
@@ -89,7 +90,13 @@ class QuizController extends Controller
             if ($user->id != $quiz->user_id) {
                 return response()->json(['message' => 'Forbidden'], 403);
             }
+        }
 
+        if (!$user) {
+            $quiz->setAttribute("is_liked", false);
+        } else {
+            $userQuiz = UserQuiz::where(["user_id" => $user->id, "quiz_id" => $quiz->id])->first();
+            $quiz->setAttribute("is_liked", $userQuiz ? $userQuiz->is_liked : false);
         }
 
         return response()->json(new QuizResource($quiz), 200);
@@ -141,21 +148,21 @@ class QuizController extends Controller
     {
         $numberPerPage = 9;
         $isSearch = $request->has("search");
+        $quizzes = Quiz::with("tag", "user", "qcms");
+
+        $user = Auth::guard('sanctum')->user();
 
         if ($request->has("myQuizzes")) {
-
-            $user = Auth::guard('sanctum')->user();
             if (!$user) {
                 return response()->json(["message" => "Unauthorized"], 401);
             }
 
-            $quizzes = Quiz::where("user_id", $user->id);
+            $quizzes = $quizzes->where("user_id", $user->id);
             if (!$quizzes) {
                 return response()->json(['message' => "You haven't created any quiz yet"], 200);
             }
-
         } else {
-            $quizzes = Quiz::where("is_public", true);
+            $quizzes = $quizzes->where("user_id", $user->id)->orWhereIn("id", $user->likedQuizzes()->pluck("id"));
         }
 
         if ($isSearch) {
@@ -171,6 +178,17 @@ class QuizController extends Controller
             $quizzes = $quizzes->orWhereIn("tag_id", $tag_ids)->orWhereIn("user_id", $user_ids);
         }
 
-        return response()->json(new QuizCollection($quizzes->paginate($numberPerPage)), 200);
+        $quizzes = $quizzes->paginate($numberPerPage);
+
+        foreach ($quizzes as $quiz) {
+            if (!$user) {
+                $quiz->setAttribute("is_liked", false);
+            } else {
+                $userQuiz = UserQuiz::where(["user_id" => $user->id, "quiz_id" => $quiz->id])->first();
+                $quiz->setAttribute("is_liked", $userQuiz ? $userQuiz->is_liked : false);
+            }
+        }
+
+        return response()->json(new QuizCollection($quizzes), 200);
     }
 }

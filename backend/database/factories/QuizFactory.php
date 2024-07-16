@@ -41,9 +41,7 @@ class QuizFactory extends Factory
         return $this->afterCreating(function ($quiz) {
             $qcms = $this->faker->numberBetween(1, 20);
 
-            if ($quiz->id <= 2) {
-                Qcm::factory()->count($qcms)->create(["quiz_id" => $quiz->id]);
-            }
+            Qcm::factory()->count($qcms)->create(["quiz_id" => $quiz->id]);
         });
     }
 }

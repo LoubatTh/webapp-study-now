@@ -58,7 +58,7 @@ Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->valu
             Route::get('organizations/{id}/users', [OrganizationUserController::class, 'show']);
             Route::get('organizations/{id}/decks', [OrganizationDeckController::class, 'index']);
             Route::get('organizations/{id}/decks/{deckId}', [OrganizationDeckController::class, 'show']);
-            Route::get('organizations/{id}/quizzes', [OrganizationDeckController::class, 'index']);
+            Route::get('organizations/{id}/quizzes', [OrganizationQuizController::class, 'index']);
             Route::get('organizations/{id}/quizzes/{quizId}', [OrganizationQuizController::class, 'show']);
         });
         Route::middleware([EnsureUserIsPremium::class])->group(function () {

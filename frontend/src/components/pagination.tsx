@@ -12,8 +12,40 @@ const Pagin = ({ currentPage, totalPages, onPageChange }) => {
     onPageChange(page);
   };
 
+  const generatePageNumbers = () => {
+    const pageNumbers = [];
+    const maxVisiblePages = 2; // Number of page numbers to display
+    let startPage = Math.max(currentPage - Math.floor(maxVisiblePages / 2), 1);
+    let endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
+
+    // Adjust startPage if we are near the end
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(endPage - maxVisiblePages + 1, 1);
+    }
+
+    if (startPage > 1) {
+      pageNumbers.push(1);
+      if (startPage > 2) {
+        pageNumbers.push("...");
+      }
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbers.push(i);
+    }
+
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) {
+        pageNumbers.push("...");
+      }
+      pageNumbers.push(totalPages);
+    }
+
+    return pageNumbers;
+  };
+
   return (
-    <Pagination>
+    <Pagination className="py-7">
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious
@@ -27,17 +59,17 @@ const Pagin = ({ currentPage, totalPages, onPageChange }) => {
             }`}
           />
         </PaginationItem>
-        {[...Array(totalPages)].map((_, index) => (
+        {generatePageNumbers().map((page, index) => (
           <PaginationItem key={index}>
             <PaginationLink
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                handlePageChange(index + 1);
+                if (page !== "...") handlePageChange(page);
               }}
-              className={`${currentPage === index + 1 ? "font-bold" : ""}`}
+              className={`${currentPage === page ? "font-bold" : ""}`}
             >
-              {index + 1}
+              {page}
             </PaginationLink>
           </PaginationItem>
         ))}

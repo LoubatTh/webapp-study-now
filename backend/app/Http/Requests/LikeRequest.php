@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class StoreDeckRequest extends FormRequest
+class LikeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,12 +22,7 @@ class StoreDeckRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name" => "required|string|max:255",
-            "is_public" => "boolean",
-            "tag_id" => "required|integer",
-            "flashcards" => "required|array",
-            "flashcards.*.question" => "required|string|max:255",
-            "flashcards.*.answer" => "required|string|max:255",
+            "isLiked" => "required|boolean",
         ];
     }
 }

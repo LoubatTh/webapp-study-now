@@ -23,14 +23,12 @@ class QuizFactory extends Factory
     {
         $name = $this->faker->word();
         $is_public = $this->faker->boolean();
-        $is_organization = $this->faker->boolean();
         $likes = $this->faker->numberBetween(0, 1000);
         $tag_id = $this->faker->numberBetween(1, 21);
 
         return [
             "name" => $name,
             "is_public" => $is_public,
-            "is_organization" => $is_organization,
             "type" => "Quiz",
             "likes" => $likes,
             "tag_id" => $tag_id,
@@ -43,9 +41,7 @@ class QuizFactory extends Factory
         return $this->afterCreating(function ($quiz) {
             $qcms = $this->faker->numberBetween(1, 20);
 
-            if ($quiz->id <= 2) {
-                Qcm::factory()->count($qcms)->create(["quiz_id" => $quiz->id]);
-            }
+            Qcm::factory()->count($qcms)->create(["quiz_id" => $quiz->id]);
         });
     }
 }

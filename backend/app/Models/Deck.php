@@ -12,7 +12,6 @@ class Deck extends Model
     protected $fillable = [
         'name',
         'is_public',
-        'is_organization',
         'likes',
         'type',
         'tag_id',
@@ -22,7 +21,6 @@ class Deck extends Model
     protected $casts = [
         'name' => 'string',
         'is_public' => 'boolean',
-        'is_organization' => 'boolean',
         'likes' => 'integer',
         'type' => 'string',
         'tag_id' => 'integer',

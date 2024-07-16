@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AllItemsController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\OrganizationDeckController;
 use App\Http\Controllers\OrganizationQuizController;
@@ -77,21 +78,21 @@ Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->valu
         });
     });
 
-  // Deck routes
-  Route::post('decks', [DeckController::class, "createDeck"]);
-  Route::get('/decks/likes', [UserDeckController::class, 'getLikedDecks']);
-  Route::put('decks/{id}', [DeckController::class, "updateDeckById"]);
-  Route::delete('decks/{id}', [DeckController::class, "deleteDeckById"]);
-  Route::put('decks/{id}/like', [UserDeckController::class, 'likeOrDislikeDeckById']);
-  Route::put('decks/{id}/grade', [UserDeckController::class, 'saveGradeDeckById']);
+    // Deck routes
+    Route::post('decks', [DeckController::class, "createDeck"]);
+    Route::get('/decks/likes', [UserDeckController::class, 'getLikedDecks']);
+    Route::put('decks/{id}', [DeckController::class, "updateDeckById"]);
+    Route::delete('decks/{id}', [DeckController::class, "deleteDeckById"]);
+    Route::put('decks/{id}/like', [UserDeckController::class, 'likeOrDislikeDeckById']);
+    Route::put('decks/{id}/grade', [UserDeckController::class, 'saveGradeDeckById']);
 
-  // Quiz routes
-  Route::post('/quizzes', [QuizController::class, 'store']);
-  Route::get('/quizzes/likes', [UserQuizController::class, 'getLikedQuizzes']);
-  Route::put('/quizzes/{id}', [QuizController::class, 'update']);
-  Route::delete('/quizzes/{id}', [QuizController::class, 'destroy']);
-  Route::put('quizzes/{id}/like', [UserQuizController::class, 'likeOrDislikeQuizById']);
-  Route::put('quizzes/{id}/grade', [UserQuizController::class, 'saveGradeQuizById']);
+    // Quiz routes
+    Route::post('/quizzes', [QuizController::class, 'store']);
+    Route::get('/quizzes/likes', [UserQuizController::class, 'getLikedQuizzes']);
+    Route::put('/quizzes/{id}', [QuizController::class, 'update']);
+    Route::delete('/quizzes/{id}', [QuizController::class, 'destroy']);
+    Route::put('quizzes/{id}/like', [UserQuizController::class, 'likeOrDislikeQuizById']);
+    Route::put('quizzes/{id}/grade', [UserQuizController::class, 'saveGradeQuizById']);
 });
 
 // Quiz routes
@@ -101,3 +102,6 @@ Route::get('/quizzes/{id}', [QuizController::class, 'show']);
 // Deck Get routes
 Route::get('decks', [DeckController::class, 'getDecksByPage']);
 Route::get('decks/{id}', [DeckController::class, 'getDeckById']);
+
+// Decks and Quizzes merged route
+Route::get('all', [AllItemsController::class, 'getDecksAndQuizzesByPage']);

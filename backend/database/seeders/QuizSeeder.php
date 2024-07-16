@@ -15,7 +15,6 @@ class QuizSeeder extends Seeder
         Quiz::factory()->create([
             "name" => "Trigo",
             "is_public" => true,
-            "is_organization" => false,
             "type" => "Quiz",
             "likes" => 0,
             "tag_id" => 1,
@@ -25,7 +24,6 @@ class QuizSeeder extends Seeder
         Quiz::factory()->create([
             "name" => "Histoire",
             "is_public" => false,
-            "is_organization" => false,
             "type" => "Quiz",
             "likes" => 0,
             "tag_id" => 2,
@@ -35,7 +33,6 @@ class QuizSeeder extends Seeder
         Quiz::factory()->create([
             "name" => "Littérature",
             "is_public" => false,
-            "is_organization" => false,
             "type" => "Quiz",
             "likes" => 0,
             "tag_id" => 4,
@@ -45,7 +42,6 @@ class QuizSeeder extends Seeder
         Quiz::factory()->create([
             "name" => "Géographie",
             "is_public" => true,
-            "is_organization" => false,
             "type" => "Quiz",
             "likes" => 0,
             "tag_id" => 3,

@@ -40,15 +40,32 @@ import Image from "./image";
 import logo from "../assets/images/Logo-T-YEP.png";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useEffect, useState } from "react";
+import { fetchApi } from "@/utils/api";
 
 const Navbar = () => {
-  const { accessToken, logout } = useAuth();
+  const { accessToken, isReady, logout } = useAuth();
+  const [ invitations, setInvitations ] = useState(0);
 
   // handle click for navigation btn
   const navigate = useNavigate();
   const handleNavigate = (path: string) => {
     navigate(path);
   };
+
+  useEffect(() => {
+    if(!isReady) return;
+
+    const fetchInvites = async () => {
+      
+      const response = await fetchApi("GET","user/invites",null,accessToken);
+      const data = await response.data;
+      setInvitations(data.length);
+
+    }
+
+    fetchInvites();
+  }, [isReady, accessToken]);
 
   return (
     <div className="flex justify-between p-2 items-center">
@@ -104,6 +121,11 @@ const Navbar = () => {
                   >
                     <LayoutDashboard className="mr-2 h-4 w-4" />
                     My Organizations
+
+                    {invitations > 0 && (
+                    <div className="bg-amber-400 p-1 rounded-full relative bottom-1 ">
+                    </div>
+                    )}
                   </NavigationMenuLink>
                 </NavigationMenuItem>
                 <NavigationMenuItem>

@@ -24,10 +24,12 @@ const OrganizationsCard = ( organization: Organization  ) => {
             <CardTitle onClick={handleClick} className="cursor-pointer">
               {organization.name}
             </CardTitle>
+            {organization.removeOrganization && (
             <DeleteOrganizations
               org_id={organization.id}
               removeOrganization={organization.removeOrganization}
             />
+          )}
           </div>
           <CardDescription>{organization.description}</CardDescription>
         </CardHeader>

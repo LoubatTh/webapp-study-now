@@ -7,23 +7,43 @@ import { Quizz } from '@/types/quizz.type';
 import { fetchApi } from '@/utils/api';
 import { motion, MotionConfig } from 'framer-motion';
 import React, { useEffect, useState } from 'react'
-import { set } from 'react-hook-form';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { FormProvider, set, useForm } from 'react-hook-form';
+import { Form, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import ReactLoading from "react-loading";
 import { Organization } from '@/types/organization.type';
 import { useUser } from '@/contexts/UserContext';
 import { Button } from '@/components/ui/button';
+import { ChevronLeft, UserPlus, UserPlus2, Users } from 'lucide-react';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { addUsersSchema } from '@/lib/form/adduser.form';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import OrganizationMember from '@/components/organizationMember';
+import { useToast } from '@/components/ui/use-toast';
 
 const BoardOrganizationPage= () => {
     
     const { accessToken, isReady } = useAuth();
     const { id } = useUser();
+    const { toast } = useToast();
+
     const { organizationId } = useParams();
     const [ organization, setOrganization] = useState<Organization>();
+    const [ members, setMembers ] = useState<string[]>([]);
+
     const [decks, setDecks] = useState<Deck[]>([]);
     const [quizzes, setQuizzes] = useState<Quizz[]>([]);
+
     const [loading, setLoading] = useState(true);
     const navigation = useNavigate();
+
+    const addUserForm = useForm({
+      resolver: zodResolver(addUsersSchema),
+      defaultValues: {
+        email: "",
+      },
+    });
 
     const handleNavigation = (path: string) => {
       navigation(path);
@@ -45,7 +65,12 @@ const BoardOrganizationPage= () => {
         response = await fetchApi("GET",`organizations/${organizationId}/decks`,null,accessToken);
         const decks = (await response.data) as Deck[];
 
-        setOrganization(organization);
+        //Get Members
+        response = await fetchApi("GET",`organizations/${organizationId}/users`,null,accessToken);
+        const members = (await response.data.members) as string[];
+
+        setMembers(members);
+        setOrganization(organization as Organization);
         setQuizzes(quizzes);
         setDecks(decks);
         setLoading(false);
@@ -53,6 +78,29 @@ const BoardOrganizationPage= () => {
 
       fetchData();
     }, [isReady]);
+
+    const inviteUser = async (values) => {
+
+      const response = await fetchApi("POST",`organizations/${organizationId}/users`,values,accessToken);
+      const data = await response.data;
+      const status = await response.status;
+      
+      if(status !== 201){
+        toast({
+          title: "Error",
+          description: data.error,
+          variant: "destructive",
+        })
+        return;
+      }
+
+      toast({
+        title: "Success",
+        description: "User invited successfully",
+        className: "bg-green-400",
+      })
+
+    }
 
     if(loading){
       return (
@@ -73,7 +121,7 @@ const BoardOrganizationPage= () => {
               This organization doesn't have any quizzes or decks
             </p>
             <div className="flex justify-center gap-2 mt-4">
-              {organization?.owner_id === id ? (
+              {organization?.owner_id === id && (
                 <>
                   <Button
                     onClick={() =>
@@ -94,8 +142,6 @@ const BoardOrganizationPage= () => {
                     Create Deck
                   </Button>
                 </>
-              ) : (
-                ""
               )}
             </div>
           </div>
@@ -106,9 +152,82 @@ const BoardOrganizationPage= () => {
 
     return (
       <>
-        <PageTitle title={organization?.name + "'s board"} />
+        <PageTitle title={`${organization?.name}'s board`} />
         <p className="text-center">{organization?.description}</p>
 
+        <div className="flex justify-around p-4">
+          <ChevronLeft
+            onClick={() => window.history.back()}
+            className="cursor-pointer hover:text-slate-500"
+          />
+
+          <Sheet>
+            <SheetTrigger>
+              <Button className="flex gap-2">
+                <Users />
+                {organization?.owner_id === id ? "Manage" : "See members"}
+              </Button>
+            </SheetTrigger>
+            <SheetContent>
+              {organization?.owner_id === id && (
+                <SheetHeader className="border-b-4 pb-4">
+                  <SheetTitle>Manage organization members</SheetTitle>
+                  <SheetDescription className="flex flex-col gap-3">
+                    <p className="text-gray-600">
+                      You can invite members to join the organization, Just put
+                      their email and they will receive an invitation to join
+                      the organization
+                    </p>
+
+                    <FormProvider {...addUserForm}>
+                      <form onSubmit={addUserForm.handleSubmit(inviteUser)}>
+                        <FormField
+                          control={addUserForm.control}
+                          name="email"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Email</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  placeholder="john.doe@gmail.com"
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <Button type="submit" className="mt-4 flex w-fit gap-2">
+                          <UserPlus2 size={24} />
+                          Invite member
+                        </Button>
+                      </form>
+                    </FormProvider>
+                  </SheetDescription>
+                </SheetHeader>
+              )}
+
+              {members.length > 0 && (
+                <>
+                  <p className="flex gap-2 mt-3 font-semibold bg-slate-200 rounded-lg p-2">
+                    <Users className="ml-2" /> {members.length} members
+                  </p>
+                  <div className="flex flex-col gap-3 mt-3">
+                    {members.map((member, index) => (
+                      <OrganizationMember
+                        key={index}
+                        id={member.id}
+                        name={member.name}
+                        pending={false}
+                        is_owner={member.id === organization?.owner_id}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+            </SheetContent>
+          </Sheet>
+        </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4">
           {quizzes.map((quizz, index) => (
@@ -123,7 +242,6 @@ const BoardOrganizationPage= () => {
               is_organization={quizz.quiz.is_organization}
             />
           ))}
-
         </div>
       </>
     );

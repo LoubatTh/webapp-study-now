@@ -163,7 +163,7 @@ const CreateQuizzPage = () => {
         setQcmList([{ id: 0, collapsed: false }]);
         resetQCMs();
 
-        if(organizationName){
+        if(organizationName && organizationName.length > 0){
           navigate(`/organizations`);
         } else {
           navigate("/board"); 

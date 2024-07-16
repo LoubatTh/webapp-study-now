@@ -165,12 +165,12 @@ class QuizController extends Controller
                 return response()->json(["message" => "Unauthorized"], 401);
             }
 
-            $quizzes = $quizzes->where("user_id", $user->id);
+            $quizzes = $quizzes->where("user_id", $user->id)->orWhereIn("id", $user->likedQuizzes()->pluck("quizzes.id"));
             if (!$quizzes) {
                 return response()->json(['message' => "You haven't created any quiz yet"], 200);
             }
         } else {
-            $quizzes = $quizzes->where("user_id", $user->id)->orWhereIn("id", $user->likedQuizzes()->pluck("quizzes.id"));
+            $quizzes = $quizzes->where("is_public", true);
         }
 
         if ($isSearch) {

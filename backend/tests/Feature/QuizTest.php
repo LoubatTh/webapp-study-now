@@ -2,17 +2,14 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\TestCase;
-use Illuminate\Testing\Fluent\AssertableJson;
 use App\Models\User;
 use App\Models\Quiz;
 use App\Models\Tag;
 
 
 class QuizTest extends TestCase
-{   
+{
 
     private $user;
     private $quizData;
@@ -33,7 +30,6 @@ class QuizTest extends TestCase
         $this->quizData = [
             "name" => 'quiz 1',
             'is_public' => true,
-            'is_organization' => false,
             'tag_id' => $this->tag->id,
             'user_id' => $this->user->id,
             'qcms' => [
@@ -87,7 +83,6 @@ class QuizTest extends TestCase
         $this->privateQuizData = [
             "name" => 'quiz 1',
             'is_public' => false,
-            'is_organization' => false,
             'tag_id' => $this->tag->id,
             'user_id' => $this->user->id,
             'qcms' => [
@@ -157,7 +152,6 @@ class QuizTest extends TestCase
         $quiz = Quiz::factory()->hasQcms(2)->create([
             "name" => 'Quiz Test',
             'is_public' => true,
-            'is_organization' => false,
             'user_id' => $this->user->id
         ]);
 
@@ -165,7 +159,6 @@ class QuizTest extends TestCase
         $quizData = [
             'name' => 'Quiz updated',
             'is_public' => false,
-            'is_organization' => true,
             'qcms' => [
                 [
                     'question' => 'Question updated',
@@ -204,19 +197,18 @@ class QuizTest extends TestCase
         $quiz = Quiz::factory()->hasQcms(2)->create([
             "name" => 'Quiz Test',
             'is_public' => true,
-            'is_organization' => false,
             'user_id' => $this->user->id
         ]);
-        
-        
+
+
         $response = $this->delete('/api/quizzes/' . $quiz->id);
-    
+
         $response->assertStatus(204);
         $this->assertDatabaseMissing('quizzes', [
             'name' => 'Quiz Test',
             'id' => $quiz->id,
         ]);
-        
+
     }
 
 
@@ -241,7 +233,7 @@ class QuizTest extends TestCase
     {
 
         $response = $this->get('/api/quizzes?myQuizzes');
-        
+
         $response->assertJson(["message" => "Unauthorized"]);
         $response->assertUnauthorized();
         $response->assertStatus(401);
@@ -253,7 +245,6 @@ class QuizTest extends TestCase
         $quiz = Quiz::factory()->hasQcms(2)->create([
             "name" => 'Quiz Test',
             'is_public' => true,
-            'is_organization' => false,
             'user_id' => $this->user->id
         ]);
 
@@ -261,7 +252,6 @@ class QuizTest extends TestCase
         $quizData = [
             'name' => 'Quiz updated',
             'is_public' => false,
-            'is_organization' => true,
             'qcms' => [
                 [
                     'question' => 'Question updated',
@@ -298,6 +288,6 @@ class QuizTest extends TestCase
             'message' => 'Unauthenticated.'
         ]);
     }
-    
+
 
 }

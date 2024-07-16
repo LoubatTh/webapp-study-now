@@ -243,7 +243,7 @@ class QuizTest extends TestCase
 
     // GET QUIZ
 
-    public function test_get_quiz_by_id(): void
+    public function test_get_public_quiz_by_id(): void
     {
 
         $this->actingAs($this->user);
@@ -260,7 +260,40 @@ class QuizTest extends TestCase
         $this->assertNotNull($response->json());
     }
 
-    public function test_get_quiz_by_id_unauthenticated(): void
+    public function test_get_private_quiz_by_id(): void
+    {
+
+        $this->actingAs($this->user);
+
+        $quiz = Quiz::factory()->hasQcms(2)->create([
+            "name" => 'Quiz Test',
+            'is_public' => false,
+            'is_organization' => false,
+            'user_id' => $this->user->id
+        ]);
+
+        $response = $this->getJson('/api/quizzes/' . $quiz->id);
+        $response->assertStatus(200);
+        $this->assertNotNull($response->json());
+    }
+
+    public function test_get_private_quiz_by_id_forbidden(): void
+    {   
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $quiz = Quiz::factory()->hasQcms(2)->create([
+            "name" => 'Quiz Test',
+            'is_public' => false,
+            'is_organization' => false,
+            'user_id' => $this->user->id
+        ]);
+
+        $response = $this->getJson('/api/quizzes/' . $quiz->id);
+        $response->assertStatus(403)->assertJson(['message' => 'Forbidden']);
+    }
+
+    public function test_get_public_quiz_by_id_unauthenticated(): void
     {
 
         $quiz = Quiz::factory()->hasQcms(2)->create([
@@ -274,6 +307,21 @@ class QuizTest extends TestCase
         $response->assertStatus(200);
         $this->assertNotNull($response->json());
     }
+
+    public function test_get_private_quiz_by_id_unauthenticated(): void
+    {
+
+        $quiz = Quiz::factory()->hasQcms(2)->create([
+            "name" => 'Quiz Test',
+            'is_public' => false,
+            'is_organization' => false,
+            'user_id' => $this->user->id
+        ]);
+
+        $response = $this->getJson('/api/quizzes/' . $quiz->id);
+        $response->assertStatus(401)->assertJson(["message" => "Unauthorized"]);
+    }
+
 
     public function test_get_my_quizzes(): void
     {
@@ -295,5 +343,18 @@ class QuizTest extends TestCase
         $response->assertStatus(401);
     }
     
+    public function test_get_all_public_quizzes(): void
+    {
+        $response = $this->getJson('/api/quizzes');
+        $response->assertStatus(200);
+        $this->assertNotNull($response->json());
+
+        $quizzes = $response->json();
+
+        foreach ($quizzes["quizzes"] as $quiz) {
+            $this->assertEquals($quiz['is_public'], true);
+        }
+
+    }
 
 }

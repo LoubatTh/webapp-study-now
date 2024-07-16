@@ -15,8 +15,10 @@ class QuizTest extends TestCase
 {   
 
     private $user;
+    private $user2;
     private $quizData;
     private $tag;
+    private $updatedQuizData;
     // SET_UP
 
     protected function setUp(): void
@@ -24,8 +26,9 @@ class QuizTest extends TestCase
 
         parent::setUp();
 
-        // INIT USER
+        // INIT USERS
         $this->user = User::factory()->create();
+        $this->user2 = User::factory()->create();
         // INIT TAG
         $this->tag = Tag::factory()->create();
 
@@ -40,43 +43,37 @@ class QuizTest extends TestCase
                 [
                     'question' => 'question 1',
                     'answers' => [
-                        [
-                            "answer" => "A",
-                            "isValid" => true
-                        ],
-                        [
-                            "answer" => "B",
-                            "isValid" => true
-                        ],
-                        [
-                            "answer" => "C",
-                            "isValid" => false
-                        ],
-                        [
-                            "answer" => "D",
-                            "isValid" => false
-                        ]
+                        ["answer" => "A", "isValid" => true],
+                        ["answer" => "B", "isValid" => true],
+                        ["answer" => "C", "isValid" => false],
+                        ["answer" => "D", "isValid" => false]
                     ]
                 ],
                 [
                     'question' => 'question 2',
                     'answers' => [
-                        [
-                            "answer" => "1",
-                            "isValid" => true
-                        ],
-                        [
-                            "answer" => "2",
-                            "isValid" => true
-                        ],
-                        [
-                            "answer" => "3",
-                            "isValid" => false
-                        ],
-                        [
-                            "answer" => "4",
-                            "isValid" => false
-                        ]
+                        ["answer" => "1", "isValid" => true],
+                        ["answer" => "2", "isValid" => true],
+                        ["answer" => "3", "isValid" => false],
+                        ["answer" => "4", "isValid" => false]
+                    ]
+                ]
+            ]
+        ];
+
+        // UPDATED QUIZ DATA
+        $this->updatedQuizData = [
+            'name' => 'Quiz updated',
+            'is_public' => false,
+            'is_organization' => true,
+            'qcms' => [
+                [
+                    'question' => 'Question updated',
+                    'answers' => [
+                        ['answer' => 'Answer 1 updated', 'isValid' => true],
+                        ['answer' => 'Answer 2 updated', 'isValid' => false],
+                        ['answer' => 'Answer 3 updated', 'isValid' => false],
+                        ['answer' => 'Answer 4 updated', 'isValid' => true]
                     ]
                 ]
             ]
@@ -94,22 +91,10 @@ class QuizTest extends TestCase
                 [
                     'question' => 'question 1',
                     'answers' => [
-                        [
-                            "answer" => "AB",
-                            "isValid" => true
-                        ],
-                        [
-                            "answer" => "BC",
-                            "isValid" => true
-                        ],
-                        [
-                            "answer" => "CD",
-                            "isValid" => false
-                        ],
-                        [
-                            "answer" => "DE",
-                            "isValid" => false
-                        ]
+                        ["answer" => "AB", "isValid" => true],
+                        ["answer" => "BC", "isValid" => true],
+                        ["answer" => "CD", "isValid" => false],
+                        ["answer" => "DE", "isValid" => false]
                     ]
                 ]
             ]
@@ -117,7 +102,7 @@ class QuizTest extends TestCase
     }
 
 
-    // AUTHENTICATED USER
+    // CREATE QUIZ
 
     public function test_create_quiz(): void
     {
@@ -140,15 +125,21 @@ class QuizTest extends TestCase
         }
     }
 
-    public function test_get_my_quizzes(): void
+    public function test_create_quiz_unauthenticated(): void
     {
-        $this->actingAs($this->user);
-        $response = $this->get('/api/quizzes?myQuizzes');
 
+        $response = $this->post('/api/quizzes', $this->quizData, [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json'
+        ]);
 
-        $response->assertStatus(200);
-        $this->assertNotNull($response->json());
+        $response->assertJson(["message" => "Unauthenticated."]);
+        $response->assertUnauthorized();
+        $response->assertStatus(401);
     }
+
+
+    // UPDATE QUIZ
 
     public function test_update_quiz(): void
     {
@@ -161,40 +152,46 @@ class QuizTest extends TestCase
             'user_id' => $this->user->id
         ]);
 
-
-        $quizData = [
-            'name' => 'Quiz updated',
-            'is_public' => false,
-            'is_organization' => true,
-            'qcms' => [
-                [
-                    'question' => 'Question updated',
-                    'answers' => [
-                        [
-                            'answer' => 'Answer 1 updated',
-                            'isValid' => true
-                        ],
-                        [
-                            'answer' => 'Answer 2 updated',
-                            'isValid' => false
-                        ],
-                        [
-                            'answer' => 'Answer 3 updated',
-                            'isValid' => false
-                        ],
-                        [
-                            'answer' => 'Answer 4 updated',
-                            'isValid' => true
-                        ]
-                    ]
-                ]
-            ]
-        ];
-
-        $response = $this->put('/api/quizzes/' . $quiz->id, $quizData);
+        $response = $this->put('/api/quizzes/' . $quiz->id, $this->updatedQuizData);
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('quizzes', ['name' => 'Quiz updated']);
+    }
+
+    public function test_update_quiz_unauthenticated(): void
+    {
+
+        $quiz = Quiz::factory()->hasQcms(2)->create([
+            "name" => 'Quiz Test',
+            'is_public' => true,
+            'is_organization' => false,
+            'user_id' => $this->user->id
+        ]);
+
+        $response = $this->put('/api/quizzes/' . $quiz->id, $this->updatedQuizData, [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json'
+        ]);
+
+        $response->assertStatus(401);
+        $response->assertUnauthorized();
+        $response->assertJson([
+            'message' => 'Unauthenticated.'
+        ]);
+    }
+
+
+
+    // AUTHENTICATED USER
+
+    public function test_get_my_quizzes(): void
+    {
+        $this->actingAs($this->user);
+        $response = $this->get('/api/quizzes?myQuizzes');
+
+
+        $response->assertStatus(200);
+        $this->assertNotNull($response->json());
     }
 
     public function test_delete_quiz(): void
@@ -224,19 +221,6 @@ class QuizTest extends TestCase
 
     // UNAUTHENTICATED USER
 
-    public function test_create_quiz_unauthenticated(): void
-    {
-
-        $response = $this->post('/api/quizzes', $this->quizData, [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json'
-        ]);
-
-        $response->assertJson(["message" => "Unauthenticated."]);
-        $response->assertUnauthorized();
-        $response->assertStatus(401);
-    }
-
     public function test_get_my_quizzes_unauthenticated(): void
     {
 
@@ -245,58 +229,6 @@ class QuizTest extends TestCase
         $response->assertJson(["message" => "Unauthorized"]);
         $response->assertUnauthorized();
         $response->assertStatus(401);
-    }
-
-    public function test_update_quiz_unauthenticated(): void
-    {
-
-        $quiz = Quiz::factory()->hasQcms(2)->create([
-            "name" => 'Quiz Test',
-            'is_public' => true,
-            'is_organization' => false,
-            'user_id' => $this->user->id
-        ]);
-
-
-        $quizData = [
-            'name' => 'Quiz updated',
-            'is_public' => false,
-            'is_organization' => true,
-            'qcms' => [
-                [
-                    'question' => 'Question updated',
-                    'answers' => [
-                        [
-                            'answer' => 'Answer 1 updated',
-                            'isValid' => true
-                        ],
-                        [
-                            'answer' => 'Answer 2 updated',
-                            'isValid' => false
-                        ],
-                        [
-                            'answer' => 'Answer 3 updated',
-                            'isValid' => false
-                        ],
-                        [
-                            'answer' => 'Answer 4 updated',
-                            'isValid' => true
-                        ]
-                    ]
-                ]
-            ]
-        ];
-
-        $response = $this->put('/api/quizzes/' . $quiz->id, $quizData, [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json'
-        ]);
-
-        $response->assertStatus(401);
-        $response->assertUnauthorized();
-        $response->assertJson([
-            'message' => 'Unauthenticated.'
-        ]);
     }
     
 

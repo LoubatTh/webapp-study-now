@@ -105,7 +105,32 @@ class DeckController extends Controller
                 $deck->setAttribute("is_liked", $userDeck ? $userDeck->is_liked : false);
             }
 
-            return response()->json(new DeckResource($deck), 200);
+            $response = [
+                'id' => $deck['id'],
+                'type' => $deck['type'],
+                'name' => $deck['name'],
+                'is_public' => $deck['is_public'],
+                'likes' => $deck['likes'],
+                'tag' => $deck['tag']['name'],
+                'owner' => $deck['user']['name'],
+                'is_liked' => $deck->getAttribute('is_liked'),
+                'flashcards' => $deck['flashcards']
+            ];
+            $ownedOrganizations = Organization::where('owner_id', $user->id)->get('id');
+
+            if (count($ownedOrganizations) > 0) {
+                $relatedOrganizations = [];
+                foreach ($ownedOrganizations as $organization) {
+                    $relatedDeck = OrganizationDeck::where('deck_id', $deck['id'])->where('organization_id', $organization['id']);
+                    if ($relatedDeck) {
+                        array_push($relatedOrganizations, $organization['id']);
+                    }
+                }
+
+                $response['organizations'] = $relatedOrganizations;
+            }
+
+            return response()->json($response, 200);
         } catch (\Exception $e) {
             return response()->json(["error" => $e->getMessage()], 400);
         }

@@ -122,7 +122,32 @@ class QuizController extends Controller
             $quiz->setAttribute("is_liked", $userQuiz ? $userQuiz->is_liked : false);
         }
 
-        return response()->json(new QuizResource($quiz), 200);
+        $response = [
+            'id' => $quiz['id'],
+            'type' => $quiz['type'],
+            'name' => $quiz['name'],
+            'is_public' => $quiz['is_public'],
+            'likes' => $quiz['likes'],
+            'tag' => $quiz['tag']['name'],
+            'owner' => $quiz['user']['name'],
+            'is_liked' => $quiz->getAttribute('is_liked'),
+            'qcms' => $quiz['qcms']
+        ];
+        $ownedOrganizations = Organization::where('owner_id', $user->id)->get('id');
+
+        if (count($ownedOrganizations) > 0) {
+            $relatedOrganizations = [];
+            foreach ($ownedOrganizations as $organization) {
+                $relatedDeck = OrganizationQuiz::where('deck_id', $quiz['id'])->where('organization_id', $organization['id']);
+                if ($relatedDeck) {
+                    array_push($relatedOrganizations, $organization['id']);
+                }
+            }
+
+            $response['organizations'] = $relatedOrganizations;
+        }
+
+        return response()->json($response, 200);
     }
 
 

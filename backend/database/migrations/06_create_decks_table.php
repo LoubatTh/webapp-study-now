@@ -14,7 +14,6 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->boolean('is_public');
-            $table->boolean('is_organization');
             $table->integer('likes')->nullable();
             $table->string('type');
             $table->foreignId('tag_id');

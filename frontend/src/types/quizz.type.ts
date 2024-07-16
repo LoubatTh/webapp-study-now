@@ -18,7 +18,11 @@ export type PostQCM = {
 export type Quizz = {
   id: number;
   name: string;
+  type: string;
+  tag: string;
   is_public: boolean;
+  is_organization?: boolean;
+  likes: number;
   qcms: QCM[];
   owner: string;
   tag: string;

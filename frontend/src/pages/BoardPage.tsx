@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import CreateSetBtn from "@/components/createSetBtn";
 import QuizzDeckCard from "@/components/quizzDeckCard";
 import { useAuth } from "@/contexts/AuthContext";
 import { fetchApi } from "@/utils/api";
@@ -7,7 +6,6 @@ import { Deck } from "@/types/deck.type";
 import { motion } from "framer-motion";
 import { QuizzType } from "@/types/QuizzContext.type";
 import FilterBar from "@/components/FilterBar";
-import { ClassNames } from "@emotion/react";
 import FilterBarMobile from "@/components/FilterBarMobile";
 
 const getDecksUser = async (accessToken: string) => {
@@ -54,7 +52,7 @@ const BoardPage = () => {
   const getDataDecks = async () => {
     const response = await getDecksUser(accessToken);
     if (response.status === 200) {
-      const decks: Deck[] = response.data?.decks as Deck[];
+      const decks: Deck[] = response.data.decks as Deck[];
       setDecks(decks);
       setAllCards((prev) => [...prev, ...decks]);
     } else {
@@ -106,24 +104,8 @@ const BoardPage = () => {
       <div className="md:hidden">
         <FilterBarMobile onSearch={handleSearch} />
       </div>
-      <div className="hidden md:block">
+      <div className="hidden md:block md:mb-2">
         <FilterBar onSearch={handleSearch} />
-      </div>
-      <div className="hidden md:flex justify-around p-10 items-center">
-        <div>
-          <CreateSetBtn />
-        </div>
-        <div>
-          <p>My board</p>
-        </div>
-      </div>
-      <div className="md:hidden flex flex-col items-center p-10">
-        <div className="mb-4">
-          <h3>My board</h3>
-        </div>
-        <div className="mb-4">
-          <CreateSetBtn />
-        </div>
       </div>
       <motion.div
         className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4"

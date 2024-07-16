@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AllItemsController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\OrganizationDeckController;
 use App\Http\Controllers\OrganizationQuizController;
@@ -103,3 +104,6 @@ Route::get('/quizzes/{id}', [QuizController::class, 'show']);
 // Deck Get routes
 Route::get('decks', [DeckController::class, 'getDecksByPage']);
 Route::get('decks/{id}', [DeckController::class, 'getDeckById']);
+
+// Decks and Quizzes merged route
+Route::get('all', [AllItemsController::class, 'getDecksAndQuizzesByPage']);

@@ -34,7 +34,6 @@ class UserQuizTest extends TestCase
                 'id' => 1,
                 'name' => 'Test',
                 'is_public' => true,
-                'is_organization' => false,
                 'likes' => 2,
                 'user_id' => self::$user->id,
             ]
@@ -45,7 +44,6 @@ class UserQuizTest extends TestCase
                 'id' => 2,
                 'name' => 'TestPrivate',
                 'is_public' => false,
-                'is_organization' => false,
                 'likes' => 20,
                 'user_id' => self::$userPrivate->id,
             ]
@@ -85,8 +83,15 @@ class UserQuizTest extends TestCase
     {
         $this->actingAs(self::$user);
 
+        $likeData = [
+            "isLiked" => false,
+        ];
+
         $userQuizBefore = UserQuiz::where('user_id', self::$user->id)->where('quiz_id', 1)->first();
-        $response = $this->putJson('/api/quizzes/1/like');
+        $response = $this->putJson('/api/quizzes/1/like', $likeData, [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json'
+        ]);
 
         $response->assertStatus(204);
         $userQuizAfter = UserQuiz::where('user_id', self::$user->id)->where('quiz_id', 1)->first();
@@ -108,8 +113,15 @@ class UserQuizTest extends TestCase
     {
         $this->actingAs(self::$user);
 
+        $likeData = [
+            "isLiked" => true,
+        ];
+
         $userQuizBefore = UserQuiz::where('user_id', self::$user->id)->where('quiz_id', 2)->first();
-        $response = $this->putJson('/api/quizzes/2/like');
+        $response = $this->putJson('/api/quizzes/2/like', $likeData, [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json'
+        ]);
 
         $response->assertStatus(204);
         $userQuizAfter = UserQuiz::where('user_id', self::$user->id)->where('quiz_id', 2)->first();
@@ -133,7 +145,14 @@ class UserQuizTest extends TestCase
 
     public function test_like_quiz_by_id_unauthorized(): void
     {
-        $response = $this->putJson('/api/quizzes/1/like');
+        $likeData = [
+            "isLiked" => true,
+        ];
+
+        $response = $this->putJson('/api/quizzes/1/like', $likeData, [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json'
+        ]);
 
         $response->assertStatus(401)->assertJson([
             'message' => 'Unauthenticated.'
@@ -144,7 +163,14 @@ class UserQuizTest extends TestCase
     {
         $this->actingAs(self::$user);
 
-        $response = $this->putJson('/api/quizzes/1000/like');
+        $likeData = [
+            "isLiked" => true,
+        ];
+
+        $response = $this->putJson('/api/quizzes/1000/like', $likeData, [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json'
+        ]);
 
         $response->assertStatus(404)->assertJson([
             'message' => 'Quiz not found'

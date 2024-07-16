@@ -56,8 +56,8 @@ const DeleteButton = ({ id, type, onDeleteCard }: DeleteButtonProps) => {
       <Dialog>
         <DialogTrigger asChild>
           <Button
-            variant="destructive"
-            className="p-3"
+            variant="ghost"
+            className="p-3 hover:bg-red-500"
             onClick={(event) => event.stopPropagation()}
           >
             <Trash2 size={14} />

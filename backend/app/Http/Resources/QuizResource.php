@@ -5,7 +5,6 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-use App\Http\Resources\TagResource;
 use App\Http\Resources\QcmResource;
 
 class QuizResource extends JsonResource
@@ -22,10 +21,10 @@ class QuizResource extends JsonResource
             "type" => $this->type,
             "name" => $this->name,
             "is_public" => $this->is_public,
-            "is_organization" => $this->is_organization,
             "likes" => $this->likes,
             "tag" => $this->tag->name,
             "owner" => $this->user->name,
+            "is_liked" => $this->getAttribute("is_liked"),
             "qcms" => QcmResource::collection($this->qcms),
         ];
     }

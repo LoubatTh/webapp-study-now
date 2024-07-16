@@ -17,6 +17,8 @@ import {
   LogOut,
   User,
   Home,
+  Earth,
+  FilePlus2,
 } from "lucide-react";
 
 import {
@@ -72,6 +74,15 @@ const Navbar = () => {
                 Home
               </NavigationMenuLink>
             </NavigationMenuItem>
+            <NavigationMenuItem className="cursor-pointer">
+              <NavigationMenuLink
+                className={navigationMenuTriggerStyle()}
+                onClick={() => handleNavigate("/explore")}
+              >
+                <Earth className="mr-2 h-4 w-4" />
+                Explore
+              </NavigationMenuLink>
+            </NavigationMenuItem>
 
             {accessToken ? (
               <>
@@ -93,6 +104,32 @@ const Navbar = () => {
                     <LayoutDashboard className="mr-2 h-4 w-4" />
                     My Organizations
                   </NavigationMenuLink>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger>
+                    <FilePlus2 className="mr-2 h-4 w-4" />
+                    Create Card
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="flex flex-col gap-3 p-4 w-[300px]">
+                      <ListItem
+                        className="cursor-pointer"
+                        key="createDeck"
+                        title="Deck"
+                        onClick={() => handleNavigate("/create-deck")}
+                      >
+                        Create a new Deck
+                      </ListItem>
+                      <ListItem
+                        className="cursor-pointer"
+                        key="createQuizz"
+                        title="Quizz"
+                        onClick={() => handleNavigate("/create-quizz")}
+                      >
+                        Create a new Quizz
+                      </ListItem>
+                    </ul>
+                  </NavigationMenuContent>
                 </NavigationMenuItem>
               </>
             ) : (
@@ -182,9 +219,7 @@ const Navbar = () => {
                 <p>Statistics</p>
               </DropdownMenuItem>
 
-              <DropdownMenuItem
-                onClick={() => handleNavigate("/premium")}
-              >
+              <DropdownMenuItem onClick={() => handleNavigate("/premium")}>
                 <CreditCard className="mr-2 h-4 w-4" />
                 <p>Premium</p>
               </DropdownMenuItem>

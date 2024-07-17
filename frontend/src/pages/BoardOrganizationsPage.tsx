@@ -34,6 +34,7 @@ const BoardOrganizationPage= () => {
 
     const [decks, setDecks] = useState<Deck[]>([]);
     const [quizzes, setQuizzes] = useState<Quizz[]>([]);
+    const [ allCards, setAllCards] = useState<any[]>([]);
 
     const [loading, setLoading] = useState(true);
     const navigation = useNavigate();
@@ -48,6 +49,11 @@ const BoardOrganizationPage= () => {
     const handleNavigation = (path: string) => {
       navigation(path);
     }
+
+    const handleDeleteCard = (id: number) => {
+      setDecks((prev) => prev.filter((card) => card.id !== id));
+      setQuizzes((prev) => prev.filter((card) => card.id !== id));
+    };
 
     useEffect(() => {
         if(!isReady) return;
@@ -240,6 +246,20 @@ const BoardOrganizationPage= () => {
               type={quizz.quiz.type}
               is_public={quizz.quiz.is_public}
               is_organization={quizz.quiz.is_organization}
+
+            />
+          ))}
+
+          {decks.map((deck, index) => (
+            <QuizzDeckCard
+              key={index}
+              id={deck.deck.id}
+              name={deck.deck.name}
+              tag={deck.deck.tag}
+              likes={deck.deck.likes}
+              type={deck.deck.type}
+              is_public={deck.deck.is_public}
+              is_organization={deck.deck.is_organization}
             />
           ))}
         </div>

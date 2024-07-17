@@ -135,7 +135,7 @@ const CreateQuizzPage = () => {
     } else {
       setErrorMessage("");
       const createdQuizz = {
-        name,
+        name: nameQuizz,
         is_public: isPublic,
         tag_id: parseInt(label),
         organizations: organizationsBody.organisations,
@@ -278,9 +278,9 @@ const CreateQuizzPage = () => {
     <div className="flex flex-col items-center gap-4">
       <h1 className="mx-auto my-4">Create Quizz</h1>
       <div className="flex flex-col gap-3 p-2 max-w-3xl min-w-full md:min-w-[768px]">
-        <Label htmlFor="name">Quizz name</Label>
+        <Label htmlFor="nameQuizz">Quizz name</Label>
         <Input
-          id="name"
+          id="nameQuizz"
           type="text"
           placeholder="My Quizz name"
           value={nameQuizz}

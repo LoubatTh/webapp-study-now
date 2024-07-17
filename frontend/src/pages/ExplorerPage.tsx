@@ -8,9 +8,9 @@ import FilterBarMobile from "@/components/FilterBarMobile";
 import { Button } from "@/components/ui/button";
 import {
   ChevronFirst,
+  ChevronLast,
   ChevronLeft,
   ChevronRight,
-  ChevronLast,
 } from "lucide-react";
 
 const cardVariants = {
@@ -29,7 +29,7 @@ const getAllCards = async (
 ) => {
   const response = await fetchApi(
     "GET",
-    `all?me&page=${pageSelected}${queryString ? `&${queryString}` : ""}`,
+    `all?page=${pageSelected}${queryString ? `&${queryString}` : ""}`,
     null,
     accessToken
   );
@@ -37,7 +37,7 @@ const getAllCards = async (
   return response;
 };
 
-const BoardPage = () => {
+const ExplorerPage = () => {
   const { accessToken, isReady } = useAuth();
   const [allCards, setAllCards] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -97,10 +97,10 @@ const BoardPage = () => {
   return (
     <>
       <div className="md:hidden">
-        <FilterBarMobile onSearch={handleSearch} board={true} />
+        <FilterBarMobile onSearch={handleSearch} />
       </div>
       <div className="hidden md:block md:mb-2">
-        <FilterBar onSearch={handleSearch} board={true} />
+        <FilterBar onSearch={handleSearch} />
       </div>
       <motion.div
         className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4"
@@ -108,25 +108,19 @@ const BoardPage = () => {
         animate="visible"
         variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
       >
-        {allCards && (
-          <>
-            {allCards.map((item, index) => (
-              <motion.div variants={cardVariants} key={index}>
-                <QuizzDeckCard
-                  id={item.id}
-                  name={item.name}
-                  owner={item.owner}
-                  tag={item.tag}
-                  likes={item.likes}
-                  type={item.type}
-                  flashcards={item.flashcards}
-                  qcms={item.qcms}
-                  onDeleteCard={handleDeleteCard}
-                />
-              </motion.div>
-            ))}
-          </>
-        )}
+        {allCards.map((item, index) => (
+          <motion.div variants={cardVariants} key={index}>
+            <QuizzDeckCard
+              id={item.id}
+              name={item.name}
+              owner={item.owner}
+              tag={item.tag}
+              likes={item.likes}
+              type={item.type}
+              onDeleteCard={handleDeleteCard}
+            />
+          </motion.div>
+        ))}
       </motion.div>
       <div className="flex gap-2 md:mx-auto md:w-auto items-center mt-6 w-full">
         <div className="flex items-center">
@@ -169,4 +163,4 @@ const BoardPage = () => {
   );
 };
 
-export default BoardPage;
+export default ExplorerPage;

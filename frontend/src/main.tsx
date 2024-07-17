@@ -17,7 +17,7 @@ import LayoutNavbarPage from "./pages/LayoutNavbarPage";
 import MyOrganizationsPage from "./pages/MyOrganizationsPage";
 import Error404 from "./pages/errors/Error404";
 import PremiumPage from "./pages/PremiumPage";
-import ExplorePage from "./pages/ExplorePage";
+import ExplorePage from "./pages/ExplorerPage";
 import BoardOrganizationsPage from "./pages/BoardOrganizationsPage";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

@@ -37,7 +37,10 @@ class DeckController extends Controller
                     return response()->json(["message" => "Unauthorized"], 401);
                 }
 
-                $decks = $decks->where("user_id", $user->id)->orWhereIn("id", $user->likedDecks()->pluck("decks.id"));
+                $decks = $decks->where(function ($query) use ($user) {
+                    $query->where('user_id', $user->id)
+                        ->orWhereIn('id', $user->likedDecks()->pluck('decks.id'));
+                });
             } else {
                 $decks = $decks->where("is_public", true);
             }

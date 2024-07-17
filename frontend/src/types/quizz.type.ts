@@ -25,7 +25,6 @@ export type Quizz = {
   likes: number;
   qcms: QCM[];
   owner: string;
-  tag: string;
 };
 
 export type PostQuizz = {

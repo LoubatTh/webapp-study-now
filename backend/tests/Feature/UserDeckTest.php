@@ -11,7 +11,6 @@ class UserDeckTest extends TestCase
 {
     private $deck;
     private $privateDeck;
-
     private $userDeck;
     private static $user;
 

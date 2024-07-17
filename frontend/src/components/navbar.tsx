@@ -68,7 +68,7 @@ const Navbar = () => {
   }, [isReady, accessToken]);
 
   return (
-    <div className="flex justify-between p-2 items-center">
+    <div className="flex justify-between p-2 items-center z-20">
       <div
         onClick={() => handleNavigate("/")}
         className="flex items-center cursor-pointer"
@@ -127,6 +127,32 @@ const Navbar = () => {
                     </div>
                     )}
                   </NavigationMenuLink>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger>
+                    <FilePlus2 className="mr-2 h-4 w-4" />
+                    Create Card
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="flex flex-col gap-3 p-4 w-[300px]">
+                      <ListItem
+                        className="cursor-pointer"
+                        key="createDeck"
+                        title="Deck"
+                        onClick={() => handleNavigate("/create-deck")}
+                      >
+                        Create a new Deck
+                      </ListItem>
+                      <ListItem
+                        className="cursor-pointer"
+                        key="createQuizz"
+                        title="Quizz"
+                        onClick={() => handleNavigate("/create-quizz")}
+                      >
+                        Create a new Quizz
+                      </ListItem>
+                    </ul>
+                  </NavigationMenuContent>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                   <NavigationMenuTrigger>
@@ -231,7 +257,7 @@ const Navbar = () => {
               <DropdownMenuLabel>Menu</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem onClick={() => handleNavigate("/explore")}>
+                <DropdownMenuItem onClick={() => handleNavigate("/")}>
                   <Home className="mr-2 h-4 w-4" />
                   <p>Home</p>
                 </DropdownMenuItem>
@@ -262,7 +288,7 @@ const Navbar = () => {
               <DropdownMenuLabel>Menu</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem onClick={() => handleNavigate("/explore")}>
+                <DropdownMenuItem onClick={() => handleNavigate("/")}>
                   <Home className="mr-2 h-4 w-4" />
                   <p>Home</p>
                 </DropdownMenuItem>
@@ -283,11 +309,15 @@ const Navbar = () => {
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem onClick={() => handleNavigate("/create-deck")}>
+                <DropdownMenuItem
+                  onClick={() => handleNavigate("/create-deck")}
+                >
                   <BookPlus className="mr-2 h-4 w-4" />
                   <p>Create deck</p>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleNavigate("/create-quizz")}>
+                <DropdownMenuItem
+                  onClick={() => handleNavigate("/create-quizz")}
+                >
                   <BookPlus className="mr-2 h-4 w-4" />
                   <p>Create Quizz</p>
                 </DropdownMenuItem>

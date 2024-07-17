@@ -80,6 +80,10 @@ const CreateQuizzPage = () => {
   const [selectedOrganizations, setSelectedOrganizations] = useState<
     Organization[]
   >([]);
+  // State to manage the filtered organizations for the autocomplete
+  const [filteredOrganizations, setFilteredOrganizations] = useState<
+    Organization[]
+  >([]);
 
   //Function to add a new QCM to the list
   const addNewQCM = (): void => {
@@ -163,12 +167,7 @@ const CreateQuizzPage = () => {
         setQcmList([{ id: 0, collapsed: false }]);
         resetQCMs();
 
-        if(organizationName && organizationName.length > 0){
-          navigate(`/organizations`);
-        } else {
-          navigate("/board"); 
-        }
-
+        navigate("/board");
       } catch (error: any) {
         toast({ description: error.message });
       }
@@ -188,7 +187,6 @@ const CreateQuizzPage = () => {
           .owned_organizations as Organization[];
         setOrganizations(allOrganizations);
 
-        // Find the default organization based on organizationName
         if (organizationName) {
           const defaultOrganization = allOrganizations.find(
             (org) => org.name === organizationName
@@ -197,6 +195,10 @@ const CreateQuizzPage = () => {
             setSelectedOrganizations([defaultOrganization]);
           }
         }
+
+        setFilteredOrganizations(
+          allOrganizations.filter((org) => !selectedOrganizations.includes(org))
+        );
       } else {
         toast({ description: response.data.message });
       }
@@ -260,6 +262,16 @@ const CreateQuizzPage = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, accessToken, name, loading]);
+
+  useEffect(() => {
+    setFilteredOrganizations(
+      organizations.filter(
+        (org) =>
+          !selectedOrganizations.some((selected) => selected.id === org.id)
+      )
+    );
+  }, [selectedOrganizations, organizations]);
+
   return (
     <div className="flex flex-col items-center gap-4">
       <h1 className="mx-auto my-4">Create Quizz</h1>
@@ -311,13 +323,13 @@ const CreateQuizzPage = () => {
               <Autocomplete
                 multiple
                 id="organizations"
-                options={organizations}
+                options={filteredOrganizations}
                 disableCloseOnSelect
-                defaultValue={selectedOrganizations} // Set default values here
+                defaultValue={selectedOrganizations} 
                 getOptionLabel={(option) => option.name}
-                onChange={(event, newValue) =>
-                  setSelectedOrganizations(newValue)
-                }
+                onChange={(event, newValue) => {
+                  setSelectedOrganizations(newValue);
+                }}
                 renderOption={(props, option, { selected }) => {
                   const { key, ...optionProps } = props;
                   return (

@@ -5,12 +5,6 @@ import { fetchApi } from "@/utils/api";
 import { motion } from "framer-motion";
 import FilterBar from "@/components/FilterBar";
 import FilterBarMobile from "@/components/FilterBarMobile";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-} from "@/components/ui/pagination";
 import { Button } from "@/components/ui/button";
 import {
   ChevronFirst,
@@ -117,10 +111,11 @@ const BoardPage = () => {
         {allCards && (
           <>
             {allCards.map((item, index) => (
-              <motion.div variants={cardVariants} key={item.id}>
+              <motion.div variants={cardVariants} key={index}>
                 <QuizzDeckCard
                   id={item.id}
                   name={item.name}
+                  owner={item.owner}
                   tag={item.tag}
                   likes={item.likes}
                   type={item.type}

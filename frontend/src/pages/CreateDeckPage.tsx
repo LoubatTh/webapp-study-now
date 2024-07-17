@@ -27,6 +27,7 @@ const postDeck = async (deck: PostDeck, accessToken: string) => {
 };
 
 const editDeck = async (id: string, deck: PostDeck, accessToken: string) => {
+  console.log("Deck: ", deck);
   const response = await fetchApi("PUT", `decks/${id}`, deck, accessToken);
   return response;
 };
@@ -192,9 +193,9 @@ const CreateDeckPage = () => {
     <div className="flex flex-col items-center gap-4">
       <h1 className="mx-auto my-4">Create Deck</h1>
       <div className="flex flex-col gap-2 p-2 max-w-3xl min-w-full md:min-w-[768px]">
-        <Label htmlFor="name">Deck name</Label>
+        <Label htmlFor="nameDeck">Deck name</Label>
         <Input
-          id="name"
+          id="nameDeck"
           type="text"
           placeholder="My Deck name"
           value={nameDeck}

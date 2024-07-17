@@ -64,9 +64,9 @@ const LikeButton = ({ id, type, likes, isLiked }: LikeButtonProps) => {
       >
         <p>{currentLikes}</p>
         {liked ? (
-          <Heart className="text-red-500 fill-red-500" />
+          <Heart className="text-red-500 fill-red-500 hover:size-8" />
         ) : (
-          <Heart className="text-red-500 hover:fill-red-500" />
+          <Heart className="text-red-500 hover:size-8" />
         )}
       </Button>
     </div>

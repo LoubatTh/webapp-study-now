@@ -23,7 +23,8 @@ export const colorPalette: { [key: string]: string } = {
   "civic education": "bg-orange-100 text-orange-800",
 };
 
+
 // method to define tag color
 export const getColorClass = (tagName: string) => {
-  return colorPalette[tagName] || "bg-gray-100 text-gray-800";
+  return colorPalette[tagName.toLowerCase()] || "bg-gray-100 text-gray-800";
 };

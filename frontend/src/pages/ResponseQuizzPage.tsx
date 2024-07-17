@@ -42,7 +42,8 @@ const ResponseQuizzPage = () => {
   useEffect(() => {
     if (!isReady || !quizzId) return;
 
-    // Initalisation des states
+    
+    //Initalisation des states 
     setQuizz(null);
     setIsForbidden(false);
     setIsNotFound(false);

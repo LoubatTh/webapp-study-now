@@ -114,18 +114,24 @@ const BoardPage = () => {
         animate="visible"
         variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
       >
-        {allCards.map((item) => (
-          <motion.div key={item.id} variants={cardVariants}>
-            <QuizzDeckCard
-              id={item.id}
-              name={item.name}
-              tag={item.tag}
-              likes={item.likes}
-              type={item.type}
-              onDeleteCard={handleDeleteCard}
-            />
-          </motion.div>
-        ))}
+        {allCards && (
+          <>
+            {allCards.map((item, index) => (
+              <motion.div variants={cardVariants} key={item.id}>
+                <QuizzDeckCard
+                  id={item.id}
+                  name={item.name}
+                  tag={item.tag}
+                  likes={item.likes}
+                  type={item.type}
+                  flashcards={item.flashcards}
+                  qcms={item.qcms}
+                  onDeleteCard={handleDeleteCard}
+                />
+              </motion.div>
+            ))}
+          </>
+        )}
       </motion.div>
       <div className="flex gap-2 md:mx-auto md:w-auto items-center mt-6 w-full">
         <div className="flex items-center">

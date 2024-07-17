@@ -14,6 +14,8 @@ import { cn } from "@/lib/utils";
 import EditButton from "./EditButton";
 import DeleteButton from "./DeleteButton";
 import LikeButton from "./LikeButton";
+import { Flashcard } from "@/types/deck.type";
+import { QCM } from "@/types/quizz.type";
 
 type CommonCardProps = {
   id: number;
@@ -21,6 +23,8 @@ type CommonCardProps = {
   tag: string;
   type: string;
   likes: number;
+  flashcards?: Flashcard[];
+  qcms?: QCM[];
   onDeleteCard: (id: number) => void;
 };
 
@@ -30,10 +34,14 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
   tag,
   type,
   likes,
+  flashcards,
+  qcms,
   onDeleteCard,
 }: CommonCardProps) => {
   const navigate = useNavigate();
   const cards = type === "Quiz" ? "quizz" : "deck";
+  const itemCount = type === "Quiz" ? qcms?.length : flashcards?.length;
+  const itemLabel = type === "Quiz" ? "qcms" : "flashcards";
   const handleClick = () => {
     navigate(`/${cards}/${id}`);
   };
@@ -49,19 +57,22 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
           }`
         )}
       >
-        <CardHeader>
-          <div className="flex justify-between">
-            <CardTitle>{name}</CardTitle>
-            <div className="flex gap-2">
-              <EditButton id={id} type={type} />
-              <DeleteButton id={id} type={type} onDeleteCard={onDeleteCard} />
+        <CardHeader className="">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center">
+              <Avatar>
+                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+              <p className="ml-2 capitalize">lulu</p>
             </div>
+            <LikeButton id={id} type={type} likes={likes} isLiked={false} />
           </div>
-          <CardDescription>
-            {type === "Quiz" ? "Quizz" : "Deck"}
-          </CardDescription>
         </CardHeader>
         <CardContent>
+          <div className="flex justify-between mb-2">
+            <CardTitle className="capitalize">{name}</CardTitle>
+          </div>
           <span
             className={cn(
               "p-1 ps-2 pe-2 rounded-lg font-medium text-sm",
@@ -72,14 +83,13 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
           </span>
         </CardContent>
         <CardFooter className="justify-between">
-          <div className="flex items-center">
-            <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <p className="ml-2">lulu</p>
+          <CardDescription>
+            {itemCount} {itemLabel}
+          </CardDescription>
+          <div className="flex gap-0.5">
+            <EditButton id={id} type={type} />
+            <DeleteButton id={id} type={type} onDeleteCard={onDeleteCard} />
           </div>
-          <LikeButton id={id} type={type} likes={likes} isLiked={false} />
         </CardFooter>
       </Card>
     </div>

@@ -51,7 +51,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="flex justify-between p-2 items-center">
+    <div className="flex justify-between p-2 items-center z-20">
       <div
         onClick={() => handleNavigate("/")}
         className="flex items-center cursor-pointer"
@@ -66,7 +66,7 @@ const Navbar = () => {
       <div className="hidden md:flex">
         <NavigationMenu>
           <NavigationMenuList>
-            <NavigationMenuItem className="cursor-pointer ${}">
+            <NavigationMenuItem className="cursor-pointer">
               <NavigationMenuLink
                 className={navigationMenuTriggerStyle()}
                 onClick={() => handleNavigate("/")}
@@ -105,6 +105,32 @@ const Navbar = () => {
                     <LayoutDashboard className="mr-2 h-4 w-4" />
                     My Organizations
                   </NavigationMenuLink>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger>
+                    <FilePlus2 className="mr-2 h-4 w-4" />
+                    Create Card
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="flex flex-col gap-3 p-4 w-[300px]">
+                      <ListItem
+                        className="cursor-pointer"
+                        key="createDeck"
+                        title="Deck"
+                        onClick={() => handleNavigate("/create-deck")}
+                      >
+                        Create a new Deck
+                      </ListItem>
+                      <ListItem
+                        className="cursor-pointer"
+                        key="createQuizz"
+                        title="Quizz"
+                        onClick={() => handleNavigate("/create-quizz")}
+                      >
+                        Create a new Quizz
+                      </ListItem>
+                    </ul>
+                  </NavigationMenuContent>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                   <NavigationMenuTrigger>

@@ -23,7 +23,9 @@ import { useUser } from "@/contexts/UserContext";
 import { Tag } from "@/types/tag.type";
 import { Organization } from "@/types/organization.type";
 import { Autocomplete, Checkbox, TextField } from "@mui/material";
-import { Check, Cross, Square, SquareCheck } from "lucide-react";
+import { Check, Cross, Info, Square, SquareCheck } from "lucide-react";
+import { HoverCard } from "@radix-ui/react-hover-card";
+import { HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
 const postQuizz = async (quizz: PostQuizz, accessToken: string) => {
   const response = await fetchApi("POST", "quizzes", quizz, accessToken);
@@ -307,7 +309,7 @@ const CreateQuizzPage = () => {
         </Select>
       </div>
       <div className="flex flex-col gap-3 p-2 max-w-3xl min-w-full md:min-w-[768px]">
-        <div className="flex justify-between">
+        <div className="flex flex-col gap-y-10">
           <div>
             <Label htmlFor="name">Visibility</Label>
             <div className="flex gap-2 mt-2">
@@ -319,40 +321,56 @@ const CreateQuizzPage = () => {
             </div>
           </div>
           {organizations.length > 0 && (
-            <div className="min-w-40">
-              <Autocomplete
-                multiple
-                id="organizations"
-                options={filteredOrganizations}
-                disableCloseOnSelect
-                defaultValue={selectedOrganizations} 
-                getOptionLabel={(option) => option.name}
-                onChange={(event, newValue) => {
-                  setSelectedOrganizations(newValue);
-                }}
-                renderOption={(props, option, { selected }) => {
-                  const { key, ...optionProps } = props;
-                  return (
-                    <li key={key} {...optionProps}>
-                      <Checkbox
-                        icon={<Square />}
-                        checkedIcon={<SquareCheck />}
-                        style={{ marginRight: 4 }}
-                        checked={selected}
-                      />
-                      {option.name}
-                    </li>
-                  );
-                }}
-                className="min-w-48 max-w-96"
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Organizations"
-                    placeholder="College Saint Exupery"
-                  />
-                )}
-              />
+            <div className="flex items-center gap-3">
+              <div>
+                <HoverCard>
+                  <HoverCardTrigger asChild>
+                    <Info className="hover:text-slate-500" size={30} />
+                  </HoverCardTrigger>
+                  <HoverCardContent className="w-80">
+                    <div className="text-lg font-bold">Organizations</div>
+                    <div className="text-sm">
+                      Select the organizations that will have access to this
+                      quizz.
+                    </div>
+                  </HoverCardContent>
+                </HoverCard>
+              </div>
+              <div className="min-w-50">
+                <Autocomplete
+                  multiple
+                  id="organizations"
+                  options={filteredOrganizations}
+                  disableCloseOnSelect
+                  defaultValue={selectedOrganizations}
+                  getOptionLabel={(option) => option.name}
+                  onChange={(event, newValue) => {
+                    setSelectedOrganizations(newValue);
+                  }}
+                  renderOption={(props, option, { selected }) => {
+                    const { key, ...optionProps } = props;
+                    return (
+                      <li key={key} {...optionProps}>
+                        <Checkbox
+                          icon={<Square />}
+                          checkedIcon={<SquareCheck />}
+                          style={{ marginRight: 4 }}
+                          checked={selected}
+                        />
+                        {option.name}
+                      </li>
+                    );
+                  }}
+                  className="min-w-48 max-w-96"
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Organizations"
+                      placeholder="College Saint Exupery"
+                    />
+                  )}
+                />
+              </div>
             </div>
           )}
         </div>

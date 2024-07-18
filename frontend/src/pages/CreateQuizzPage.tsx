@@ -10,7 +10,7 @@ import { fetchApi } from "@/utils/api";
 import CreateQCM from "../components/quizz/CreateQCM";
 import useQCMStore from "../lib/stores/quizzStore";
 import { toast } from "@/components/ui/use-toast";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import {
   Select,
   SelectContent,
@@ -134,6 +134,7 @@ const CreateQuizzPage = () => {
       return;
     } else {
       setErrorMessage("");
+
       const createdQuizz = {
         name: nameQuizz,
         is_public: isPublic,
@@ -146,6 +147,11 @@ const CreateQuizzPage = () => {
         let response;
         if (id) {
           response = await editQuizz(id, createdQuizz, accessToken);
+
+          if(organizationsBody.organisations.length <= 0){
+            await fetchApi("DELETE", `organizations/${id}/organizations`, null, accessToken);
+          }
+
           if (response.status === 200) {
             toast({
               description: "Quizz edited successfully",
@@ -168,7 +174,6 @@ const CreateQuizzPage = () => {
         setNameQuizz("");
         setQcmList([{ id: 0, collapsed: false }]);
         resetQCMs();
-
         navigate("/board");
       } catch (error: any) {
         toast({ description: error.message });
@@ -258,10 +263,17 @@ const CreateQuizzPage = () => {
   };
 
   useEffect(() => {
+
+    console.log("location changed");
+
+  }, [location]);
+
+  useEffect(() => {
     if (accessToken && name) {
       fetchLabelsAndQuizzData(id, accessToken);
       fetchAllOwnedOrganizations(accessToken);
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, accessToken, name, loading]);
 

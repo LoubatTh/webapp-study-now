@@ -13,7 +13,7 @@ import ReactLoading from "react-loading";
 import { Organization } from '@/types/organization.type';
 import { useUser } from '@/contexts/UserContext';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, UserPlus, UserPlus2, Users } from 'lucide-react';
+import { ChevronLeft, FilePlus, UserPlus, UserPlus2, Users } from 'lucide-react';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { addUsersSchema } from '@/lib/form/adduser.form';
@@ -53,6 +53,27 @@ const BoardOrganizationPage= () => {
     const handleDeleteCard = (id: number) => {
       setDecks((prev) => prev.filter((card) => card.id !== id));
       setQuizzes((prev) => prev.filter((card) => card.id !== id));
+    };
+
+    const handleRemoveUser = async (id_member: number) => {
+      const response = await fetchApi("DELETE",`organizations/${organizationId}/users/${id_member}`,null,accessToken);
+      const status = await response.status;
+
+      if(status !== 204){
+        toast({
+          title: "Error",
+          description: "An error occured while removing the user",
+          variant: "destructive",
+        })
+        return;
+      } else {
+        setMembers((prev) => prev.filter((member) => member.id !== id_member));
+        toast({
+          title: "Success",
+          description: "User removed",
+          className: "bg-green-400",
+        })
+      }
     };
 
     useEffect(() => {
@@ -130,22 +151,25 @@ const BoardOrganizationPage= () => {
               {organization?.owner_id === id && (
                 <>
                   <Button
+                    className="flex gap-2"
                     onClick={() =>
                       handleNavigation(
                         `/create-quizz?organization=${organization.name}`
                       )
                     }
                   >
-                    Create Quizz
+                    <FilePlus size={20} /> Quizz
                   </Button>
                   <Button
+                    className="flex gap-2"
                     onClick={() =>
                       handleNavigation(
                         `/create-deck?organization=${organization.name}`
                       )
                     }
                   >
-                    Create Deck
+                    <FilePlus size={20} />
+                    Deck
                   </Button>
                 </>
               )}
@@ -161,78 +185,109 @@ const BoardOrganizationPage= () => {
         <PageTitle title={`${organization?.name}'s board`} />
         <p className="text-center">{organization?.description}</p>
 
-        <div className="flex justify-around p-4">
+        <div className="flex justify-around items-center p-4">
           <ChevronLeft
             onClick={() => window.history.back()}
             className="cursor-pointer hover:text-slate-500"
           />
 
-          <Sheet>
-            <SheetTrigger>
-              <Button className="flex gap-2">
-                <Users />
-                {organization?.owner_id === id ? "Manage" : "See members"}
-              </Button>
-            </SheetTrigger>
-            <SheetContent>
-              {organization?.owner_id === id && (
-                <SheetHeader className="border-b-4 pb-4">
-                  <SheetTitle>Manage organization members</SheetTitle>
-                  <SheetDescription className="flex flex-col gap-3">
-                    <p className="text-gray-600">
-                      You can invite members to join the organization, Just put
-                      their email and they will receive an invitation to join
-                      the organization
+          <div className="flex flex-raw gap-4">
+            <Sheet>
+              <SheetTrigger>
+                <Button className="flex gap-2">
+                  <Users />
+                  {organization?.owner_id === id ? "Manage" : "See members"}
+                </Button>
+              </SheetTrigger>
+              <SheetContent>
+                {organization?.owner_id === id && (
+                  <SheetHeader className="border-b-4 pb-4">
+                    <SheetTitle>Manage organization members</SheetTitle>
+                    <SheetDescription className="flex flex-col gap-3">
+                      <p className="text-gray-600">
+                        You can invite members to join the organization, Just
+                        put their email and they will receive an invitation to
+                        join the organization
+                      </p>
+
+                      <FormProvider {...addUserForm}>
+                        <form onSubmit={addUserForm.handleSubmit(inviteUser)}>
+                          <FormField
+                            control={addUserForm.control}
+                            name="email"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Email</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    placeholder="john.doe@gmail.com"
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <Button
+                            type="submit"
+                            className="mt-4 flex w-fit gap-2"
+                          >
+                            <UserPlus2 size={24} />
+                            Invite member
+                          </Button>
+                        </form>
+                      </FormProvider>
+                    </SheetDescription>
+                  </SheetHeader>
+                )}
+
+                {members.length > 0 && (
+                  <>
+                    <p className="flex gap-2 mt-3 font-semibold bg-slate-200 rounded-lg p-2">
+                      <Users className="ml-2" /> {members.length} members
                     </p>
-
-                    <FormProvider {...addUserForm}>
-                      <form onSubmit={addUserForm.handleSubmit(inviteUser)}>
-                        <FormField
-                          control={addUserForm.control}
-                          name="email"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Email</FormLabel>
-                              <FormControl>
-                                <Input
-                                  {...field}
-                                  placeholder="john.doe@gmail.com"
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
+                    <div className="flex flex-col gap-3 mt-3">
+                      {members.map((member, index) => (
+                        <OrganizationMember
+                          key={index}
+                          id={member.id}
+                          name={member.name}
+                          pending={false}
+                          is_owner={id === organization?.owner_id}
+                          onRemoveUser={handleRemoveUser}
                         />
-                        <Button type="submit" className="mt-4 flex w-fit gap-2">
-                          <UserPlus2 size={24} />
-                          Invite member
-                        </Button>
-                      </form>
-                    </FormProvider>
-                  </SheetDescription>
-                </SheetHeader>
-              )}
-
-              {members.length > 0 && (
-                <>
-                  <p className="flex gap-2 mt-3 font-semibold bg-slate-200 rounded-lg p-2">
-                    <Users className="ml-2" /> {members.length} members
-                  </p>
-                  <div className="flex flex-col gap-3 mt-3">
-                    {members.map((member, index) => (
-                      <OrganizationMember
-                        key={index}
-                        id={member.id}
-                        name={member.name}
-                        pending={false}
-                        is_owner={id === organization?.owner_id}
-                      />
-                    ))}
-                  </div>
-                </>
-              )}
-            </SheetContent>
-          </Sheet>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </SheetContent>
+            </Sheet>
+            {organization?.owner_id === id && (
+              <>
+                <Button
+                  className="flex gap-2"
+                  onClick={() =>
+                    handleNavigation(
+                      `/create-quizz?organization=${organization.name}`
+                    )
+                  }
+                >
+                  <FilePlus size={20} /> Quizz
+                </Button>
+                <Button
+                  className="flex gap-2"
+                  onClick={() =>
+                    handleNavigation(
+                      `/create-deck?organization=${organization.name}`
+                    )
+                  }
+                >
+                  <FilePlus size={20} />
+                  Deck
+                </Button>
+              </>
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4">
@@ -246,7 +301,8 @@ const BoardOrganizationPage= () => {
               type={quizz.quiz.type}
               is_public={quizz.quiz.is_public}
               is_organization={quizz.quiz.is_organization}
-
+              organizationName={organization?.name}
+              qcms={quizz.quiz.qcms}
             />
           ))}
 
@@ -260,6 +316,8 @@ const BoardOrganizationPage= () => {
               type={deck.deck.type}
               is_public={deck.deck.is_public}
               is_organization={deck.deck.is_organization}
+              organizationName={organization?.name}
+              flashcards={deck.deck.flashcards}
             />
           ))}
         </div>

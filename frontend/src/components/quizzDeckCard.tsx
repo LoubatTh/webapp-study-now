@@ -26,6 +26,7 @@ type CommonCardProps = {
   likes: number;
   flashcards?: Flashcard[];
   qcms?: QCM[];
+  organizationName?: string;
   onDeleteCard: (id: number) => void;
 };
 
@@ -38,6 +39,7 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
   likes,
   flashcards,
   qcms,
+  organizationName,
   onDeleteCard,
 }: CommonCardProps) => {
   const navigate = useNavigate();
@@ -97,7 +99,7 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
             {size} {itemLabel}
           </CardDescription>
           <div className="flex gap-0.5">
-            <EditButton id={id} type={type} />
+            <EditButton id={id} type={type} organizationName={organizationName}/>
             <DeleteButton id={id} type={type} onDeleteCard={onDeleteCard} />
           </div>
         </CardFooter>

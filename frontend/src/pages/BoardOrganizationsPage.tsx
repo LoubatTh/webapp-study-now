@@ -246,6 +246,7 @@ const BoardOrganizationPage= () => {
               type={quizz.quiz.type}
               is_public={quizz.quiz.is_public}
               is_organization={quizz.quiz.is_organization}
+              qcms={quizz.quiz.qcms}
 
             />
           ))}
@@ -260,6 +261,7 @@ const BoardOrganizationPage= () => {
               type={deck.deck.type}
               is_public={deck.deck.is_public}
               is_organization={deck.deck.is_organization}
+              flashcards={deck.deck.flashcards}
             />
           ))}
         </div>

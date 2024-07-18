@@ -5,7 +5,7 @@ import { AuroraBackground } from "../components/ui/aurora-background";
 
 const LayoutNavbarPage = () => {
   return (
-    <AuroraBackground>
+    // <AuroraBackground>
       <div className="flex flex-col min-h-screen w-full">
         <Navbar />
         <div className="flex flex-col flex-grow z-10 p-4">
@@ -13,7 +13,7 @@ const LayoutNavbarPage = () => {
         </div>
         <Footer />
       </div>
-    </AuroraBackground>
+    // </AuroraBackground>
   );
 };
 

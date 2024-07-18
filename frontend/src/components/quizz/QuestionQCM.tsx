@@ -33,7 +33,7 @@ const QuestionQCM = ({
     if (answeredCorrectly === undefined) {
       return selectedAnswers.includes(answer)
         ? "bg-blue-400 text-white"
-        : "bg-gray-100";
+        : "border-slate-300";
     }
     const isAnswerCorrect = answer.isValid;
     if (selectedAnswers.includes(answer)) {
@@ -53,14 +53,16 @@ const QuestionQCM = ({
   }, [answeredCorrectly]);
 
   return (
-    <div className="drop-shadow-md">
-      <div className="bg-gray-100 rounded-lg p-2 m-0.5 mb-2">
-        <h2 className="font-medium text-center">{question.question}</h2>
+    <div>
+      <div className="mb-3">
+        <h2 className="font-semibold text-lg text-center">
+          {question.question}
+        </h2>
       </div>
       <div className="grid grid-cols-2 grid-rows-2 gap-1">
         {question.answers.map((answer, index) => (
           <p
-            className={`rounded-lg p-1 m-0.5 ${getBorderColor(answer)}`}
+            className={`flex flex-raw border-2 rounded-full p-2 ${getBorderColor(answer)}`}
             key={index}
             onClick={
               !isSubmitting ? () => handleAnswerClick(answer) : undefined
@@ -69,7 +71,8 @@ const QuestionQCM = ({
               cursor: isSubmitting ? "not-allowed" : "pointer",
             }}
           >
-            {getLetterById(index)}. {answer.answer}
+            <span className="font-bold mr-2">{getLetterById(index)}.</span>{" "}
+            {answer.answer}
           </p>
         ))}
       </div>

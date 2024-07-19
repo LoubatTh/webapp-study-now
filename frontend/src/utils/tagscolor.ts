@@ -21,8 +21,13 @@ export const colorPalette: { [key: string]: string } = {
   architecture: "bg-sky-100 text-sky-800",
   "general culture": "bg-lime-100 text-lime-800",
   "civic education": "bg-orange-100 text-orange-800",
+  home: "text-teal-800",
+  explore: "text-rose-800",
+  board: "text-purple-800",
+  organizations: "text-fuchsia-800",
+  create: "text-violet-800",
+  account: "text-lime-800",
 };
-
 
 // method to define tag color
 export const getColorClass = (tagName: string) => {

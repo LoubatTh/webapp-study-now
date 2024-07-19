@@ -24,7 +24,11 @@ import { Autocomplete, Checkbox, TextField } from "@mui/material";
 import { Organization } from "@/types/organization.type";
 import { Tag } from "@/types/tag.type";
 import { Info, Square, SquareCheck } from "lucide-react";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 const postDeck = async (deck: PostDeck, accessToken: string) => {
   const response = await fetchApi("POST", "decks", deck, accessToken);
@@ -116,7 +120,6 @@ const CreateDeckPage = () => {
 
   // Function to create the deck with the flashcards and send it to the backend
   const createDeckHandler = async (): Promise<void> => {
-
     let organizationsBody = {
       organisations: [] as number[],
     };
@@ -273,7 +276,9 @@ const CreateDeckPage = () => {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <h1 className="mx-auto my-4">Create Deck</h1>
+      <h1 className="mx-auto my-4 text-3xl">
+        {id ? "Edit Deck" : "Create Deck"}
+      </h1>
       <div className="flex flex-col gap-2 p-2 max-w-3xl min-w-full md:min-w-[768px]">
         <Label htmlFor="nameDeck">Deck name</Label>
         <Input
@@ -326,8 +331,7 @@ const CreateDeckPage = () => {
                 <HoverCardContent className="w-80">
                   <div className="text-lg font-bold">Organizations</div>
                   <div className="text-sm">
-                    Select the organizations that will have access to this
-                    deck.
+                    Select the organizations that will have access to this deck.
                   </div>
                 </HoverCardContent>
               </HoverCard>
@@ -392,7 +396,11 @@ const CreateDeckPage = () => {
           Add New Flashcard
         </Button>
         <Separator className="my-2" />
-        <Button onClick={createDeckHandler} variant="default">
+        <Button
+          onClick={createDeckHandler}
+          variant="default"
+          className="bg-green-500 hover:bg-green-400"
+        >
           {id ? "Edit Deck" : "Create Deck"}
         </Button>
       </div>

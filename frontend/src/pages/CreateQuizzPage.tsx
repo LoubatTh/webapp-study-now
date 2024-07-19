@@ -10,7 +10,12 @@ import { fetchApi } from "@/utils/api";
 import CreateQCM from "../components/quizz/CreateQCM";
 import useQCMStore from "../lib/stores/quizzStore";
 import { toast } from "@/components/ui/use-toast";
-import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import {
   Select,
   SelectContent,
@@ -148,8 +153,13 @@ const CreateQuizzPage = () => {
         if (id) {
           response = await editQuizz(id, createdQuizz, accessToken);
 
-          if(organizationsBody.organisations.length <= 0){
-            await fetchApi("DELETE", `organizations/${id}/organizations`, null, accessToken);
+          if (organizationsBody.organisations.length <= 0) {
+            await fetchApi(
+              "DELETE",
+              `organizations/${id}/organizations`,
+              null,
+              accessToken
+            );
           }
 
           if (response.status === 200) {
@@ -263,9 +273,7 @@ const CreateQuizzPage = () => {
   };
 
   useEffect(() => {
-
     console.log("location changed");
-
   }, [location]);
 
   useEffect(() => {
@@ -288,7 +296,7 @@ const CreateQuizzPage = () => {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <h1 className="mx-auto my-4">Create Quizz</h1>
+      <h1 className="mx-auto my-4">{id ? "Edit Quizz" : "Create Quizz"}</h1>
       <div className="flex flex-col gap-3 p-2 max-w-3xl min-w-full md:min-w-[768px]">
         <Label htmlFor="nameQuizz">Quizz name</Label>
         <Input
@@ -409,7 +417,11 @@ const CreateQuizzPage = () => {
           Add New QCM
         </Button>
         <Separator className="my-2" />
-        <Button onClick={createQuizzHandler} variant="default">
+        <Button
+          onClick={createQuizzHandler}
+          variant="default"
+          className="bg-green-500 hover:bg-green-400"
+        >
           {id ? "Edit Quizz" : "Create Quizz"}
         </Button>
       </div>

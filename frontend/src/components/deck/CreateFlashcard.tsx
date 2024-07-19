@@ -77,7 +77,7 @@ const CreateFlashcard = ({
   }, []);
 
   return (
-    <div className="flex flex-col border rounded-md p-2">
+    <div className="flex flex-col border bg-slate-400/15 rounded-md p-4 backdrop-blur-xl">
       {collapsed ? (
         <div className="flex flex-col gap-2">
           <Label className=" text-md">

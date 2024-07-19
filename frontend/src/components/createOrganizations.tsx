@@ -1,4 +1,3 @@
-import React from "react";
 import {
   DialogClose,
   DialogContent,
@@ -13,7 +12,6 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import {
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -53,7 +51,7 @@ const CreateOrganizations = ({ onOrganizationCreated }) => {
 
       if (onOrganizationCreated) {
         onOrganizationCreated();
-      } 
+      }
     } else {
       toast({
         title: "Failed to create organization",
@@ -72,7 +70,10 @@ const CreateOrganizations = ({ onOrganizationCreated }) => {
         </DialogDescription>
       </DialogHeader>
       <FormProvider {...organizationForm}>
-        <form className="flex flex-col gap-2" onSubmit={organizationForm.handleSubmit(onSubmit)}>
+        <form
+          className="flex flex-col gap-2"
+          onSubmit={organizationForm.handleSubmit(onSubmit)}
+        >
           <FormField
             control={organizationForm.control}
             name="name"

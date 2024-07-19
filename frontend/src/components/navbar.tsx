@@ -85,7 +85,8 @@ const Navbar = () => {
               <NavigationMenuLink
                 className={cn(
                   navigationMenuTriggerStyle(),
-                  isActive("/") && getColorClass("home")
+                  "hover:bg-transparent hover:text-blue-500",
+                  isActive("/") && getColorClass("navbar")
                 )}
                 onClick={() => handleNavigate("/")}
               >
@@ -97,7 +98,8 @@ const Navbar = () => {
               <NavigationMenuLink
                 className={cn(
                   navigationMenuTriggerStyle(),
-                  isActive("/explore") && getColorClass("explore")
+                  "hover:bg-transparent hover:text-blue-500",
+                  isActive("/explore") && getColorClass("navbar")
                 )}
                 onClick={() => handleNavigate("/explore")}
               >
@@ -112,7 +114,8 @@ const Navbar = () => {
                   <NavigationMenuLink
                     className={cn(
                       navigationMenuTriggerStyle(),
-                      isActive("/board") && getColorClass("board")
+                      "hover:bg-transparent hover:text-blue-500",
+                      isActive("/board") && getColorClass("navbar")
                     )}
                     onClick={() => handleNavigate("/board")}
                   >
@@ -125,8 +128,8 @@ const Navbar = () => {
                   <NavigationMenuLink
                     className={cn(
                       navigationMenuTriggerStyle(),
-                      isActive("/organizations") &&
-                        getColorClass("organizations")
+                      "hover:bg-transparent hover:text-blue-500",
+                      isActive("/organizations") && getColorClass("navbar")
                     )}
                     onClick={() => handleNavigate("/organizations")}
                   >
@@ -140,8 +143,9 @@ const Navbar = () => {
                 <NavigationMenuItem>
                   <NavigationMenuTrigger
                     className={cn(
+                      "hover:bg-transparent hover:text-blue-500",
                       (isActive("/create-deck") || isActive("/create-quizz")) &&
-                        getColorClass("organizations")
+                        getColorClass("navbar")
                     )}
                   >
                     <FilePlus2 className="mr-2 h-4 w-4" />
@@ -150,11 +154,7 @@ const Navbar = () => {
                   <NavigationMenuContent>
                     <ul className="flex flex-col gap-3 p-4 w-[300px]">
                       <ListItem
-                        className={cn(
-                          "cursor-pointer",
-                          isActive("/create-deck") &&
-                            getColorClass("create-deck")
-                        )}
+                        className={cn("cursor-pointer")}
                         key="createDeck"
                         title="Deck"
                         onClick={() => handleNavigate("/create-deck")}
@@ -162,11 +162,7 @@ const Navbar = () => {
                         Create a new Deck
                       </ListItem>
                       <ListItem
-                        className={cn(
-                          "cursor-pointer",
-                          isActive("/create-quizz") &&
-                            getColorClass("create-quizz")
-                        )}
+                        className={cn("cursor-pointer")}
                         key="createQuizz"
                         title="Quizz"
                         onClick={() => handleNavigate("/create-quizz")}
@@ -194,9 +190,10 @@ const Navbar = () => {
                 <>
                   <NavigationMenuTrigger
                     className={cn(
+                      "hover:bg-transparent hover:text-blue-500",
                       (isActive("/profile") ||
                         isActive("/premium" || isActive("/statistics"))) &&
-                        getColorClass("account")
+                        getColorClass("navbar")
                     )}
                   >
                     <User className="mr-2 h-4 w-4" />

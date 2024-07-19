@@ -23,10 +23,12 @@ export const colorPalette: { [key: string]: string } = {
   "civic education": "bg-orange-100 text-orange-800",
   home: "text-teal-800",
   explore: "text-rose-800",
-  board: "text-purple-800",
+  board: "text-purple-400 underline",
   organizations: "text-fuchsia-800",
   create: "text-violet-800",
   account: "text-lime-800",
+  navbar:
+    "text-purple-400 underline hover:bg-transparent hover:text-purple-400",
 };
 
 // method to define tag color

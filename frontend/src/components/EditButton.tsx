@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { Button } from "./ui/button";
 import { FilePen } from "lucide-react";
 
 type EditButtonProps = {
@@ -22,13 +21,12 @@ const EditButton = ({ id, type, organizationName }: EditButtonProps) => {
 
   return (
     <div>
-      <Button
-        className="p-3"
-        variant="ghost"
+      <button
+        className="h-full p-2h-full p-2 rounded-md hover:bg-background hover:text-primary hover:ring-1 hover:ring-primary"
         onClick={(event) => editHandler(event)}
       >
         <FilePen size={14} />
-      </Button>
+      </button>
     </div>
   );
 };

@@ -66,7 +66,7 @@ const LikeButton = ({ id, type, likes, isLiked }: LikeButtonProps) => {
   }, [isLiked]);
 
   return (
-    <div className="flex items-center">
+    <div className="flex pt-3">
       <Button
         variant="ghost"
         className="flex gap-1 hover:bg-inherit"
@@ -74,9 +74,9 @@ const LikeButton = ({ id, type, likes, isLiked }: LikeButtonProps) => {
       >
         <p>{currentLikes}</p>
         {liked ? (
-          <Heart className="text-red-500 fill-red-500 hover:size-8" />
+          <Heart className="text-red-500 fill-red-500 hover:fill-pink-400" />
         ) : (
-          <Heart className="text-red-500 hover:size-8" />
+          <Heart className="text-red-500 hover:fill-pink-200" />
         )}
       </Button>
     </div>

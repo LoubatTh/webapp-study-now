@@ -99,7 +99,7 @@ const ExplorerPage = () => {
         <FilterBar onSearch={handleSearch} />
       </div>
       <motion.div
-        className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4"
+        className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4 md:gap-8 md:p-8"
         initial="initial"
         animate="visible"
         variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
@@ -108,7 +108,7 @@ const ExplorerPage = () => {
           <motion.div variants={cardVariants} key={index}>
             <QuizzDeckCard
               id={item.id}
-              name={item.name}
+              Cardname={item.name}
               owner={item.owner}
               tag={item.tag}
               likes={item.likes}
@@ -121,7 +121,7 @@ const ExplorerPage = () => {
           </motion.div>
         ))}
       </motion.div>
-      <div className="flex gap-2 md:mx-auto md:w-auto items-center mt-6 w-full">
+      <div className="flex gap-2 md:mx-auto md:w-auto items-center my-6 w-full">
         <div className="flex items-center">
           <Button
             disabled={page <= 1}

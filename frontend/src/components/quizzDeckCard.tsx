@@ -16,10 +16,11 @@ import DeleteButton from "./DeleteButton";
 import LikeButton from "./LikeButton";
 import { Flashcard } from "@/types/deck.type";
 import { QCM } from "@/types/quizz.type";
+import { useUser } from "@/contexts/UserContext";
 
 type CommonCardProps = {
   id: number;
-  name: string;
+  Cardname: string;
   owner: string;
   tag: string;
   type: string;
@@ -33,7 +34,7 @@ type CommonCardProps = {
 
 const QuizzDeckCard: React.FC<CommonCardProps> = ({
   id,
-  name,
+  Cardname,
   owner,
   tag,
   type,
@@ -45,6 +46,7 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
   onDeleteCard,
 }: CommonCardProps) => {
   const navigate = useNavigate();
+  const { name } = useUser();
   const [size, setSize] = useState<number>(0);
   const cards = type === "Quiz" ? "quizz" : "deck";
   const itemLabel = type === "Quiz" ? "qcms" : "flashcards";
@@ -64,50 +66,45 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
     <div onClick={handleClick} className="cursor-pointer">
       <Card
         className={cn(
-          `transition duration-200 shadow-lg transform hover:shadow-2xl hover:scale-105 ${
-            cards === "quizz"
-              ? "ring-1 ring-electricalPurple"
-              : "ring-1 ring-electricalBlue"
-          }`
+          "transition duration-200 shadow-lg transform hover:shadow-2xl hover:scale-105 flex flex-col gap-4"
         )}
       >
-        <CardHeader className="">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center">
-              <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-              <p className="ml-2 capitalize">{owner}</p>
+        <div className="flex justify-between">
+          <CardHeader className="flex flex-row items-center p-3">
+            <Avatar>
+              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarFallback>{owner}</AvatarFallback>
+            </Avatar>
+            <div className="flex-col flex-grow ml-2 capitalize">
+              <CardTitle>{Cardname}</CardTitle>
+              <CardDescription>{owner}</CardDescription>
             </div>
-            <LikeButton id={id} type={type} likes={likes} isLiked={isLiked} />
+          </CardHeader>
+          <LikeButton id={id} type={type} likes={likes} isLiked={isLiked} />
+        </div>
+        <CardContent className="flex">
+          <div className=" capitalize mr-1">{cards}</div>
+          <div>
+            of {size} {itemLabel}
           </div>
-        </CardHeader>
-        <CardContent>
-          <div className="flex justify-between mb-2">
-            <CardTitle className="capitalize">{name}</CardTitle>
-          </div>
-          <span
-            className={cn(
-              "p-1 ps-2 pe-2 rounded-lg font-medium text-sm",
-              getColorClass(tag.toLowerCase())
-            )}
-          >
-            {tag}
-          </span>
         </CardContent>
-        <CardFooter className="justify-between">
-          <CardDescription>
-            {size} {itemLabel}
-          </CardDescription>
-          <div className="flex gap-0.5">
-            <EditButton
-              id={id}
-              type={type}
-              organizationName={organizationName}
-            />
-            <DeleteButton id={id} type={type} onDeleteCard={onDeleteCard} />
-          </div>
+        <CardFooter
+          className={cn(
+            "pt-2 pb-2 pr-2 justify-between items-center h-12",
+            getColorClass(tag.toLowerCase())
+          )}
+        >
+          <div>{tag}</div>
+          {owner === name && (
+            <div className="flex h-full gap-0.5">
+              <EditButton
+                id={id}
+                type={type}
+                organizationName={organizationName}
+              />
+              <DeleteButton id={id} type={type} onDeleteCard={onDeleteCard} />
+            </div>
+          )}
         </CardFooter>
       </Card>
     </div>

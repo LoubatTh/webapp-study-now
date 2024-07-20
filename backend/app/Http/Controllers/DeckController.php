@@ -78,7 +78,7 @@ class DeckController extends Controller
     /**
      * Display one item of the resource.
      */
-    public function getDeckById(int $id, Request $request)
+    public function getDeckById(Request $request, int $id)
     {
         try {
             $deck = Deck::with("tag", "user", "flashcards")->find($id);
@@ -98,13 +98,6 @@ class DeckController extends Controller
                 }
             }
 
-            if (!$user) {
-                $deck->setAttribute("is_liked", false);
-            } else {
-                $userDeck = UserDeck::where(["user_id" => $user->id, "deck_id" => $deck->id])->first();
-                $deck->setAttribute("is_liked", $userDeck ? $userDeck->is_liked : false);
-            }
-
             $response = [
                 'id' => $deck['id'],
                 'type' => $deck['type'],
@@ -116,23 +109,31 @@ class DeckController extends Controller
                 'is_liked' => $deck->getAttribute('is_liked'),
                 'flashcards' => $deck['flashcards']
             ];
-            $ownedOrganizations = Organization::where('owner_id', $user->id)->get('id');
 
-            if (count($ownedOrganizations) > 0) {
-                $relatedOrganizations = [];
-                foreach ($ownedOrganizations as $organization) {
-                    $relatedDeck = OrganizationDeck::where('deck_id', $deck['id'])->where('organization_id', $organization['id'])->first();
-                    if ($relatedDeck) {
-                        array_push($relatedOrganizations, $organization['id']);
+            if (!$user) {
+                $deck->setAttribute("is_liked", false);
+            } else {
+                $userDeck = UserDeck::where(["user_id" => $user->id, "deck_id" => $deck->id])->first();
+                $deck->setAttribute("is_liked", $userDeck ? $userDeck->is_liked : false);
+                $ownedOrganizations = Organization::where('owner_id', $user->id)->get('id');
+
+                if (count($ownedOrganizations) > 0) {
+                    $relatedOrganizations = [];
+                    foreach ($ownedOrganizations as $organization) {
+                        $relatedDeck = OrganizationDeck::where('deck_id', $deck['id'])->where('organization_id', $organization['id'])->first();
+                        if ($relatedDeck) {
+                            array_push($relatedOrganizations, $organization['id']);
+                        }
                     }
-                }
 
-                $response['organizations'] = $relatedOrganizations;
+                    $response['organizations'] = $relatedOrganizations;
+                }
             }
 
             return response()->json($response, 200);
         } catch (\Exception $e) {
-            return response()->json(["error" => $e->getMessage()], 400);
+            return response($e);
+            // return response()->json(["error" => $e->getMessage()], 400);
         }
     }
 

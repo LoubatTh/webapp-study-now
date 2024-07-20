@@ -150,7 +150,7 @@ class DeckTest extends TestCase
 
     public function test_deck_get_by_id(): void
     {
-        $response = $this->getJson('/api/decks/1');
+        $response = $this->getJson('/api/decks/' . $this->deck->id);
 
         $response->assertStatus(200)->assertJson(
             fn(AssertableJson $json) =>
@@ -161,8 +161,11 @@ class DeckTest extends TestCase
                     $json->each(
                         fn($json) =>
                         $json->whereType('id', 'integer')
+                            ->whereType('deck_id', 'integer')
                             ->whereType('question', 'string')
                             ->whereType('answer', 'string')
+                            ->whereType('created_at', 'string')
+                            ->whereType('updated_at', 'string')
                     )
                 )
         );
@@ -195,8 +198,11 @@ class DeckTest extends TestCase
                     $json->each(
                         fn($json) =>
                         $json->whereType('id', 'integer')
+                            ->whereType('deck_id', 'integer')
                             ->whereType('question', 'string')
                             ->whereType('answer', 'string')
+                            ->whereType('created_at', 'string')
+                            ->whereType('updated_at', 'string')
                     )
                 )
         );

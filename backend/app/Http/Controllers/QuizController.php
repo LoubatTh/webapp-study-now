@@ -115,13 +115,6 @@ class QuizController extends Controller
             }
         }
 
-        if (!$user) {
-            $quiz->setAttribute("is_liked", false);
-        } else {
-            $userQuiz = UserQuiz::where(["user_id" => $user->id, "quiz_id" => $quiz->id])->first();
-            $quiz->setAttribute("is_liked", $userQuiz ? $userQuiz->is_liked : false);
-        }
-
         $response = [
             'id' => $quiz['id'],
             'type' => $quiz['type'],
@@ -133,18 +126,25 @@ class QuizController extends Controller
             'is_liked' => $quiz->getAttribute('is_liked'),
             'qcms' => $quiz['qcms']
         ];
-        $ownedOrganizations = Organization::where('owner_id', $user->id)->get('id');
 
-        if (count($ownedOrganizations) > 0) {
-            $relatedOrganizations = [];
-            foreach ($ownedOrganizations as $organization) {
-                $relatedDeck = OrganizationQuiz::where('quiz_id', $quiz['id'])->where('organization_id', $organization['id'])->first();
-                if ($relatedDeck) {
-                    array_push($relatedOrganizations, $organization['id']);
+        if (!$user) {
+            $quiz->setAttribute("is_liked", false);
+        } else {
+            $userQuiz = UserQuiz::where(["user_id" => $user->id, "quiz_id" => $quiz->id])->first();
+            $quiz->setAttribute("is_liked", $userQuiz ? $userQuiz->is_liked : false);
+            $ownedOrganizations = Organization::where('owner_id', $user->id)->get('id');
+    
+            if (count($ownedOrganizations) > 0) {
+                $relatedOrganizations = [];
+                foreach ($ownedOrganizations as $organization) {
+                    $relatedDeck = OrganizationQuiz::where('quiz_id', $quiz['id'])->where('organization_id', $organization['id'])->first();
+                    if ($relatedDeck) {
+                        array_push($relatedOrganizations, $organization['id']);
+                    }
                 }
+    
+                $response['organizations'] = $relatedOrganizations;
             }
-
-            $response['organizations'] = $relatedOrganizations;
         }
 
         return response()->json($response, 200);

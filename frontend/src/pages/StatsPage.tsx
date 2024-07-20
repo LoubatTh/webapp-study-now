@@ -1,26 +1,15 @@
-import { useEffect, useState } from "react";
-import QuizzDeckCard from "@/components/quizzDeckCard";
-import { useAuth } from "@/contexts/AuthContext";
-import { fetchApi } from "@/utils/api";
-import { motion } from "framer-motion";
 import FilterBar from "@/components/FilterBar";
 import FilterBarMobile from "@/components/FilterBarMobile";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
+import { fetchApi } from "@/utils/api";
 import {
   ChevronFirst,
-  ChevronLast,
   ChevronLeft,
   ChevronRight,
+  ChevronLast,
 } from "lucide-react";
-
-const cardVariants = {
-  initial: { opacity: 0, y: 50 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { type: "spring", stiffness: 120 },
-  },
-};
+import { useState, useEffect } from "react";
 
 const getAllCards = async (
   accessToken: string,
@@ -29,20 +18,19 @@ const getAllCards = async (
 ) => {
   const response = await fetchApi(
     "GET",
-    `all?page=${pageSelected}${queryString ? `&${queryString}` : ""}`,
+    `all?me&page=${pageSelected}${queryString ? `&${queryString}` : ""}`,
     null,
     accessToken
   );
   return response;
 };
 
-const ExplorerPage = () => {
+const StatsPage = () => {
   const { accessToken, isReady } = useAuth();
   const [allCards, setAllCards] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-
   const buildQueryString = (params) => {
     return Object.keys(params)
       .filter((key) => params[key])
@@ -71,17 +59,11 @@ const ExplorerPage = () => {
     setPage(newPage);
     getAll(newPage);
   };
-
   const handleSearch = (searchValues) => {
     getAll(1, searchValues); // Reset to first page when performing a new search
   };
-
-  const handleDeleteCard = (id) => {
-    setAllCards((prev) => prev.filter((card) => card.id !== id));
-  };
-
   useEffect(() => {
-    if (isReady) {
+    if (isReady && accessToken) {
       getAll();
     }
   }, [isReady, accessToken]);
@@ -89,38 +71,20 @@ const ExplorerPage = () => {
   if (loading) {
     return <div>Loading...</div>;
   }
-
   return (
     <>
       <div className="md:hidden">
-        <FilterBarMobile onSearch={handleSearch} />
+        <FilterBarMobile onSearch={handleSearch} board={true} />
       </div>
       <div className="hidden md:block md:mb-2">
-        <FilterBar onSearch={handleSearch} />
+        <FilterBar onSearch={handleSearch} board={true} />
       </div>
-      <motion.div
-        className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4"
-        initial="initial"
-        animate="visible"
-        variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
-      >
-        {allCards.map((item, index) => (
-          <motion.div variants={cardVariants} key={index}>
-            <QuizzDeckCard
-              id={item.id}
-              name={item.name}
-              owner={item.owner}
-              tag={item.tag}
-              likes={item.likes}
-              isLiked={item.is_liked}
-              type={item.type}
-              flashcards={item.flashcards}
-              qcms={item.qcms}
-              onDeleteCard={handleDeleteCard}
-            />
-          </motion.div>
-        ))}
-      </motion.div>
+      <div className="flex flex-col p-8">
+        <h2 className="text-3xl font-bold text-center">Statistics</h2>
+        <div className="mt-4">
+          <p className="text-lg">Coming soon...</p>
+        </div>
+      </div>
       <div className="flex gap-2 md:mx-auto md:w-auto items-center mt-6 w-full">
         <div className="flex items-center">
           <Button
@@ -162,4 +126,4 @@ const ExplorerPage = () => {
   );
 };
 
-export default ExplorerPage;
+export default StatsPage;

@@ -192,7 +192,8 @@ const Navbar = () => {
                     className={cn(
                       "hover:bg-transparent hover:text-blue-500",
                       (isActive("/profile") ||
-                        isActive("/premium" || isActive("/statistics"))) &&
+                        isActive("/premium" || isActive("/statistics")) ||
+                        isActive("/profile/statistics")) &&
                         getColorClass("navbar")
                     )}
                   >
@@ -338,7 +339,7 @@ const Navbar = () => {
                   <p>Profile</p>
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() => handleNavigate("/profil/statistics")}
+                  onClick={() => handleNavigate("/profile/statistics")}
                 >
                   <BarChart3 className="mr-2 h-4 w-4" />
                   <p>Statistics</p>

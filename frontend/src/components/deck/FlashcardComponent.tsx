@@ -30,7 +30,10 @@ const FlashcardComponent = ({
 
   return (
     <div className="flex flex-col justify-center items-center gap-8">
-      <div className="relative w-96 h-48 perspective" onClick={handleFlip}>
+      <div
+        className="relative w-80 md:w-96 h-48 perspective"
+        onClick={handleFlip}
+      >
         <motion.div
           className={`bg-background rounded-xl absolute inset-0 flex border shadow-xl ${
             isFlipped ? "rotate-y-180" : ""
@@ -49,7 +52,7 @@ const FlashcardComponent = ({
           </div>
         </motion.div>
       </div>
-      <div className="flex flex-col gap-2 text-center">
+      <div className="flex flex-col gap-2 text-center mb-8">
         <Typography>My rating</Typography>
         <Rating
           value={star}

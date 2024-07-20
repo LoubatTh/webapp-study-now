@@ -33,7 +33,6 @@ const getAllCards = async (
     null,
     accessToken
   );
-  console.log("Cards response: ", response);
   return response;
 };
 
@@ -74,9 +73,6 @@ const ExplorerPage = () => {
   };
 
   const handleSearch = (searchValues) => {
-    const queryString = buildQueryString(searchValues);
-    console.log("Search values: ", searchValues);
-    console.log("Query values: ", queryString);
     getAll(1, searchValues); // Reset to first page when performing a new search
   };
 
@@ -85,7 +81,7 @@ const ExplorerPage = () => {
   };
 
   useEffect(() => {
-    if (isReady && accessToken) {
+    if (isReady) {
       getAll();
     }
   }, [isReady, accessToken]);
@@ -116,7 +112,10 @@ const ExplorerPage = () => {
               owner={item.owner}
               tag={item.tag}
               likes={item.likes}
+              isLiked={item.is_liked}
               type={item.type}
+              flashcards={item.flashcards}
+              qcms={item.qcms}
               onDeleteCard={handleDeleteCard}
             />
           </motion.div>

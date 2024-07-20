@@ -6,7 +6,7 @@ const content = [
     description:
       "Discover a vast library of quizzes and flashcards created by our community. Collaborate with other learners, share knowledge, and benefit from the collective effort. Find the resources you need to enhance your studies and track your progress.",
     content: (
-      <div className="h-full w-full flex items-center justify-center text-white ring ring-primary">
+      <div className="h-full w-full flex items-center justify-center text-white">
         <img
           src="/community.jpg"
           width={500}

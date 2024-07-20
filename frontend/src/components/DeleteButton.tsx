@@ -55,13 +55,12 @@ const DeleteButton = ({ id, type, onDeleteCard }: DeleteButtonProps) => {
     <div>
       <Dialog>
         <DialogTrigger asChild>
-          <Button
-            variant="ghost"
-            className="p-3 hover:bg-red-500"
+          <button
+            className="h-full p-2 rounded-md hover:bg-red-500 hover:text-background"
             onClick={(event) => event.stopPropagation()}
           >
             <Trash2 size={14} />
-          </Button>
+          </button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>

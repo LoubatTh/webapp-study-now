@@ -42,7 +42,8 @@ const ResponseQuizzPage = () => {
   useEffect(() => {
     if (!isReady || !quizzId) return;
 
-    // Initalisation des states
+    
+    //Initalisation des states 
     setQuizz(null);
     setIsForbidden(false);
     setIsNotFound(false);
@@ -198,7 +199,7 @@ const ResponseQuizzPage = () => {
                 )}
               </div>
             ))}
-            <div className="flex items-center gap-2 m-3">
+            <div className="flex flex-col items-center gap-2 m-3">
               <Button
                 className="w-1/2"
                 onClick={handleSubmit}

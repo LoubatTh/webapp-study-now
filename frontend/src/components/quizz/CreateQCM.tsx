@@ -27,6 +27,7 @@ import useQCMStore from "../../lib/stores/quizzStore";
 import type { QCM, Quizz } from "../../types/quizz.type";
 import { DialogClose, DialogFooter } from "../ui/dialog";
 import { useEffect } from "react";
+import { cn } from "@/lib/utils";
 
 type CreateQCMProps = {
   id: number;
@@ -106,7 +107,7 @@ const CreateQCM = ({
   }, []);
 
   return (
-    <div className="flex flex-col border rounded-md p-2">
+    <div className="flex flex-col border bg-slate-400/15 rounded-md p-4 backdrop-blur-xl">
       {collapsed ? (
         <div className="flex flex-col gap-2">
           <Label className=" text-md">

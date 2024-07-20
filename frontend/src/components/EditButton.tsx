@@ -5,17 +5,18 @@ import { FilePen } from "lucide-react";
 type EditButtonProps = {
   id: number;
   type: string;
+  organizationName?: string;
 };
 
-const EditButton = ({ id, type }: EditButtonProps) => {
+const EditButton = ({ id, type, organizationName }: EditButtonProps) => {
   const navigate = useNavigate();
 
   const editHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     if (type === "Quiz") {
-      navigate(`/quizz/${id}/edit`);
+      navigate(`/quizz/${id}/edit?organization=${organizationName}`);
     } else {
-      navigate(`/deck/${id}/edit`);
+      navigate(`/deck/${id}/edit?organization=${organizationName}`);
     }
   };
 

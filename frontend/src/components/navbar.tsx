@@ -6,7 +6,6 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu-special";
-
 import {
   AlignJustify,
   ClipboardList,
@@ -21,7 +20,6 @@ import {
   FilePlus2,
   BookPlus,
 } from "lucide-react";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,27 +29,44 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
 import { Button } from "@/components/ui/button";
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import Image from "./image";
 import logo from "../assets/images/Logo-T-YEP.png";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { getColorClass } from "@/utils/tagscolor";
+import { useEffect, useState } from "react";
+import { fetchApi } from "@/utils/api";
 
 const Navbar = () => {
-  const { accessToken, logout } = useAuth();
+  const { accessToken, isReady, logout } = useAuth();
+  const [invitations, setInvitations] = useState(0);
 
   // handle click for navigation btn
   const navigate = useNavigate();
+  const location = useLocation();
+  const isActive = (path: string) => location.pathname === path;
   const handleNavigate = (path: string) => {
     navigate(path);
   };
 
+  useEffect(() => {
+    if (!isReady) return;
+
+    const fetchInvites = async () => {
+      const response = await fetchApi("GET", "user/invites", null, accessToken);
+      const data = await response.data;
+      setInvitations(data.length);
+    };
+
+    fetchInvites();
+  }, [isReady, accessToken]);
+
   return (
-    <div className="flex justify-between p-2 items-center">
+    <div className="flex justify-between p-2 items-center z-20">
       <div
         onClick={() => handleNavigate("/")}
         className="flex items-center cursor-pointer"
@@ -66,9 +81,13 @@ const Navbar = () => {
       <div className="hidden md:flex">
         <NavigationMenu>
           <NavigationMenuList>
-            <NavigationMenuItem className="cursor-pointer ${}">
+            <NavigationMenuItem className="cursor-pointer">
               <NavigationMenuLink
-                className={navigationMenuTriggerStyle()}
+                className={cn(
+                  navigationMenuTriggerStyle(),
+                  "hover:bg-transparent hover:text-blue-500",
+                  isActive("/") && getColorClass("navbar")
+                )}
                 onClick={() => handleNavigate("/")}
               >
                 <Home className="mr-2 h-4 w-4" />
@@ -77,7 +96,11 @@ const Navbar = () => {
             </NavigationMenuItem>
             <NavigationMenuItem className="cursor-pointer">
               <NavigationMenuLink
-                className={navigationMenuTriggerStyle()}
+                className={cn(
+                  navigationMenuTriggerStyle(),
+                  "hover:bg-transparent hover:text-blue-500",
+                  isActive("/explore") && getColorClass("navbar")
+                )}
                 onClick={() => handleNavigate("/explore")}
               >
                 <Earth className="mr-2 h-4 w-4" />
@@ -89,7 +112,11 @@ const Navbar = () => {
               <>
                 <NavigationMenuItem className="cursor-pointer">
                   <NavigationMenuLink
-                    className={navigationMenuTriggerStyle()}
+                    className={cn(
+                      navigationMenuTriggerStyle(),
+                      "hover:bg-transparent hover:text-blue-500",
+                      isActive("/board") && getColorClass("navbar")
+                    )}
                     onClick={() => handleNavigate("/board")}
                   >
                     <ClipboardList className="mr-2 h-4 w-4" />
@@ -99,22 +126,35 @@ const Navbar = () => {
 
                 <NavigationMenuItem className="cursor-pointer">
                   <NavigationMenuLink
-                    className={navigationMenuTriggerStyle()}
+                    className={cn(
+                      navigationMenuTriggerStyle(),
+                      "hover:bg-transparent hover:text-blue-500",
+                      isActive("/organizations") && getColorClass("navbar")
+                    )}
                     onClick={() => handleNavigate("/organizations")}
                   >
                     <LayoutDashboard className="mr-2 h-4 w-4" />
                     My Organizations
+                    {invitations > 0 && (
+                      <div className="bg-amber-400 p-1 rounded-full relative bottom-1 "></div>
+                    )}
                   </NavigationMenuLink>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger>
+                  <NavigationMenuTrigger
+                    className={cn(
+                      "hover:bg-transparent hover:text-blue-500",
+                      (isActive("/create-deck") || isActive("/create-quizz")) &&
+                        getColorClass("navbar")
+                    )}
+                  >
                     <FilePlus2 className="mr-2 h-4 w-4" />
                     Create Card
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <ul className="flex flex-col gap-3 p-4 w-[300px]">
                       <ListItem
-                        className="cursor-pointer"
+                        className={cn("cursor-pointer")}
                         key="createDeck"
                         title="Deck"
                         onClick={() => handleNavigate("/create-deck")}
@@ -122,7 +162,7 @@ const Navbar = () => {
                         Create a new Deck
                       </ListItem>
                       <ListItem
-                        className="cursor-pointer"
+                        className={cn("cursor-pointer")}
                         key="createQuizz"
                         title="Quizz"
                         onClick={() => handleNavigate("/create-quizz")}
@@ -148,14 +188,24 @@ const Navbar = () => {
                 </NavigationMenuLink>
               ) : (
                 <>
-                  <NavigationMenuTrigger>
+                  <NavigationMenuTrigger
+                    className={cn(
+                      "hover:bg-transparent hover:text-blue-500",
+                      (isActive("/profile") ||
+                        isActive("/premium" || isActive("/statistics"))) &&
+                        getColorClass("navbar")
+                    )}
+                  >
                     <User className="mr-2 h-4 w-4" />
                     Account
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <ul className="flex flex-col gap-3 p-4 w-[300px]">
                       <ListItem
-                        className="cursor-pointer"
+                        className={cn(
+                          "cursor-pointer",
+                          isActive("/profile") && getColorClass("profile")
+                        )}
                         key="profile"
                         title="Profile"
                         onClick={() => handleNavigate("/profile")}
@@ -163,7 +213,11 @@ const Navbar = () => {
                         Consult your profile
                       </ListItem>
                       <ListItem
-                        className="cursor-pointer"
+                        className={cn(
+                          "cursor-pointer",
+                          isActive("/profile/statistics") &&
+                            getColorClass("statistics")
+                        )}
                         key="stats"
                         title="Stats"
                         onClick={() => handleNavigate("/profile/statistics")}
@@ -171,7 +225,10 @@ const Navbar = () => {
                         Check your statistics
                       </ListItem>
                       <ListItem
-                        className="cursor-pointer"
+                        className={cn(
+                          "cursor-pointer",
+                          isActive("/premium") && getColorClass("premium")
+                        )}
                         key="premium"
                         title="Premium"
                         onClick={() => handleNavigate("/premium")}

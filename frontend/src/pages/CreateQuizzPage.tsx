@@ -10,12 +10,7 @@ import { fetchApi } from "@/utils/api";
 import CreateQCM from "../components/quizz/CreateQCM";
 import useQCMStore from "../lib/stores/quizzStore";
 import { toast } from "@/components/ui/use-toast";
-import {
-  useLocation,
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import {
   Select,
   SelectContent,
@@ -28,7 +23,6 @@ import { useUser } from "@/contexts/UserContext";
 import { Tag } from "@/types/tag.type";
 import { Organization } from "@/types/organization.type";
 import { Autocomplete, Checkbox, TextField } from "@mui/material";
-import { Check, Cross, Info, Square, SquareCheck } from "lucide-react";
 import { HoverCard } from "@radix-ui/react-hover-card";
 import { HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 

@@ -8,7 +8,7 @@ import { fetchApi } from "@/utils/api";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-const ResponseQuizzPage = () => {
+const QuizzPlayPage = () => {
   // Permet de s'assurer que aucune action nécessitant l'authentification ne soit effectuée avant que le système soit initialisé
   const { isReady, accessToken } = useAuth();
   // Permet de récupérer l'identifiant du quizz passé en paramètre dans l'URL
@@ -42,8 +42,7 @@ const ResponseQuizzPage = () => {
   useEffect(() => {
     if (!isReady || !quizzId) return;
 
-    
-    //Initalisation des states 
+    //Initalisation des states
     setQuizz(null);
     setIsForbidden(false);
     setIsNotFound(false);
@@ -220,4 +219,4 @@ const ResponseQuizzPage = () => {
   );
 };
 
-export default ResponseQuizzPage;
+export default QuizzPlayPage;

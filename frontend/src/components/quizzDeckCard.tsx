@@ -24,6 +24,7 @@ type CommonCardProps = {
   tag: string;
   type: string;
   likes: number;
+  isLiked: boolean;
   flashcards?: Flashcard[];
   qcms?: QCM[];
   organizationName?: string;
@@ -37,6 +38,7 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
   tag,
   type,
   likes,
+  isLiked,
   flashcards,
   qcms,
   organizationName,
@@ -78,7 +80,7 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
               </Avatar>
               <p className="ml-2 capitalize">{owner}</p>
             </div>
-            <LikeButton id={id} type={type} likes={likes} isLiked={false} />
+            <LikeButton id={id} type={type} likes={likes} isLiked={isLiked} />
           </div>
         </CardHeader>
         <CardContent>
@@ -99,7 +101,11 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
             {size} {itemLabel}
           </CardDescription>
           <div className="flex gap-0.5">
-            <EditButton id={id} type={type} organizationName={organizationName}/>
+            <EditButton
+              id={id}
+              type={type}
+              organizationName={organizationName}
+            />
             <DeleteButton id={id} type={type} onDeleteCard={onDeleteCard} />
           </div>
         </CardFooter>

@@ -3,6 +3,7 @@ import { Heart } from "lucide-react";
 import { Button } from "./ui/button";
 import { fetchApi } from "@/utils/api";
 import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "./ui/use-toast";
 
 type LikeButtonProps = {
   id: number;
@@ -17,13 +18,15 @@ const likeFetch = async (
   liked: boolean,
   accessToken: string
 ) => {
-  //   const response = await fetchApi(
-  //     "POST",
-  //     `/${type}/${id}/like`,
-  //     { liked },
-  //     accessToken
-  //   );
-  console.log("Like response: ", liked);
+  type = type === "quizz" ? "quizzes" : "decks";
+  const response = await fetchApi(
+    "PUT",
+    `${type}/${id}/like`,
+    { isLiked: liked },
+    accessToken
+  );
+  console.log("Like response: ", response);
+  return response;
 };
 
 const LikeButton = ({ id, type, likes, isLiked }: LikeButtonProps) => {
@@ -35,8 +38,15 @@ const LikeButton = ({ id, type, likes, isLiked }: LikeButtonProps) => {
 
   const handleLike = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
-    setLiked((prevLiked) => !prevLiked);
-    setCurrentLikes((prevLikes) => (liked ? prevLikes - 1 : prevLikes + 1));
+    if (!accessToken) {
+      toast({
+        description: "You need to be logged in to like a card",
+        variant: "destructive",
+      });
+    } else {
+      setLiked((prevLiked) => !prevLiked);
+      setCurrentLikes((prevLikes) => (liked ? prevLikes - 1 : prevLikes + 1));
+    }
 
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
@@ -44,7 +54,7 @@ const LikeButton = ({ id, type, likes, isLiked }: LikeButtonProps) => {
 
     timeoutRef.current = setTimeout(() => {
       likeFetch(id, cards, !liked, accessToken);
-    }, 1000);
+    }, 500);
   };
 
   useEffect(() => {
@@ -53,7 +63,7 @@ const LikeButton = ({ id, type, likes, isLiked }: LikeButtonProps) => {
         clearTimeout(timeoutRef.current);
       }
     };
-  }, []);
+  }, [isLiked]);
 
   return (
     <div className="flex items-center">

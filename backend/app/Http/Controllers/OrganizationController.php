@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreOrganizationRequest;
 use App\Http\Requests\UpdateOrganizationRequest;
+use App\Http\Resources\OrganizationResource;
 use App\Models\Organization;
 use Illuminate\Http\Request;
 
@@ -32,7 +33,7 @@ class OrganizationController
     {
         $organization = Organization::find($id);
 
-        return response()->json($organization);
+        return response()->json(new OrganizationResource($organization));
     }
 
     /**

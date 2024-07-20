@@ -121,7 +121,7 @@ class DeckController extends Controller
             if (count($ownedOrganizations) > 0) {
                 $relatedOrganizations = [];
                 foreach ($ownedOrganizations as $organization) {
-                    $relatedDeck = OrganizationDeck::where('deck_id', $deck['id'])->where('organization_id', $organization['id']);
+                    $relatedDeck = OrganizationDeck::where('deck_id', $deck['id'])->where('organization_id', $organization['id'])->first();
                     if ($relatedDeck) {
                         array_push($relatedOrganizations, $organization['id']);
                     }
@@ -155,7 +155,7 @@ class DeckController extends Controller
 
             if (isset($request['organizations'])) {
                 foreach ($request['organizations'] as $organization) {
-                    if (!Organization::where('id', $organization)->where('owner_id', $request->user()->first())) {
+                    if (!Organization::where('id', $organization)->where('owner_id', $request->user()->id)->first()) {
                         return response()->json([
                             'error' => 'Organization not found'
                         ], 404);
@@ -207,6 +207,31 @@ class DeckController extends Controller
 
             foreach ($request->flashcards as $flashcard) {
                 $flashcardController->createFlashcard($flashcard, $deck->id);
+            }
+
+
+            if (isset($request['organizations'])) {
+                $organizationDecks = OrganizationDeck::where('deck_id', $id)->pluck('organization_id')->toArray();
+                $orgToAdd = array_diff($request['organizations'], $organizationDecks);
+                $orgToRemove = array_diff($organizationDecks, $request['organizations']);
+
+                foreach ($orgToAdd as $organization) {
+                    if (!Organization::where('id', $organization)->where('owner_id', $request->user()->id)->first()) {
+                        return response()->json([
+                            'error' => 'Organization not found'
+                        ], 404);
+                    }
+
+                    OrganizationDeck::create([
+                        'deck_id' => $deck['id'],
+                        'organization_id' => $organization,
+                    ]);
+                }
+
+                foreach ($orgToRemove as $organization) {
+                    $orgDeckId = OrganizationDeck::where('organization_id', $organization)->where('deck_id', $id)->pluck('id')->first();
+                    OrganizationDeck::destroy($orgDeckId);
+                }
             }
 
             return response()->noContent();

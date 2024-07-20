@@ -18,7 +18,7 @@ const DeckComponent = ({
 }: DeckComponentProps) => {
   return (
     <div>
-      <h1 className="text-3xl my-8">{name}</h1>
+      <h1 className="text-3xl my-8 uppercase">{name}</h1>
       <div className="flex flex-col gap-8">
         {flashcards.map((flashcard, i) => (
           <React.Fragment key={i}>

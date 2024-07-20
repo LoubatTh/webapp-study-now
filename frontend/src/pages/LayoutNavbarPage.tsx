@@ -8,12 +8,12 @@ const LayoutNavbarPage = () => {
     <AuroraBackground>
       <div className="flex flex-col min-h-screen w-full">
         <Navbar />
-        <div className="flex flex-col flex-grow z-10 p-4">
+        <div className="flex flex-col flex-grow z-10">
           <Outlet />
         </div>
         <Footer />
       </div>
-    // </AuroraBackground>
+    </AuroraBackground>
   );
 };
 

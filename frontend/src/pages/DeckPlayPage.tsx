@@ -1,5 +1,6 @@
 import DeckComponent from "@/components/deck/DeckComponent";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import useFlashcardStore from "@/lib/stores/flashcardStore";
 import { Deck } from "@/types/deck.type";
@@ -24,6 +25,11 @@ const DeckPlayPage = () => {
   const handleResult = () => {
     const rating = getAverageRating();
     setResult(rating);
+    if (result > 0 && result !== null) {
+      toast({
+        description: "You have already calculated your result",
+      });
+    }
   };
 
   const fetchDeck = async () => {
@@ -40,7 +46,6 @@ const DeckPlayPage = () => {
     }
     if (response.status === 200) {
       const data: Deck = response.data as Deck;
-      console.log(data);
       setDeck(data);
       for (let i = 0; i < data.flashcards.length; i++) {
         addRating(i, 0);
@@ -64,14 +69,14 @@ const DeckPlayPage = () => {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center text-center gap-8 max-w-3xl min-w-full md:min-w-[768px] mx-auto">
+    <div className="flex flex-col justify-center items-center text-center gap-8 max-w-3xl min-w-full md:min-w-[768px] mx-auto p-6">
       <DeckComponent
         id={deck.id}
         name={deck.name}
-        isPublic={deck.isPublic}
+        isPublic={deck.is_public}
         flashcards={deck.flashcards}
       />
-      <Button onClick={() => handleResult()} className="w-1/3">
+      <Button onClick={() => handleResult()} className="w-full md:w-1/3 mb-8">
         Get my result
       </Button>
       {result > 0 && result !== null && (

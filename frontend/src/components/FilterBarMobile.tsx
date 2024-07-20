@@ -16,10 +16,9 @@ const FilterBarMobile = ({ onSearch, board }: FilterMobileProps) => {
   };
 
   return (
-    <div>
+    <div className="px-4">
       <Button
         onClick={handleDisplay}
-        variant="secondary"
         className="flex items-center gap-1 w-full"
       >
         <Search size={16} /> Show filters

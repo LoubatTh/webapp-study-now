@@ -19,6 +19,7 @@ import Error404 from "./pages/errors/Error404";
 import PremiumPage from "./pages/PremiumPage";
 import ExplorePage from "./pages/ExplorerPage";
 import BoardOrganizationsPage from "./pages/BoardOrganizationsPage";
+import StatsPage from "./pages/StatsPage";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
@@ -38,8 +39,12 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <Route path="/deck/:deckId" element={<DeckPlayPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/organizations" element={<MyOrganizationsPage />} />
-            <Route path="/organizations/:organizationId" element={<BoardOrganizationsPage />} />
+            <Route
+              path="/organizations/:organizationId"
+              element={<BoardOrganizationsPage />}
+            />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/profile/statistics" element={<StatsPage />} />
             <Route path="/explore" element={<ExplorePage />} />
             <Route path="/premium" element={<PremiumPage />} />
             <Route path="*" element={<Error404 />} />

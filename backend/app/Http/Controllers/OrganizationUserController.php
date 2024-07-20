@@ -34,7 +34,8 @@ class OrganizationUserController
                     'id' => $owner['id'],
                     'name' => $owner['name'],
                 ],
-                'members' => $members
+                'members' => $members,
+                'members_count' => count($members),
             ]);
         } catch (\Exception $e) {
             return response()->json([

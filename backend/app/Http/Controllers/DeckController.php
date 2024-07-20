@@ -78,7 +78,7 @@ class DeckController extends Controller
     /**
      * Display one item of the resource.
      */
-    public function getDeckById(int $id, Request $request)
+    public function getDeckById(Request $request, int $id)
     {
         try {
             $deck = Deck::with("tag", "user", "flashcards")->find($id);
@@ -98,16 +98,42 @@ class DeckController extends Controller
                 }
             }
 
+            $response = [
+                'id' => $deck['id'],
+                'type' => $deck['type'],
+                'name' => $deck['name'],
+                'is_public' => $deck['is_public'],
+                'likes' => $deck['likes'],
+                'tag' => $deck['tag']['name'],
+                'owner' => $deck['user']['name'],
+                'is_liked' => $deck->getAttribute('is_liked'),
+                'flashcards' => $deck['flashcards']
+            ];
+
             if (!$user) {
                 $deck->setAttribute("is_liked", false);
             } else {
                 $userDeck = UserDeck::where(["user_id" => $user->id, "deck_id" => $deck->id])->first();
                 $deck->setAttribute("is_liked", $userDeck ? $userDeck->is_liked : false);
+                $ownedOrganizations = Organization::where('owner_id', $user->id)->get('id');
+
+                if (count($ownedOrganizations) > 0) {
+                    $relatedOrganizations = [];
+                    foreach ($ownedOrganizations as $organization) {
+                        $relatedDeck = OrganizationDeck::where('deck_id', $deck['id'])->where('organization_id', $organization['id'])->first();
+                        if ($relatedDeck) {
+                            array_push($relatedOrganizations, $organization['id']);
+                        }
+                    }
+
+                    $response['organizations'] = $relatedOrganizations;
+                }
             }
 
-            return response()->json(new DeckResource($deck), 200);
+            return response()->json($response, 200);
         } catch (\Exception $e) {
-            return response()->json(["error" => $e->getMessage()], 400);
+            return response($e);
+            // return response()->json(["error" => $e->getMessage()], 400);
         }
     }
 
@@ -130,7 +156,7 @@ class DeckController extends Controller
 
             if (isset($request['organizations'])) {
                 foreach ($request['organizations'] as $organization) {
-                    if (!Organization::where('id', $organization)->where('owner_id', $request->user()->first())) {
+                    if (!Organization::where('id', $organization)->where('owner_id', $request->user()->id)->first()) {
                         return response()->json([
                             'error' => 'Organization not found'
                         ], 404);
@@ -182,6 +208,31 @@ class DeckController extends Controller
 
             foreach ($request->flashcards as $flashcard) {
                 $flashcardController->createFlashcard($flashcard, $deck->id);
+            }
+
+
+            if (isset($request['organizations'])) {
+                $organizationDecks = OrganizationDeck::where('deck_id', $id)->pluck('organization_id')->toArray();
+                $orgToAdd = array_diff($request['organizations'], $organizationDecks);
+                $orgToRemove = array_diff($organizationDecks, $request['organizations']);
+
+                foreach ($orgToAdd as $organization) {
+                    if (!Organization::where('id', $organization)->where('owner_id', $request->user()->id)->first()) {
+                        return response()->json([
+                            'error' => 'Organization not found'
+                        ], 404);
+                    }
+
+                    OrganizationDeck::create([
+                        'deck_id' => $deck['id'],
+                        'organization_id' => $organization,
+                    ]);
+                }
+
+                foreach ($orgToRemove as $organization) {
+                    $orgDeckId = OrganizationDeck::where('organization_id', $organization)->where('deck_id', $id)->pluck('id')->first();
+                    OrganizationDeck::destroy($orgDeckId);
+                }
             }
 
             return response()->noContent();

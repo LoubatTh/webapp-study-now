@@ -46,7 +46,7 @@ class QuizController extends Controller
 
         if (isset($data['organizations'])) {
             foreach ($data['organizations'] as $organization) {
-                if (!Organization::where('id', $organization)->where('owner_id', $request->user()->first())) {
+                if (!Organization::where('id', $organization)->where('owner_id', $request->user()->id)->first()) {
                     return response()->json([
                         'error' => 'Organization not found'
                     ], 404);
@@ -115,25 +115,49 @@ class QuizController extends Controller
             }
         }
 
+        $response = [
+            'id' => $quiz['id'],
+            'type' => $quiz['type'],
+            'name' => $quiz['name'],
+            'is_public' => $quiz['is_public'],
+            'likes' => $quiz['likes'],
+            'tag' => $quiz['tag']['name'],
+            'owner' => $quiz['user']['name'],
+            'is_liked' => $quiz->getAttribute('is_liked'),
+            'qcms' => $quiz['qcms']
+        ];
+
         if (!$user) {
             $quiz->setAttribute("is_liked", false);
         } else {
             $userQuiz = UserQuiz::where(["user_id" => $user->id, "quiz_id" => $quiz->id])->first();
             $quiz->setAttribute("is_liked", $userQuiz ? $userQuiz->is_liked : false);
+            $ownedOrganizations = Organization::where('owner_id', $user->id)->get('id');
+    
+            if (count($ownedOrganizations) > 0) {
+                $relatedOrganizations = [];
+                foreach ($ownedOrganizations as $organization) {
+                    $relatedDeck = OrganizationQuiz::where('quiz_id', $quiz['id'])->where('organization_id', $organization['id'])->first();
+                    if ($relatedDeck) {
+                        array_push($relatedOrganizations, $organization['id']);
+                    }
+                }
+    
+                $response['organizations'] = $relatedOrganizations;
+            }
         }
 
-        return response()->json(new QuizResource($quiz), 200);
+        return response()->json($response, 200);
     }
-
 
     public function update(Request $request, string $id): JsonResponse
     {
-
         $user = $request->user();
-
         $data = $request->validate([
             'name' => 'required|string',
             'is_public' => 'boolean',
+            'organizations' => 'array',
+            'organizations.*' => 'integer',
             'tag_id' => 'integer',
             'qcms' => 'required|array',
             'qcms.*.question' => 'required|string',
@@ -141,7 +165,6 @@ class QuizController extends Controller
             'qcms.*.answers.*.answer' => 'required|string',
             'qcms.*.answers.*.isValid' => 'required|boolean',
         ]);
-
         $quiz = Quiz::find($id);
 
         if (!$quiz) {
@@ -157,7 +180,6 @@ class QuizController extends Controller
         $quiz->tag_id = $request->has("tag_id") ? $request->tag_id : $quiz->tag_id;
         $quiz->save();
 
-
         $quiz->qcms()->delete();
 
         foreach ($data["qcms"] as $qcmData) {
@@ -165,6 +187,30 @@ class QuizController extends Controller
                 'question' => $qcmData['question'],
                 'answers' => $qcmData['answers']
             ]);
+        }
+
+        if (isset($data['organizations'])) {
+            $organizationQuizzes = OrganizationQuiz::where('quiz_id', $id)->pluck('organization_id')->toArray();
+            $orgToAdd = array_diff($data['organizations'], $organizationQuizzes);
+            $orgToRemove = array_diff($organizationQuizzes, $data['organizations']);
+
+            foreach ($orgToAdd as $organization) {
+                if (!Organization::where('id', $organization)->where('owner_id', $request->user()->id)->first()) {
+                    return response()->json([
+                        'error' => 'Organization not found'
+                    ], 404);
+                }
+
+                OrganizationQuiz::create([
+                    'quiz_id' => $quiz['id'],
+                    'organization_id' => $organization,
+                ]);
+            }
+
+            foreach ($orgToRemove as $organization) {
+                $orgQuizId = OrganizationQuiz::where('organization_id', $organization)->where('quiz_id', $id)->pluck('id')->first();
+                OrganizationQuiz::destroy($orgQuizId);
+            }
         }
 
         return response()->json($quiz->load("qcms"), 200);

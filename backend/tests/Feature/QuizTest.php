@@ -2,10 +2,7 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\TestCase;
-use Illuminate\Testing\Fluent\AssertableJson;
 use App\Models\User;
 use App\Models\Quiz;
 use App\Models\Tag;

@@ -76,8 +76,8 @@ class AllItemsController extends Controller
                 if ($tags->count() > 0) {
                     $tag_ids = $tags->pluck("id");
 
-                    $decks = $decks->where("tag_id", $tag_ids);
-                    $quizzes = $quizzes->where("tag_id", $tag_ids);
+                    $decks = $decks->wherein("tag_id", $tag_ids);
+                    $quizzes = $quizzes->wherein("tag_id", $tag_ids);
                     \Log::info("Test1: ", ["decks", $decks->count()]);
                 } else {
                     $decks = $decks->where("tag_id", 0);
@@ -87,14 +87,15 @@ class AllItemsController extends Controller
 
             if ($isSearchOwner) {
                 $search = $request->input("owner");
+
                 $searchTerm = "%{$search}%";
 
                 $users = User::where("name", "ILIKE", $searchTerm);
                 if ($users->count() > 0) {
                     $user_ids = $users->pluck("id");
 
-                    $decks = $decks->where("user_id", $user_ids);
-                    $quizzes = $quizzes->where("user_id", $user_ids);
+                    $decks = $decks->wherein("user_id", $user_ids);
+                    $quizzes = $quizzes->wherein("user_id", $user_ids);
                 } else {
                     $decks = $decks->where("user_id", 0);
                     $quizzes = $quizzes->where("user_id", 0);

@@ -16,7 +16,7 @@ class OrganizationQuizController
      */
     public function index(Request $request, int $id)
     {
-        $quizzes = OrganizationQuiz::with('quiz')->where('organization_id', $id)->get();
+        $quizzes = OrganizationQuiz::with('quiz', 'quiz.qcms', 'quiz.tag', 'quiz.user')->where('organization_id', $id)->get();
 
         return response()->json(OrganizationQuizResource::collection($quizzes));
     }
@@ -89,7 +89,7 @@ class OrganizationQuizController
      */
     public function show(Request $request, int $id, int $quizId)
     {
-        $organizationQuiz = OrganizationQuiz::with('quiz.qcms')
+        $organizationQuiz = OrganizationQuiz::with('quiz', 'quiz.qcms', 'quiz.tag', 'quiz.user')
             ->where('organization_id', $id)
             ->where('quiz_id', $quizId)
             ->first();

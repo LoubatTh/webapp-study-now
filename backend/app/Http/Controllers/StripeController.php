@@ -70,4 +70,28 @@ class StripeController extends Controller
             'message' => 'Subscription resumed'
         ]);
     }
+
+
+    /**
+     * Get use subscription infos.
+     */
+    public function show(Request $request)
+    {
+        $user = $request->user();
+
+        if (!$user->subscribed('default')) {
+            return response()->json([
+                'is_subscribed' => false,
+            ]);
+        }
+
+        $subscription = $user->subscription('default');
+
+        return response()->json([
+            'is_subscribed' => true,
+            'on_grace_period' => $subscription->onGracePeriod(),
+            'ends_at' => $subscription->ends_at,
+            'next_payment' => $subscription->asStripeSubscription()->current_period_end,
+        ]);
+    }
 }

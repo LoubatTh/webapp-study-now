@@ -53,8 +53,8 @@ class UserDeckResultController extends Controller
 
         $userDeckResults = UserDeckResults::where('user_deck_id', $userDeck->id)->latest()->get();
         [$repetition, $easinessFactor, $interval] = count($userDeckResults) > 0
-            ? $statsController->sm2($request['grade'], $userDeckResults[0]['repetition'], $userDeckResults[0]['easiness_factor'], $userDeckResults[0]['interval'])
-            : $statsController->sm2($request['grade']);
+            ? $statsController->sm2($request['grade'], 5, $userDeckResults[0]['repetition'], $userDeckResults[0]['easiness_factor'], $userDeckResults[0]['interval'])
+            : $statsController->sm2($request['grade'], 5);
 
         UserDeckResults::create([
             'user_deck_id' => $userDeck->id,

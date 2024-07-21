@@ -23,7 +23,7 @@ class StoreUserDeckResultRequest extends FormRequest
     {
         return [
             'deck_id' => 'required|int',
-            'grade' => 'required|int|max:5|min:0',
+            'grade' => 'required|numeric|max:5|min:0',
         ];
     }
 }

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('user_deck_results', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_deck_id');
-            $table->integer('grade');
+            $table->float('grade');
             $table->float('easiness_factor');
             $table->integer('interval');
             $table->integer('repetition');

@@ -19,7 +19,7 @@ class UserDeckResults extends Model
 
     protected $casts = [
         'user_deck_id' => 'int',
-        'grade' => 'int',
+        'grade' => 'float',
         'interval' => 'int',
         'easiness_factor' => 'float',
         'repetition' => 'int',

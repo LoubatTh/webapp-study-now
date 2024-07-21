@@ -9,9 +9,11 @@ class StatsController extends Controller
     /**
      * Algorithm: https://en.wikipedia.org/wiki/SuperMemo#Algorithms
      */
-    public function sm2(int $grade, int $repetition = 0, float $easiness = 2.5, int $interval = 1)
+    public function sm2(int $grade, int $maxGrade = 5, int $repetition = 0, float $easiness = 2.5, int $interval = 1)
     {
-        if ($grade >= 3) {
+        $percentGrade = $grade / $maxGrade * 100;
+
+        if ($percentGrade >= 60) {
             switch ($repetition) {
                 case 0:
                     $interval = 1;

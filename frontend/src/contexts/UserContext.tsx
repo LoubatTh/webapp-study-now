@@ -25,6 +25,7 @@ const defaultState = {
   updated_at: "",
   setUser: () => {},
   clearUser: () => {},
+  refreshUser: () => {},
 };
 
 /*
@@ -44,19 +45,18 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserContextType>(defaultState);
   const { accessToken, isReady, setToken, logout } = useAuth();
 
+  const fetchUser = async () => {
+    if (accessToken) {
+      const response = await fetchApi("GET", "user", null, accessToken);
+
+      const data = await response.data;
+      handleSetUser(data as UserContextType);
+    }
+  };
   /*
     useEffect permettant de récupérer les informations de l'utilisateur
     */
   useEffect(() => {
-    const fetchUser = async () => {
-      if (accessToken) {
-        const response = await fetchApi("GET", "user", null, accessToken);
-
-        const data = await response.data;
-        handleSetUser(data as UserContextType);
-      }
-    };
-
     fetchUser();
   }, [isReady, setToken]);
 
@@ -81,5 +81,20 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     setUser({ ...defaultState });
   };
 
-  return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
+  const refreshUser = async () => {
+    await fetchUser();
+  };
+
+  return (
+    <UserContext.Provider
+      value={{
+        ...user,
+        setUser: handleSetUser,
+        clearUser: handleClearUser,
+        refreshUser,
+      }}
+    >
+      {children}
+    </UserContext.Provider>
+  );
 };

@@ -7,4 +7,7 @@ export type UserContextType = {
   email_verified_at: string | null;
   created_at: string;
   updated_at: string;
+  setUser: (user: UserContextType) => void;
+  clearUser: () => void;
+  refreshUser: () => void;
 };

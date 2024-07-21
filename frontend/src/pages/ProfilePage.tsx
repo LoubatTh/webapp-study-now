@@ -17,12 +17,15 @@ import { motion } from "framer-motion";
 import { EditFormSchema } from "@/lib/form/edit.form";
 import { log } from "console";
 import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
+import { getFormattedDate, parseISODateToMilis } from "@/utils/dateparser";
 
 const ProfilePage = () => {
 
-    const { id, name, email, is_subscribed } = useUser();
+    const { id, name, email, is_subscribed, refreshUser } = useUser();
     const { accessToken } = useAuth();
     const { toast } = useToast();
+    const navigate = useNavigate();
 
     const editForm = useForm({
       resolver: zodResolver(EditFormSchema),
@@ -32,6 +35,53 @@ const ProfilePage = () => {
         newPassword: "",
       },
     });
+
+    const handleNavigation = (path) => {
+      navigate(path);
+    }
+
+    const cancelSubscription = async () => {
+      
+      const response = await fetchApi("POST", "stripe/cancel", null, accessToken);
+      const status = await response.status;
+      const data = await response.data;
+
+      if(status == 200){
+        toast({
+          title: data.message,
+          description: "Will end at " + getFormattedDate(data.ends_at),
+          className: "bg-green-400",
+        });
+      } else {
+        const errorMessage = await response.error;
+        toast({
+          title: "Error",
+          description: errorMessage,
+          variant: "destructive",
+        });
+      }
+
+    }
+
+    const resumeSubscription = async () => {
+      const response = await fetchApi("POST", "stripe/resume", null, accessToken);
+      const status = await response.status;
+      const data = await response.data;
+
+      if(status == 200){
+        toast({
+          title: data.message,
+          className: "bg-green-400",
+        });
+      } else {
+        const errorMessage = await response.error;
+        toast({
+          title: "Error",
+          description: errorMessage,
+          variant: "destructive",
+        });
+    }
+  }
 
     const onChangeSaved = async (values) => {
 
@@ -51,6 +101,7 @@ const ProfilePage = () => {
           description: "Your profile has been updated",
           className: "bg-green-400",
         })
+        refreshUser();
       } else {
         const errorMessage = await response.error;
         toast({
@@ -95,8 +146,10 @@ return (
           <div className="flex items-center mt-2">
             {is_subscribed ? (
               <>
-                <StarsIcon className="text-green-500" />
-                <span className="ml-2 text-gray-800">Premium User</span>
+                <StarsIcon className="text-blue-500" />
+                <span className="ml-2 text-blue-500 font-bold">
+                  Premium User
+                </span>
               </>
             ) : (
               <>
@@ -176,11 +229,40 @@ return (
         </TabsContent>
         <TabsContent value="subscription">
           <>
-            <div className="bg-white rounded-lg shadow-lg p-8">
+            <div className="bg-white rounded-lg shadow-lg p-8 h-full">
               <h1 className="text-xl font-semibold mb-2">
                 Manage subscription
               </h1>
-              <p></p>
+              {!is_subscribed ? (
+                <div className="flex flex-col gap-4">
+                  <p className="text-gray-800">
+                    You are currently using the free version of our app. To
+                    unlock all the features, you can subscribe to our premium
+                    plan.
+                  </p>
+                  <Button onClick={() => handleNavigation("/premium")}>
+                    Subscribe
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <div className="flex flex-col gap-4">
+                    <p className="text-gray-800">
+                      You are currently subscribed to our premium plan. You can
+                      cancel your subscription at any time.
+                    </p>
+                    <Button onClick={cancelSubscription}>
+                      Cancel Subscription
+                    </Button>
+                    <p className="text-gray-800">
+                      You can also resume your subscription at any time.
+                    </p>
+                    <Button onClick={resumeSubscription}>
+                      Resume Subscription
+                    </Button>
+                  </div>
+                </>
+              )}
             </div>
           </>
         </TabsContent>

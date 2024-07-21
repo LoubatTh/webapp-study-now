@@ -3,18 +3,29 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Exceptions\MathException;
 
 class StatsController extends Controller
 {
-    public function updateStatsUser(float $userGrade, int $repetition, float $easiness, int $interval)
+    /**
+     * Algorithm: https://en.wikipedia.org/wiki/SuperMemo#Algorithms
+     */
+    public function sm2(int $grade, int $maxGrade = 5, int $repetition = 0, float $easiness = 2.5, int $interval = 1)
     {
-        if ($userGrade >= 3) {
-            if ($repetition == 0) {
-                $interval = 1;
-            } else if ($repetition == 1) {
-                $interval = 6;
-            } else {
-                round($interval * $easiness);
+        throw_if($grade > $maxGrade, new MathException("grade should be smaller or equals to max_grade"));
+        $percentGrade = $grade / $maxGrade * 100;
+
+        if ($percentGrade >= 60) {
+            switch ($repetition) {
+                case 0:
+                    $interval = 1;
+                    break;
+                case 1:
+                    $interval = 6;
+                    break;
+                default:
+                    round($interval * $easiness);
+                    break;
             }
 
             $repetition++;
@@ -23,7 +34,7 @@ class StatsController extends Controller
             $interval = 1;
         }
 
-        $easiness = $easiness + (0.1 - (5 - $userGrade) * (0.08 + (5 - $userGrade) * 0.02));
+        $easiness += 0.1 - ((100 - $percentGrade) / 20) * (0.08 + ((100 - $percentGrade) / 20) * 0.02);
         if ($easiness < 1.3) {
             $easiness = 1.3;
         }

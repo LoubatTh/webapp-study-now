@@ -14,12 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('user_id');
             $table->foreignId('quiz_id');
-            $table->float('easiness_factor');
-            $table->integer('repetition');
-            $table->integer('interval');
-            $table->datetime('date');
-            $table->float('user_grade')->nullable();
-            $table->float('prev_user_grade')->nullable();
+            $table->date('next_repetition')->nullable();
             $table->boolean('is_liked');
             $table->timestamps();
 

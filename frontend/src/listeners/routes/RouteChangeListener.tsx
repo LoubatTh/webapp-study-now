@@ -3,9 +3,17 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 
 /*
-Mettre ici toutes les routes que l'on souhaite exclure de la vérification d'authentification
+  Define all routes that should be excluded from authentication check
 */
-const excludedRoutes = ["/", "/login", "/explore"];
+const excludedRoutes = [
+  "/",
+  "/login",
+  "/explore",
+  /^\/deck\/\d+$/,
+  /^\/deck\/\d+\/result$/,
+  /^\/quizz\/\d+$/,
+  /^\/quizz\/\d+\/result$/,
+];
 
 const RouteChangeListener = () => {
   const location = useLocation();
@@ -14,23 +22,24 @@ const RouteChangeListener = () => {
 
   useEffect(() => {
     const verifyAccess = async () => {
-      /*
-       Attendre que le AuthContext soit initialisé avant de vérifier l'accès
-        */
+      // Wait for AuthContext to be initialized before verifying access
       if (!isReady) return;
 
-      /*
-          Si cette page ne nécessite pas d'authentification alors on ne fait rien
-          */
-      if (excludedRoutes.includes(location.pathname)) {
+      // Check if the current route matches any of the excluded routes
+      const isExcludedRoute = excludedRoutes.some((route) =>
+        route instanceof RegExp
+          ? route.test(location.pathname)
+          : route === location.pathname
+      );
+
+      // If this page does not require authentication, do nothing
+      if (isExcludedRoute) {
         return;
       }
 
       const tokenIsValid = await checkToken();
 
-      /*
-          Si le token n'est plus valide alors on redirige vers la page de login
-          */
+      // If the token is no longer valid, redirect to the login page
       if (!tokenIsValid) {
         logout();
         navigate("/login");

@@ -50,6 +50,7 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
   const [size, setSize] = useState<number>(0);
   const cards = type === "Quiz" ? "quizz" : "deck";
   const itemLabel = type === "Quiz" ? "qcms" : "flashcards";
+
   const handleClick = () => {
     navigate(`/${cards}/${id}`);
   };

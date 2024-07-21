@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\OrganizationInviteRequest;
+use App\Http\Resources\OrganizationInvitationResource;
 use App\Models\Organization;
 use App\Models\OrganizationInvitation;
 use App\Models\User;
@@ -61,6 +62,12 @@ class OrganizationUserController
         if ($organization->users()->where('user_id', $member['id'])->exists()) {
             return response()->json([
                 'message' => 'User already in organization'
+            ], 400);
+        }
+
+        if (OrganizationInvitation::where('user_id', $member['id'])->where('organization_id', $id)->first()) {
+            return response()->json([
+                'error' => 'User already invited to the organization',
             ], 400);
         }
 
@@ -128,6 +135,6 @@ class OrganizationUserController
     {
         $invitations = OrganizationInvitation::where('user_id', $request->user()['id'])->get();
 
-        return response()->json($invitations);
+        return response()->json(OrganizationInvitationResource::collection($invitations));
     }
 }

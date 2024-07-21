@@ -7,6 +7,7 @@ use App\Models\Organization;
 use App\Models\OrganizationDeck;
 use App\Models\OrganizationQuiz;
 use App\Models\Quiz;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -53,6 +54,7 @@ class UserController extends Controller
                 'created_at' => $organization['created_at'],
                 'updated_at' => $organization['updated_at'],
                 'owner_id' => $organization['owner_id'],
+                'owner' => $user->name,
                 'tags' => $this->getOrganizationTags($organization['id']),
             ];
             
@@ -67,6 +69,7 @@ class UserController extends Controller
                 'created_at' => $organization['created_at'],
                 'updated_at' => $organization['updated_at'],
                 'owner_id' => $organization['owner_id'],
+                'owner' => User::find($organization['owner_id'])->name,
                 'tags' => $this->getOrganizationTags($organization['id']),
             ];
 

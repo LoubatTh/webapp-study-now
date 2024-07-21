@@ -5,13 +5,7 @@ import { fetchApi } from "@/utils/api";
 import { motion } from "framer-motion";
 import FilterBar from "@/components/FilterBar";
 import FilterBarMobile from "@/components/FilterBarMobile";
-import { Button } from "@/components/ui/button";
-import {
-  ChevronFirst,
-  ChevronLeft,
-  ChevronRight,
-  ChevronLast,
-} from "lucide-react";
+import Pagination from "@/components/tools/Pagination";
 
 const cardVariants = {
   initial: { opacity: 0, y: 50 },
@@ -27,6 +21,7 @@ const getAllCards = async (
   pageSelected = 1,
   queryString = ""
 ) => {
+  console.log(queryString);
   const response = await fetchApi(
     "GET",
     `all?me&page=${pageSelected}${queryString ? `&${queryString}` : ""}`,
@@ -42,19 +37,10 @@ const BoardPage = () => {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-
-  const buildQueryString = (params) => {
-    return Object.keys(params)
-      .filter((key) => params[key])
-      .map(
-        (key) => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`
-      )
-      .join("&");
-  };
+  const [searchValues, setSearchValues] = useState(null);
 
   const getAll = async (page = 1, searchValues = null) => {
-    const queryString = searchValues ? buildQueryString(searchValues) : "";
-    const response = await getAllCards(accessToken, page, queryString);
+    const response = await getAllCards(accessToken, page, searchValues);
     if (response.status === 200) {
       const { data: cards, meta } = response.data;
       setTotalPages(meta.last_page);
@@ -69,10 +55,11 @@ const BoardPage = () => {
 
   const handlePageChange = (newPage) => {
     setPage(newPage);
-    getAll(newPage);
+    getAll(newPage, searchValues);
   };
 
   const handleSearch = (searchValues) => {
+    setSearchValues(searchValues);
     getAll(1, searchValues); // Reset to first page when performing a new search
   };
 
@@ -125,43 +112,11 @@ const BoardPage = () => {
           </>
         )}
       </motion.div>
-      <div className="flex gap-2 md:mx-auto md:w-auto items-center my-6 w-full">
-        <div className="flex items-center">
-          <Button
-            disabled={page <= 1}
-            variant="ghost"
-            onClick={() => handlePageChange(1)}
-          >
-            <ChevronFirst />
-          </Button>
-          <Button
-            disabled={page <= 1}
-            variant="ghost"
-            onClick={() => handlePageChange(page - 1)}
-          >
-            <ChevronLeft />
-          </Button>
-        </div>
-        <div className="md:min-w-20 flex-auto text-center">
-          {page} / {totalPages}
-        </div>
-        <div className="flex items-center">
-          <Button
-            disabled={page >= totalPages}
-            variant="ghost"
-            onClick={() => handlePageChange(page + 1)}
-          >
-            <ChevronRight />
-          </Button>
-          <Button
-            disabled={page >= totalPages}
-            variant="ghost"
-            onClick={() => handlePageChange(totalPages)}
-          >
-            <ChevronLast />
-          </Button>
-        </div>
-      </div>
+      <Pagination
+        page={page}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </>
   );
 };

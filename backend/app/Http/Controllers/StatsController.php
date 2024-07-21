@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Exceptions\MathException;
 
 class StatsController extends Controller
 {
@@ -11,6 +12,7 @@ class StatsController extends Controller
      */
     public function sm2(int $grade, int $maxGrade = 5, int $repetition = 0, float $easiness = 2.5, int $interval = 1)
     {
+        throw_if($grade > $maxGrade, new MathException("grade should be smaller or equals to max_grade"));
         $percentGrade = $grade / $maxGrade * 100;
 
         if ($percentGrade >= 60) {
@@ -32,7 +34,7 @@ class StatsController extends Controller
             $interval = 1;
         }
 
-        $easiness += 0.1 - (5 - $grade) * (0.08 + (5 - $grade) * 0.02);
+        $easiness += 0.1 - ((100 - $percentGrade) / 20) * (0.08 + ((100 - $percentGrade) / 20) * 0.02);
         if ($easiness < 1.3) {
             $easiness = 1.3;
         }

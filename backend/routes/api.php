@@ -15,6 +15,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserDeckController;
 use App\Http\Controllers\UserDeckResultController;
 use App\Http\Controllers\UserQuizController;
+use App\Http\Controllers\UserQuizResultsController;
 use App\Http\Middleware\EnsureIsOrganizationMember;
 use App\Http\Middleware\EnsureIsOrganizationOwner;
 use App\Http\Middleware\EnsureOrganizationExist;
@@ -86,18 +87,15 @@ Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->valu
         });
     });
 
-    // UserDeckResult routes
-    Route::get('decks/results', [UserDeckResultController::class, 'index']);
-    Route::get('decks/{id}/results', [UserDeckResultController::class, 'show']);
-    Route::post('decks/results', [UserDeckResultController::class, 'store']);
-
     // Deck routes
     Route::post('decks', [DeckController::class, "createDeck"]);
     Route::get('decks/likes', [UserDeckController::class, 'getLikedDecks']);
     Route::put('decks/{id}', [DeckController::class, "updateDeckById"]);
     Route::delete('decks/{id}', [DeckController::class, "deleteDeckById"]);
     Route::put('decks/{id}/like', [UserDeckController::class, 'likeOrDislikeDeckById']);
-    // Route::put('decks/{id}/grade', [UserDeckController::class, 'saveGradeDeckById']);
+    Route::get('decks/results', [UserDeckResultController::class, 'index']);
+    Route::get('decks/{id}/results', [UserDeckResultController::class, 'show']);
+    Route::post('decks/results', [UserDeckResultController::class, 'store']);
 
     // Quiz routes
     Route::post('quizzes', [QuizController::class, 'store']);
@@ -105,7 +103,9 @@ Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->valu
     Route::put('quizzes/{id}', [QuizController::class, 'update']);
     Route::delete('quizzes/{id}', [QuizController::class, 'destroy']);
     Route::put('quizzes/{id}/like', [UserQuizController::class, 'likeOrDislikeQuizById']);
-    Route::put('quizzes/{id}/grade', [UserQuizController::class, 'saveGradeQuizById']);
+    Route::get('quizzes/results', [UserQuizResultsController::class, 'index']);
+    Route::get('quizzes/{id}/results', [UserQuizResultsController::class, 'show']);
+    Route::post('quizzes/results', [UserQuizResultsController::class, 'store']);
 });
 
 // Quiz routes

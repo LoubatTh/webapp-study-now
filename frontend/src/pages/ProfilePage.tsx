@@ -108,165 +108,164 @@ const ProfilePage = () => {
     }
   };
 
-  return (
-    <div className="flex justify-center items-center w-full min-h-screen">
-      <div className="flex flex-row gap-4 w-3/4 max-w-5xl">
-        {/* Profile  */}
-        <div className="bg-white shadow-lg rounded-lg backdrop-blur-xl p-6 w-1/3 h-96">
-          <div className="flex justify-center ">
-            <img
-              className="w-24 h-24 rounded-full"
-              src="https://picsum.photos/200/300"
-              alt="Profile"
-            />
+return (
+  <div className="flex justify-center items-center w-full min-h-screen">
+    <div className="flex flex-col md:flex-row gap-4 w-3/4 max-w-5xl">
+      {/* Profile */}
+      <div className="bg-white shadow-lg rounded-lg backdrop-blur-xl p-6 w-full md:w-1/3 h-96">
+        <div className="flex justify-center">
+          <img
+            className="w-24 h-24 rounded-full"
+            src="https://picsum.photos/200/300"
+            alt="Profile"
+          />
+        </div>
+        <div className="text-center mt-3 border-b-2 pb-4">
+          <h2 className="text-xl font-semibold">{name}</h2>
+          <p className="text-gray-600">Student</p>
+        </div>
+        <div className="flex flex-col gap-2 mt-3">
+          <div className="flex items-center mt-2">
+            <User className="text-gray-600" />
+            <span className="ml-2 text-gray-800">{name}</span>
           </div>
-          <div className="text-center mt-3 border-b-2 pb-4">
-            <h2 className="text-xl font-semibold">{name}</h2>
-            <p className="text-gray-600">Student</p>
+          <div className="flex items-center mt-2">
+            <Mail className="text-gray-600" />
+            <span className="ml-2 text-gray-800">{email}</span>
           </div>
-          <div className="flex flex-col gap-2 mt-3">
-            <div className="flex items-center mt-2">
-              <User className="text-gray-600" />
-              <span className="ml-2 text-gray-800">{name}</span>
-            </div>
-            <div className="flex items-center mt-2">
-              <Mail className="text-gray-600" />
-              <span className="ml-2 text-gray-800">{email}</span>
-            </div>
-            <div className="flex items-center mt-2">
-              <Phone className=" text-gray-600" />
-              <span className="ml-2 text-gray-800">+330000000</span>
-            </div>
-            <div className="flex items-center mt-2">
-              {is_subscribed ? (
-                <>
-                  <StarsIcon className="text-blue-500" />
-                  <span className="ml-2 text-blue-500 font-bold">
-                    Premium User
-                  </span>
-                </>
+          <div className="flex items-center mt-2">
+            <Phone className=" text-gray-600" />
+            <span className="ml-2 text-gray-800">+330000000</span>
+          </div>
+          <div className="flex items-center mt-2">
+            {is_subscribed ? (
+              <>
+                <StarsIcon className="text-blue-500" />
+                <span className="ml-2 text-blue-500 font-bold">
+                  Premium User
+                </span>
+              </>
+            ) : (
+              <>
+                <XCircle className="text-red-500" />
+                <span className="ml-2 text-gray-800">Free User</span>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+      <Tabs defaultValue="account" className="w-full md:w-2/3">
+        <TabsList>
+          <TabsTrigger value="account">Account</TabsTrigger>
+          <TabsTrigger value="subscription">Subscription</TabsTrigger>
+        </TabsList>
+        <TabsContent value="account">
+          <div className="bg-white rounded-lg p-8 shadow-lg">
+            <h1 className="flex gap-2 items-center text-xl font-semibold mb-2 border-b-2 pb-3">
+              <User /> Edit profile
+            </h1>
+            <Form {...editForm}>
+              <form
+                onSubmit={editForm.handleSubmit(onChangeSaved)}
+                className="grid grid-cols-1 md:grid-cols-2 gap-4"
+              >
+                <FormField
+                  control={editForm.control}
+                  name="username"
+                  render={({ field }) => (
+                    <FormItem className="col-span-2">
+                      <FormLabel>New username</FormLabel>
+                      <FormControl>
+                        <Input placeholder={name} {...field} />
+                      </FormControl>
+                      <FormMessage className="min-h-6" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={editForm.control}
+                  name="oldPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Old Password</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="password"
+                          placeholder="********"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="min-h-6" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={editForm.control}
+                  name="newPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>New Password</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="password"
+                          placeholder="********"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="min-h-6" />
+                    </FormItem>
+                  )}
+                />
+                <div className="flex items-end col-span-2">
+                  <Button type="submit">Save Changes</Button>
+                </div>
+              </form>
+            </Form>
+          </div>
+        </TabsContent>
+        <TabsContent value="subscription">
+          <>
+            <div className="bg-white rounded-lg shadow-lg p-8 h-full">
+              <h1 className="flex gap-2 items-center text-xl font-semibold mb-2 border-b-2 pb-3">
+                <StarsIcon /> Manage subscription
+              </h1>
+              {!is_subscribed ? (
+                <div className="flex flex-col gap-4">
+                  <p className="text-gray-800">
+                    You are currently using the free version of our app. To
+                    unlock all the features, you can subscribe to our premium
+                    plan.
+                  </p>
+                  <Button onClick={() => handleNavigation("/premium")}>
+                    Subscribe
+                  </Button>
+                </div>
               ) : (
                 <>
-                  <XCircle className="text-red-500" />
-                  <span className="ml-2 text-gray-800">Free User</span>
+                  <div className="flex flex-col gap-4">
+                    <p className="text-gray-800">
+                      You are currently subscribed to our premium plan. You can
+                      cancel your subscription at any time.
+                    </p>
+                    <Button onClick={cancelSubscription}>
+                      Cancel Subscription
+                    </Button>
+                    <p className="text-gray-800">
+                      You can also resume your subscription at any time.
+                    </p>
+                    <Button onClick={resumeSubscription}>
+                      Resume Subscription
+                    </Button>
+                  </div>
                 </>
               )}
             </div>
-          </div>
-        </div>
-        <Tabs defaultValue="account" className="w-2/3">
-          <TabsList>
-            <TabsTrigger value="account">Account</TabsTrigger>
-            <TabsTrigger value="subscription">Subscription</TabsTrigger>
-          </TabsList>
-          <TabsContent value="account">
-            <div className="bg-white rounded-lg p-8 shadow-lg">
-              <h1 className="flex gap-2 items-center text-xl font-semibold mb-2 border-b-2 pb-3">
-                {" "}
-                <User /> Edit profile{" "}
-              </h1>
-              <Form {...editForm}>
-                <form
-                  onSubmit={editForm.handleSubmit(onChangeSaved)}
-                  className="grid grid-cols-2 gap-4"
-                >
-                  <FormField
-                    control={editForm.control}
-                    name="username"
-                    render={({ field }) => (
-                      <FormItem className="col-span-2">
-                        <FormLabel>New username</FormLabel>
-                        <FormControl>
-                          <Input placeholder={name} {...field} />
-                        </FormControl>
-                        <FormMessage className="min-h-6" />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={editForm.control}
-                    name="oldPassword"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Old Password</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="password"
-                            placeholder="********"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage className="min-h-6" />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={editForm.control}
-                    name="newPassword"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>New Password</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="password"
-                            placeholder="********"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage className="min-h-6" />
-                      </FormItem>
-                    )}
-                  />
-                  <div className="flex items-end col-span-2">
-                    <Button type="submit">Save Changes</Button>
-                  </div>
-                </form>
-              </Form>
-            </div>
-          </TabsContent>
-          <TabsContent value="subscription">
-            <>
-              <div className="bg-white rounded-lg shadow-lg p-8 h-full">
-                <h1 className="flex gap-2 items-center text-xl font-semibold mb-2 border-b-2 pb-3">
-                  <StarsIcon /> Manage subscription
-                </h1>
-                {!is_subscribed ? (
-                  <div className="flex flex-col gap-4">
-                    <p className="text-gray-800">
-                      You are currently using the free version of our app. To
-                      unlock all the features, you can subscribe to our premium
-                      plan.
-                    </p>
-                    <Button onClick={() => handleNavigation("/premium")}>
-                      Subscribe
-                    </Button>
-                  </div>
-                ) : (
-                  <>
-                    <div className="flex flex-col gap-4">
-                      <p className="text-gray-800">
-                        You are currently subscribed to our premium plan. You
-                        can cancel your subscription at any time.
-                      </p>
-                      <Button onClick={cancelSubscription}>
-                        Cancel Subscription
-                      </Button>
-                      <p className="text-gray-800">
-                        You can also resume your subscription at any time.
-                      </p>
-                      <Button onClick={resumeSubscription}>
-                        Resume Subscription
-                      </Button>
-                    </div>
-                  </>
-                )}
-              </div>
-            </>
-          </TabsContent>
-        </Tabs>
-      </div>
+          </>
+        </TabsContent>
+      </Tabs>
     </div>
-  );
+  </div>
+);
 };
 
 export default ProfilePage;

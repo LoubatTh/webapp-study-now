@@ -12,25 +12,15 @@ class UserDeck extends Model
     protected $fillable = [
         'user_id',
         'deck_id',
-        'easiness_factor',
-        'repetition',
-        'interval',
-        'date',
-        'user_grade',
-        'prev_user_grade',
         'is_liked',
+        'next_repetition',
     ];
 
     protected $casts = [
         'user_id' => 'integer',
         'deck_id' => 'integer',
-        'easiness_factor' => 'float',
-        'repetition' => 'integer',
-        'interval' => 'integer',
-        'date' => 'datetime',
-        'user_grade' => 'float',
-        'prev_user_grade' => 'float',
         'is_liked' => 'boolean',
+        'next_repetition' => 'date',
     ];
 
     public function user()
@@ -41,5 +31,10 @@ class UserDeck extends Model
     public function deck()
     {
         return $this->belongsTo(Deck::class);
+    }
+
+    public function results()
+    {
+        return $this->hasMany(UserDeckResults::class);
     }
 }

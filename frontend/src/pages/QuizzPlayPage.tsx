@@ -4,11 +4,14 @@ import QuestionQCM from "@/components/quizz/QuestionQCM";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { answerSchema } from "@/lib/form/answer.form";
+import useStore from "@/lib/stores/resultStore";
 import { fetchApi } from "@/utils/api";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const QuizzPlayPage = () => {
+  const navigate = useNavigate();
+  const { setScore, setMaxScore } = useStore();
   // Permet de s'assurer que aucune action nécessitant l'authentification ne soit effectuée avant que le système soit initialisé
   const { isReady, accessToken } = useAuth();
   // Permet de récupérer l'identifiant du quizz passé en paramètre dans l'URL
@@ -33,6 +36,8 @@ const QuizzPlayPage = () => {
   const [isNotFound, setIsNotFound] = useState<boolean>(false);
   // Permet de stocker l'état de la soumission du formulaire
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [finalScore, setFinalScore] = useState<number>(0);
+  const [isQuizzOver, setIsQuizzOver] = useState<boolean>(false);
 
   /*
   Ce UseEffect permet de premièrement vérifier si l'utilisateur est prêt à 
@@ -152,7 +157,6 @@ const QuizzPlayPage = () => {
         userAnswers.length === correctAnswers.length;
 
       newAnsweredCorrectly[qcm.id] = isCorrect;
-
       return {
         question: qcm.question,
         isCorrect,
@@ -162,8 +166,14 @@ const QuizzPlayPage = () => {
     calcFinalResult(correctAnswers);
     setAnsweredCorrectly(newAnsweredCorrectly);
     setIsSubmitting(true);
+    setFinalScore(correctAnswers);
+    setIsQuizzOver(true);
+  };
 
-    console.log(correctAnswers);
+  const checkResultHandler = () => {
+    setScore(finalScore);
+    setMaxScore(quizz.qcms.length);
+    navigate(`/quizz/${quizzId}/result`);
   };
 
   if (isNotFound) {
@@ -199,16 +209,23 @@ const QuizzPlayPage = () => {
               </div>
             ))}
             <div className="flex flex-col items-center gap-2 m-3">
-              <Button
-                className="w-1/2"
-                onClick={handleSubmit}
-                variant="default"
-              >
-                Valider
-              </Button>
-              <p className="">
-                Vous avez eu {correctPercentage}% de bonnes réponses
-              </p>
+              {isQuizzOver ? (
+                <Button
+                  className="w-1/2"
+                  onClick={checkResultHandler}
+                  variant="default"
+                >
+                  Check result
+                </Button>
+              ) : (
+                <Button
+                  className="w-1/2"
+                  onClick={handleSubmit}
+                  variant="default"
+                >
+                  Validate
+                </Button>
+              )}
             </div>
           </div>
         ) : (

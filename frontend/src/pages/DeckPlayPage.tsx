@@ -1,11 +1,10 @@
 import DeckComponent from "@/components/deck/DeckComponent";
 import { Button } from "@/components/ui/button";
-import { toast } from "@/components/ui/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import useFlashcardStore from "@/lib/stores/flashcardStore";
+import useStore from "@/lib/stores/resultStore";
 import { Deck } from "@/types/deck.type";
 import { fetchApi } from "@/utils/api";
-import { Rating, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -15,21 +14,18 @@ const getDeck = async (deckId: string, accessToken?: string) => {
 };
 
 const DeckPlayPage = () => {
-  const { accessToken } = useAuth();
   const navigate = useNavigate();
+  const { accessToken } = useAuth();
+  const { setScore, setMaxScore } = useStore();
   const { addRating, getAverageRating } = useFlashcardStore();
   const { deckId } = useParams<{ deckId: string }>();
   const [deck, setDeck] = useState<Deck | null>(null);
-  const [result, setResult] = useState<number | null>(null);
 
   const handleResult = () => {
     const rating = getAverageRating();
-    setResult(rating);
-    if (result > 0 && result !== null) {
-      toast({
-        description: "You have already calculated your result",
-      });
-    }
+    setScore(rating ? rating : 0);
+    setMaxScore(5);
+    navigate(`/deck/${deckId}/result`);
   };
 
   const fetchDeck = async () => {
@@ -38,7 +34,7 @@ const DeckPlayPage = () => {
       navigate("/");
       return;
     }
-    let response;
+    let response: any;
     if (accessToken) {
       response = await getDeck(deckId, accessToken);
     } else {
@@ -79,12 +75,6 @@ const DeckPlayPage = () => {
       <Button onClick={() => handleResult()} className="w-full md:w-1/3 mb-8">
         Get my result
       </Button>
-      {result > 0 && result !== null && (
-        <div className="flex flex-col">
-          <Typography>My final score</Typography>
-          {result !== 0 && <Rating value={result} size="large" readOnly />}
-        </div>
-      )}
     </div>
   );
 };

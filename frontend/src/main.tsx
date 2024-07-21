@@ -36,11 +36,14 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <Route path="/create-quizz" element={<CreateQuizzPage />} />
             <Route path="/quizz/:id/edit" element={<CreateQuizzPage />} />
             <Route path="/quizz/:quizzId" element={<QuizzPlayPage />} />
-            <Route path="/quizz/result" element={<ResultQuizzPage />} />
+            <Route
+              path="/quizz/:quizzId/result"
+              element={<ResultQuizzPage />}
+            />
             <Route path="/create-deck" element={<CreateDeckPage />} />
             <Route path="/deck/:id/edit" element={<CreateDeckPage />} />
             <Route path="/deck/:deckId" element={<DeckPlayPage />} />
-            <Route path="/deck/result" element={<ResultDeckPage />} />
+            <Route path="/deck/:deckId/result" element={<ResultDeckPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/organizations" element={<MyOrganizationsPage />} />
             <Route

@@ -161,6 +161,7 @@ class AllItemsController extends Controller
                     "type" => $item->type,
                     "tag" => $item->tag->name,
                     "owner" => $item->user->name,
+                    "owner_id" => $item->user->id,
                     "is_liked" => $item->getAttribute("is_liked"),
                 ];
 

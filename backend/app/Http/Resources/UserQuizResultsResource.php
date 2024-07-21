@@ -2,11 +2,10 @@
 
 namespace App\Http\Resources;
 
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class OrganizationResource extends JsonResource
+class UserQuizResultsResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,11 +16,12 @@ class OrganizationResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'description' => $this->description,
-            'owner_id' => $this->owner_id,
-            'owner' => User::find($this->owner_id)->name,
-            'members_count' => count($this->users),
+            'grade' => $this->grade,
+            'max_grade' => $this->max_grade,
+            // 'user_quiz_id' => $this->user_quiz_id,
+            // 'easiness_factor' => $this->easiness_factor,
+            // 'interval' => $this->interval,
+            // 'repetition' => $this->repetition,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

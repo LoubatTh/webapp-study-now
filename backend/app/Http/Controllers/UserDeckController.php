@@ -59,48 +59,6 @@ class UserDeckController extends Controller
         }
     }
 
-    public function saveGradeDeckById(SaveGradeRequest $request, int $id, StatsController $statsController)
-    {
-        try {
-            $user = $request->user();
-
-            $deck = Deck::find($id);
-            if (!$deck) {
-                return response()->json(["message" => "Deck not found"], 404);
-            }
-
-            $userDeck = UserDeck::firstOrCreate(
-                ["deck_id" => $id, "user_id" => $user->id],
-                [
-                    "easiness_factor" => 2.5,
-                    "repetition" => 0,
-                    "interval" => 0,
-                    "date" => now(),
-                    "user_grade" => null,
-                    "prev_user_grade" => null,
-                    "is_liked" => false,
-                ]
-            );
-
-            [$repetition, $easiness, $interval] = $statsController->updateStatsUser($request->grade, $userDeck->repetition, $userDeck->easiness_factor, $userDeck->interval);
-
-            $prev_user_grade = $userDeck->user_grade;
-
-            $userDeck->update([
-                "easiness_factor" => $easiness,
-                "repetition" => $repetition,
-                "interval" => $interval,
-                "date" => now(),
-                "user_grade" => $request->grade,
-                "prev_user_grade" => $prev_user_grade,
-            ]);
-
-            return response()->noContent();
-        } catch (\Exception $e) {
-            return response()->json(["error" => $e->getMessage()], 400);
-        }
-    }
-
     public function getLikedDecks(Request $request): JsonResponse
     {
         $numberPerPage = 9;

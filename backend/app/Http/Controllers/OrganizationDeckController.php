@@ -6,7 +6,6 @@ use App\Http\Requests\StoreOrganizationDeckRequest;
 use App\Http\Requests\UpdateOrganizationDeckRequest;
 use App\Http\Resources\OrganizationDeckResource;
 use App\Models\Deck;
-use App\Models\Organization;
 use App\Models\OrganizationDeck;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;

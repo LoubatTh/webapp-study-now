@@ -13,7 +13,9 @@ use App\Http\Controllers\StripeController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserDeckController;
+use App\Http\Controllers\UserDeckResultController;
 use App\Http\Controllers\UserQuizController;
+use App\Http\Controllers\UserQuizResultsController;
 use App\Http\Middleware\EnsureIsOrganizationMember;
 use App\Http\Middleware\EnsureIsOrganizationOwner;
 use App\Http\Middleware\EnsureOrganizationExist;
@@ -58,8 +60,10 @@ Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->valu
         Route::get('organizations/{id}', [OrganizationController::class, 'show']);
         Route::middleware([EnsureIsOrganizationMember::class])->group(function () {
             Route::get('organizations/{id}/users', [OrganizationUserController::class, 'show']);
+
             Route::get('organizations/{id}/decks', [OrganizationDeckController::class, 'index']);
             Route::get('organizations/{id}/decks/{deckId}', [OrganizationDeckController::class, 'show']);
+
             Route::get('organizations/{id}/quizzes', [OrganizationQuizController::class, 'index']);
             Route::get('organizations/{id}/quizzes/{quizId}', [OrganizationQuizController::class, 'show']);
         });
@@ -68,11 +72,14 @@ Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->valu
             Route::middleware([EnsureIsOrganizationOwner::class])->group(function () {
                 Route::put('organizations/{id}', [OrganizationController::class, 'update']);
                 Route::delete('organizations/{id}', [OrganizationController::class, 'destroy']);
+
                 Route::post('organizations/{id}/users', [OrganizationUserController::class, 'store']);
                 Route::delete('organizations/{id}/users/{userId}', [OrganizationUserController::class, 'destroy']);
+
                 Route::post('organizations/{id}/decks', [OrganizationDeckController::class, 'store']);
                 Route::put('organizations/{id}/decks/{deckId}', [OrganizationDeckController::class, 'update']);
                 Route::delete('organizations/{id}/decks/{deckId}', [OrganizationDeckController::class, 'destroy']);
+
                 Route::post('organizations/{id}/quizzes', [OrganizationQuizController::class, 'store']);
                 Route::put('organizations/{id}/quizzes/{quizId}', [OrganizationQuizController::class, 'update']);
                 Route::delete('organizations/{id}/quizzes/{quizId}', [OrganizationQuizController::class, 'destroy']);
@@ -86,7 +93,9 @@ Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->valu
     Route::put('decks/{id}', [DeckController::class, "updateDeckById"]);
     Route::delete('decks/{id}', [DeckController::class, "deleteDeckById"]);
     Route::put('decks/{id}/like', [UserDeckController::class, 'likeOrDislikeDeckById']);
-    Route::put('decks/{id}/grade', [UserDeckController::class, 'saveGradeDeckById']);
+    Route::get('decks/results', [UserDeckResultController::class, 'index']);
+    Route::get('decks/{id}/results', [UserDeckResultController::class, 'show']);
+    Route::post('decks/results', [UserDeckResultController::class, 'store']);
 
     // Quiz routes
     Route::post('quizzes', [QuizController::class, 'store']);
@@ -94,7 +103,9 @@ Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->valu
     Route::put('quizzes/{id}', [QuizController::class, 'update']);
     Route::delete('quizzes/{id}', [QuizController::class, 'destroy']);
     Route::put('quizzes/{id}/like', [UserQuizController::class, 'likeOrDislikeQuizById']);
-    Route::put('quizzes/{id}/grade', [UserQuizController::class, 'saveGradeQuizById']);
+    Route::get('quizzes/results', [UserQuizResultsController::class, 'index']);
+    Route::get('quizzes/{id}/results', [UserQuizResultsController::class, 'show']);
+    Route::post('quizzes/results', [UserQuizResultsController::class, 'store']);
 });
 
 // Quiz routes

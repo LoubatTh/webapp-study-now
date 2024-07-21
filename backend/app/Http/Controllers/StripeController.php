@@ -13,8 +13,7 @@ class StripeController extends Controller
     public function subcriptionCheckout(Request $request)
     {
         $checkoutSession = $request->user()
-            ->newSubscription('default', 'price_1PVCT5LDBaFPKLdsUk1W8WUK')
-            ->trialDays(1)
+            ->newSubscription('default', 'price_1PemT9LDBaFPKLds7A5CmJQD')
             ->allowPromotionCodes()
             ->checkout([
                 'success_url' => 'http://localhost:3000/profile',

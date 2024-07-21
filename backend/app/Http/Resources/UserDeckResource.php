@@ -2,11 +2,10 @@
 
 namespace App\Http\Resources;
 
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class OrganizationResource extends JsonResource
+class UserDeckResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,13 +16,14 @@ class OrganizationResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'description' => $this->description,
-            'owner_id' => $this->owner_id,
-            'owner' => User::find($this->owner_id)->name,
-            'members_count' => count($this->users),
+            'user_id' => $this->user_id,
+            'deck_id' => $this->deck_id,
+            'next_repetition' => $this->next_repetition,
+            'is_liked' => $this->is_liked,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'deck' => new DeckResource($this->whenLoaded('deck')),
+            'results' => UserDeckResultsResource::collection($this->whenLoaded('results')),
         ];
     }
 }

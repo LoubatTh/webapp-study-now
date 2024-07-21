@@ -205,7 +205,7 @@ const BoardOrganizationPage = () => {
                   className="flex gap-2"
                   onClick={() =>
                     handleNavigation(
-                      `/create-quizz?organization=${organization.name}`
+                      `/create-quizz?name=${organization?.name}`
                     )
                   }
                 >
@@ -215,7 +215,7 @@ const BoardOrganizationPage = () => {
                   className="flex gap-2"
                   onClick={() =>
                     handleNavigation(
-                      `/create-deck?organization=${organization.name}`
+                      `/create-deck?name=${organization?.name}`
                     )
                   }
                 >
@@ -318,7 +318,7 @@ const BoardOrganizationPage = () => {
                 className="flex gap-2"
                 onClick={() =>
                   handleNavigation(
-                    `/create-quizz?organization=${organization.name}`
+                    `/create-quizz?name=${organization?.name}`
                   )
                 }
               >
@@ -328,7 +328,7 @@ const BoardOrganizationPage = () => {
                 className="flex gap-2"
                 onClick={() =>
                   handleNavigation(
-                    `/create-deck?organization=${organization.name}`
+                    `/create-deck?name=${organization?.name}`
                   )
                 }
               >

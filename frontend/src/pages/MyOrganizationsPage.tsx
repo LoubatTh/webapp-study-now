@@ -170,6 +170,8 @@ const MyOrganizationsPage = () => {
                           created_at={invitation.created_at}
                           updated_at={invitation.updated_at}
                           user_id={invitation.user_id}
+                          owner={invitation.owner}
+                          organization={invitation.organization}
                           organization_id={invitation.organization_id}
                           requestInvitation={requestInvitation}
                         />

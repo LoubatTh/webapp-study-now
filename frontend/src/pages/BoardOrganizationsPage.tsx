@@ -201,7 +201,7 @@ const BoardOrganizationPage= () => {
               </SheetTrigger>
               <SheetContent>
                 {organization?.owner_id === id && (
-                  <SheetHeader className="border-b-4 pb-4">
+                  <SheetHeader>
                     <SheetTitle>Manage organization members</SheetTitle>
                     <SheetDescription className="flex flex-col gap-3">
                       <p className="text-gray-600">
@@ -243,6 +243,7 @@ const BoardOrganizationPage= () => {
 
                 {members.length > 0 && (
                   <>
+                  {organization?.owner_id === id && ( <div className="border-t-4 mt-4"></div> )}
                     <p className="flex gap-2 mt-3 font-semibold bg-slate-200 rounded-lg p-2">
                       <Users className="ml-2" /> {members.length} members
                     </p>

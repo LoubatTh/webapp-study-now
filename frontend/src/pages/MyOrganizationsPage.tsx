@@ -14,6 +14,7 @@ import { Organization } from "@/types/organization.type";
 import { fetchApi } from "@/utils/api";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import ReactLoading from "react-loading";
 import { useNavigate } from "react-router-dom";
 
 const MyOrganizationsPage = () => {
@@ -31,13 +32,15 @@ const MyOrganizationsPage = () => {
   const fetchOrganizations = async () => {
     const response = await fetchApi( "GET","user/organizations", null,accessToken);
     setOrganizations(await response.data as any);
-    setIsLoading(false);
+
   };
+  
 
   const fetchInvitations = async () => {
     const response = await fetchApi("GET", "user/invites", null, accessToken);
     const data = await response.data as InvitationType[];
     setInvitations(data) 
+    setIsLoading(false);
   };
 
   const requestInvitation = async (id: number, choice: boolean) => {
@@ -91,13 +94,16 @@ const MyOrganizationsPage = () => {
 
   useEffect(() => {
     if (!isReady) return;
-
+    setIsLoading(true);
     fetchOrganizations();
     fetchInvitations();
   }, [isReady]);
 
+
+  console.log("invitations", invitations);
+
   if (isLoading) {
-    return <div>Loading...</div>;
+    return "Loading...";
   }
 
   if (
@@ -225,47 +231,6 @@ const MyOrganizationsPage = () => {
               )
             )}
           </motion.div>
-
-          {invitations?.length !== 0 && (
-          <Sheet>
-            <SheetTrigger>
-              <p className="font-semibold text-xl mt-2">
-                You have 
-                <span className="bg-amber-100 text-amber-400 p-1 rounded-lg cursor-pointer">
-                  {invitations?.length} pending invitation
-                  {invitations?.length === 1 ? "" : "s"}
-                </span>
-              </p>
-            </SheetTrigger>
-            <SheetContent>
-              <SheetHeader className="border-b-4 pb-4">
-                <SheetTitle>Invitations</SheetTitle>
-                <SheetDescription className="flex flex-col gap-3">
-                  <p className="text-gray-600">
-                    Here you can see all the invitations that user sent to you,{" "}
-                    <br />
-                    you can decide to accept or decline them.
-                  </p>
-                </SheetDescription>
-              </SheetHeader>
-
-              <div className="flex flex-col gap-3 mt-3">
-                {invitations?.map((invitation, index) => (
-                  <InvitationCard
-                    key={index}
-                    id={invitation.id}
-                    created_at={invitation.created_at}
-                    updated_at={invitation.updated_at}
-                    user_id={invitation.user_id}
-                    organization_id={invitation.organization_id}
-                    requestInvitation={requestInvitation}
-                  />
-                ))}
-              </div>
-            </SheetContent>
-          </Sheet>
-        )}
-
         </>
       )}
 
@@ -289,6 +254,46 @@ const MyOrganizationsPage = () => {
             )}
           </div>
         </>
+      )}
+
+      {invitations?.length !== 0 && (
+        <Sheet>
+          <SheetTrigger>
+            <p className="font-semibold text-xl mt-2">
+              You have
+              <span className="bg-amber-100 text-amber-400 p-1 rounded-lg cursor-pointer">
+                {invitations?.length} pending invitation
+                {invitations?.length === 1 ? "" : "s"}
+              </span>
+            </p>
+          </SheetTrigger>
+          <SheetContent>
+            <SheetHeader className="border-b-4 pb-4">
+              <SheetTitle>Invitations</SheetTitle>
+              <SheetDescription className="flex flex-col gap-3">
+                <p className="text-gray-600">
+                  Here you can see all the invitations that user sent to you,{" "}
+                  <br />
+                  you can decide to accept or decline them.
+                </p>
+              </SheetDescription>
+            </SheetHeader>
+
+            <div className="flex flex-col gap-3 mt-3">
+              {invitations?.map((invitation, index) => (
+                <InvitationCard
+                  key={index}
+                  id={invitation.id}
+                  created_at={invitation.created_at}
+                  updated_at={invitation.updated_at}
+                  user_id={invitation.user_id}
+                  organization_id={invitation.organization_id}
+                  requestInvitation={requestInvitation}
+                />
+              ))}
+            </div>
+          </SheetContent>
+        </Sheet>
       )}
     </>
   );

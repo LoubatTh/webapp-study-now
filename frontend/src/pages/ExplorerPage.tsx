@@ -95,7 +95,7 @@ const ExplorerPage = () => {
       <div className="md:hidden">
         <FilterBarMobile onSearch={handleSearch} />
       </div>
-      <div className="hidden md:block md:mb-2">
+      <div className="hidden m-8 bg-slate-300/20 rounded-lg md:block md:mb-2">
         <FilterBar onSearch={handleSearch} />
       </div>
       <motion.div

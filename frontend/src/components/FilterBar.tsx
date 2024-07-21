@@ -85,7 +85,7 @@ const FilterBar = ({ onSearch, board }: FilterBarProps) => {
   return (
     <form
       onSubmit={onSubmit}
-      className="flex flex-col md:flex-row items-center w-full gap-2 md:p-4"
+      className="flex flex-col md:flex-row items-center w-full gap-2 bg-slate-300/20 rounded-lg  md:mb-2 md:p-4 p-8 "
     >
       <div className="flex-1 w-full md:w-auto">
         <Label htmlFor="name">Name</Label>

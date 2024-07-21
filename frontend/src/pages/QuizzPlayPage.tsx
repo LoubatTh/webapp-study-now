@@ -2,6 +2,7 @@ import { ResourceForbidden } from "@/components/errors/ResourceForbidden";
 import ResourceNotFound from "@/components/errors/ResourceNotFound";
 import QuestionQCM from "@/components/quizz/QuestionQCM";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/contexts/AuthContext";
 import { answerSchema } from "@/lib/form/answer.form";
 import useStore from "@/lib/stores/resultStore";
@@ -183,7 +184,7 @@ const QuizzPlayPage = () => {
     }
 
     let response: any;
-    if (!accessToken) {
+    if (accessToken) {
       response = await getQuizz(quizzId, accessToken);
     } else {
       response = await getQuizz(quizzId);
@@ -230,49 +231,56 @@ const QuizzPlayPage = () => {
 
   return (
     <>
-      <div className="flex flex-col items-center gap-4">
+      <div className="flex flex-col items-center w-full p-2">
         {quizz ? (
-          <div>
-            <h1 className="my-4 text-center text-lg	font-bold">{quizz.name}</h1>
-
-            {quizz.qcms.map((qcm) => (
-              <div
-                key={qcm.id}
-                className="border-gray-300 border-b-2 m-3 mb-5 p-3 pb-10"
-              >
-                <QuestionQCM
-                  question={qcm}
-                  onAnswerSelect={(answers) =>
-                    handleAnswerSelect(qcm.id, answers)
-                  }
-                  answeredCorrectly={answeredCorrectly[qcm.id]}
-                  isSubmitting={isSubmitting}
-                />
-                {errors[qcm.id] && (
-                  <p className="text-red-500">{errors[qcm.id]}</p>
+          <>
+            <h1 className="my-8 text-center text-3xl uppercase">
+              {quizz.name}
+            </h1>
+            <div className="flex flex-col gap-10">
+              {quizz.qcms.map((qcm, i) => (
+                <div
+                  key={qcm.id}
+                  className="flex flex-col items-center gap-6 w-full"
+                >
+                  <Separator />
+                  <div className=" text-xl">
+                    {i + 1} of {quizz.qcms.length}
+                  </div>
+                  <QuestionQCM
+                    question={qcm}
+                    onAnswerSelect={(answers) =>
+                      handleAnswerSelect(qcm.id, answers)
+                    }
+                    answeredCorrectly={answeredCorrectly[qcm.id]}
+                    isSubmitting={isSubmitting}
+                  />
+                  {errors[qcm.id] && (
+                    <p className="text-red-500">{errors[qcm.id]}</p>
+                  )}
+                </div>
+              ))}
+              <div className="flex flex-col items-center gap-2 m-3">
+                {isQuizzOver ? (
+                  <Button
+                    className="w-1/2"
+                    onClick={handleResult}
+                    variant="default"
+                  >
+                    Check result
+                  </Button>
+                ) : (
+                  <Button
+                    className="w-1/2"
+                    onClick={handleSubmit}
+                    variant="default"
+                  >
+                    Validate
+                  </Button>
                 )}
               </div>
-            ))}
-            <div className="flex flex-col items-center gap-2 m-3">
-              {isQuizzOver ? (
-                <Button
-                  className="w-1/2"
-                  onClick={handleResult}
-                  variant="default"
-                >
-                  Check result
-                </Button>
-              ) : (
-                <Button
-                  className="w-1/2"
-                  onClick={handleSubmit}
-                  variant="default"
-                >
-                  Validate
-                </Button>
-              )}
             </div>
-          </div>
+          </>
         ) : (
           <p>Chargement...</p>
         )}

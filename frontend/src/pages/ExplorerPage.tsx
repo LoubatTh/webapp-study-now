@@ -38,18 +38,8 @@ const ExplorerPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [searchValues, setSearchValues] = useState(null);
 
-  const buildQueryString = (params) => {
-    return Object.keys(params)
-      .filter((key) => params[key])
-      .map(
-        (key) => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`
-      )
-      .join("&");
-  };
-
-  const getAll = async (page = 1, searchValues = null) => {
-    const queryString = searchValues ? buildQueryString(searchValues) : "";
-    const response = await getAllCards(accessToken, page, queryString);
+  const getAll = async (page = 1, searchValues?) => {
+    const response = await getAllCards(accessToken, page, searchValues);
     if (response.status === 200) {
       const { data: cards, meta } = response.data;
       setTotalPages(meta.last_page);

@@ -12,38 +12,14 @@ import GuestResultMessage from "@/components/result/GuestResultMessage";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchApi } from "@/utils/api";
+import { formatDateDayMonth } from "@/utils/dateparser";
 
 const chartConfig = {
-  results: {
-    label: "results",
+  result: {
+    label: "result",
     color: "#2563eb",
   },
-  type: {
-    label: "type",
-    color: "#60a5fa",
-  },
 } satisfies ChartConfig;
-
-const chartData = [
-  { day: "24/02", results: 33, type: "deck" },
-  { day: "20/02", results: 40, type: "deck" },
-  { day: "25/02", results: 80, type: "deck" },
-  { day: "24/02", results: 33, type: "deck" },
-  { day: "26/02", results: 100, type: "deck" },
-  { day: "18/02", results: 20, type: "deck" },
-  { day: "19/02", results: 30, type: "deck" },
-  { day: "20/02", results: 40, type: "deck" },
-  { day: "21/02", results: 80, type: "deck" },
-  { day: "19/02", results: 30, type: "deck" },
-  { day: "22/02", results: 12, type: "deck" },
-  { day: "21/02", results: 80, type: "deck" },
-  { day: "24/02", results: 33, type: "deck" },
-  { day: "24/02", results: 33, type: "deck" },
-  { day: "20/02", results: 40, type: "deck" },
-  { day: "25/02", results: 80, type: "deck" },
-  { day: "24/02", results: 33, type: "deck" },
-  { day: "26/02", results: 100, type: "deck" },
-];
 
 const getDeck = async (deckId: string, accessToken?: string) => {
   const response = await fetchApi("GET", `decks/${deckId}`, null, accessToken);
@@ -66,10 +42,10 @@ const ResultDeckPage = () => {
   const { deckId } = useParams<{
     deckId: string;
   }>();
-  const { score, maxScore } = useStore();
+  const { score } = useStore();
   const [cardName, setCardName] = useState<string>("");
-  // const [score, setScore] = useState<number>(40);
-  // const [maxScore, setMaxScore] = useState<number>(40);
+  const [lastScore, setSLastcore] = useState<number>(0);
+  const [results, setResults] = useState<any[]>([]);
 
   const fetchDeck = async () => {
     if (!deckId) {
@@ -102,11 +78,25 @@ const ResultDeckPage = () => {
     const response = await getResult(deckId, accessToken);
     if (response.status === 200) {
       const data: any = response.data;
-      setCardName(data.name);
+      const grade = data.results[data.results.length - 1].grade;
+      data.results.map((result: any) => {
+        setResults((results) => [
+          ...results,
+          {
+            date: formatDateDayMonth(result.created_at),
+            result: parseFloat(result.grade.toFixed(2)),
+          },
+        ]);
+      });
+      setSLastcore(grade);
     } else {
       console.error("Failed to fetch result:", response);
     }
   };
+
+  useEffect(() => {
+    console.log(results);
+  }, [results]);
 
   useEffect(() => {
     if (!accessToken && score === null) {
@@ -123,11 +113,16 @@ const ResultDeckPage = () => {
       <div className=" text-3xl font-bold text-center">
         {`Result for ${cardName}`}
       </div>
-      <CongratulatoryMessage
-        score={score ? score : 0}
-        maxScore={maxScore ? maxScore : 0}
-        deck={true}
-      />
+      {accessToken ? (
+        <CongratulatoryMessage score={lastScore} maxScore={5} deck={true} />
+      ) : (
+        <CongratulatoryMessage
+          score={score ? score : 0}
+          maxScore={5}
+          deck={true}
+        />
+      )}
+
       {accessToken ? (
         <div className="flex flex-col">
           <div className="text-xl ml-6">All your statistics</div>
@@ -137,29 +132,28 @@ const ResultDeckPage = () => {
           >
             <BarChart
               accessibilityLayer
-              data={chartData}
+              data={results}
               margin={{
                 top: 35,
               }}
               maxBarSize={35}
             >
               <XAxis
-                dataKey="day"
+                dataKey="date"
                 tickLine={false}
                 tickMargin={5}
                 axisLine={true}
                 tickFormatter={(value) => value.slice(0, 5)}
               />
-              <YAxis domain={[0, 100]} />
-              <ReferenceLine y={100} stroke="gray" />
-              <ReferenceLine y={50} stroke="gray" />
+              <YAxis domain={[1, 5]} />
+              <ReferenceLine y={5} stroke="gray" />
               <ChartTooltip
                 cursor={false}
                 content={<ChartTooltipContent hideLabel />}
               />
               <Bar
-                dataKey="results"
-                fill="var(--color-results)"
+                dataKey="result"
+                fill="var(--color-result)"
                 radius={[5, 5, 0, 0]}
               ></Bar>
             </BarChart>

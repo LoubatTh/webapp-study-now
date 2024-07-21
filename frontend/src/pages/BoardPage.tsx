@@ -21,6 +21,7 @@ const getAllCards = async (
   pageSelected = 1,
   queryString = ""
 ) => {
+  console.log(queryString);
   const response = await fetchApi(
     "GET",
     `all?me&page=${pageSelected}${queryString ? `&${queryString}` : ""}`,
@@ -38,18 +39,8 @@ const BoardPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [searchValues, setSearchValues] = useState(null);
 
-  const buildQueryString = (params) => {
-    return Object.keys(params)
-      .filter((key) => params[key])
-      .map(
-        (key) => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`
-      )
-      .join("&");
-  };
-
   const getAll = async (page = 1, searchValues = null) => {
-    const queryString = searchValues ? buildQueryString(searchValues) : "";
-    const response = await getAllCards(accessToken, page, queryString);
+    const response = await getAllCards(accessToken, page, searchValues);
     if (response.status === 200) {
       const { data: cards, meta } = response.data;
       setTotalPages(meta.last_page);

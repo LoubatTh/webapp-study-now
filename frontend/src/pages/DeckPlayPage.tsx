@@ -13,19 +13,52 @@ const getDeck = async (deckId: string, accessToken?: string) => {
   return response;
 };
 
+const postResult = async (body: any, accessToken: string) => {
+  const response = await fetchApi("POST", `decks/results`, body, accessToken);
+  return response;
+};
+
 const DeckPlayPage = () => {
   const navigate = useNavigate();
   const { accessToken } = useAuth();
-  const { setScore, setMaxScore } = useStore();
+  const { setScore } = useStore();
   const { addRating, getAverageRating } = useFlashcardStore();
   const { deckId } = useParams<{ deckId: string }>();
   const [deck, setDeck] = useState<Deck | null>(null);
 
   const handleResult = () => {
     const rating = getAverageRating();
-    setScore(rating ? rating : 0);
-    setMaxScore(5);
-    navigate(`/deck/${deckId}/result`);
+    if (accessToken) {
+      postResultToApi();
+    } else {
+      console.log(rating);
+      setScore(rating ? rating : 0);
+      navigate(`/deck/${deckId}/result`);
+    }
+  };
+
+  const postResultToApi = async () => {
+    if (!deckId) {
+      console.error("Deck ID is required");
+      navigate("/");
+      return;
+    }
+    if (!accessToken) {
+      console.error("Access token is required");
+      return;
+    }
+
+    const body = {
+      deck_id: deckId,
+      grade: getAverageRating(),
+    };
+
+    const response = await postResult(body, accessToken);
+    if (response.status === 201) {
+      navigate(`/deck/${deckId}/result`);
+    } else {
+      console.error("Failed to post result:", response);
+    }
   };
 
   const fetchDeck = async () => {
@@ -46,6 +79,7 @@ const DeckPlayPage = () => {
       for (let i = 0; i < data.flashcards.length; i++) {
         addRating(i, 0);
       }
+      console.log(data);
     } else {
       console.error("Failed to fetch deck:", response);
     }

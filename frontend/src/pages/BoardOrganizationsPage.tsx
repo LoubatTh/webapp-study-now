@@ -201,7 +201,7 @@ const BoardOrganizationPage= () => {
               </SheetTrigger>
               <SheetContent>
                 {organization?.owner_id === id && (
-                  <SheetHeader className="border-b-4 pb-4">
+                  <SheetHeader>
                     <SheetTitle>Manage organization members</SheetTitle>
                     <SheetDescription className="flex flex-col gap-3">
                       <p className="text-gray-600">
@@ -243,6 +243,7 @@ const BoardOrganizationPage= () => {
 
                 {members.length > 0 && (
                   <>
+                  {organization?.owner_id === id && ( <div className="border-t-4 mt-4"></div> )}
                     <p className="flex gap-2 mt-3 font-semibold bg-slate-200 rounded-lg p-2">
                       <Users className="ml-2" /> {members.length} members
                     </p>
@@ -295,14 +296,15 @@ const BoardOrganizationPage= () => {
             <QuizzDeckCard
               key={index}
               id={quizz.quiz.id}
-              name={quizz.quiz.name}
+              Cardname={quizz.quiz.name}
+              owner={quizz.quiz.owner}
               tag={quizz.quiz.tag}
               likes={quizz.quiz.likes}
+              isLiked={quizz.quiz.is_liked}
               type={quizz.quiz.type}
-              is_public={quizz.quiz.is_public}
-              is_organization={quizz.quiz.is_organization}
               organizationName={organization?.name}
               qcms={quizz.quiz.qcms}
+              onDeleteCard={handleDeleteCard}
             />
           ))}
 
@@ -310,14 +312,15 @@ const BoardOrganizationPage= () => {
             <QuizzDeckCard
               key={index}
               id={deck.deck.id}
-              name={deck.deck.name}
+              Cardname={deck.deck.name}
+              owner={deck.deck.owner}
               tag={deck.deck.tag}
               likes={deck.deck.likes}
+              isLiked={deck.deck.is_liked}
               type={deck.deck.type}
-              is_public={deck.deck.is_public}
-              is_organization={deck.deck.is_organization}
               organizationName={organization?.name}
               flashcards={deck.deck.flashcards}
+              onDeleteCard={handleDeleteCard}
             />
           ))}
         </div>

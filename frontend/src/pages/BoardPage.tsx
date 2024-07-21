@@ -95,7 +95,7 @@ const BoardPage = () => {
       <div className="md:hidden">
         <FilterBarMobile onSearch={handleSearch} board={true} />
       </div>
-      <div className="hidden md:block md:mb-2">
+      <div className="hidden m-8 bg-slate-300/20 rounded-lg backdrop-blur-xl md:block md:mb-2">
         <FilterBar onSearch={handleSearch} board={true} />
       </div>
       <motion.div

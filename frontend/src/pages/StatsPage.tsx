@@ -1,15 +1,59 @@
 import FilterBar from "@/components/FilterBar";
 import FilterBarMobile from "@/components/FilterBarMobile";
-import { Button } from "@/components/ui/button";
+import QuizzDeckCard from "@/components/quizzDeckCard";
 import { useAuth } from "@/contexts/AuthContext";
 import { fetchApi } from "@/utils/api";
-import {
-  ChevronFirst,
-  ChevronLeft,
-  ChevronRight,
-  ChevronLast,
-} from "lucide-react";
+import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
+import { Bar, BarChart, ReferenceLine, XAxis, YAxis } from "recharts";
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import Pagination from "@/components/tools/Pagination";
+
+const chartConfig = {
+  results: {
+    label: "results",
+    color: "#2563eb",
+  },
+  type: {
+    label: "type",
+    color: "#60a5fa",
+  },
+} satisfies ChartConfig;
+
+const chartData = [
+  { day: "24/02", results: 33, type: "deck" },
+  { day: "20/02", results: 40, type: "deck" },
+  { day: "25/02", results: 80, type: "deck" },
+  { day: "24/02", results: 33, type: "deck" },
+  { day: "26/02", results: 100, type: "deck" },
+  { day: "18/02", results: 20, type: "deck" },
+  { day: "19/02", results: 30, type: "deck" },
+  { day: "20/02", results: 40, type: "deck" },
+  { day: "21/02", results: 80, type: "deck" },
+  { day: "19/02", results: 30, type: "deck" },
+  { day: "22/02", results: 12, type: "deck" },
+  { day: "21/02", results: 80, type: "deck" },
+  { day: "24/02", results: 33, type: "deck" },
+  { day: "24/02", results: 33, type: "deck" },
+  { day: "20/02", results: 40, type: "deck" },
+  { day: "25/02", results: 80, type: "deck" },
+  { day: "24/02", results: 33, type: "deck" },
+  { day: "26/02", results: 100, type: "deck" },
+];
+
+const cardVariants = {
+  initial: { opacity: 0, y: 50 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring", stiffness: 120 },
+  },
+};
 
 const getAllCards = async (
   accessToken: string,
@@ -31,18 +75,10 @@ const StatsPage = () => {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const buildQueryString = (params) => {
-    return Object.keys(params)
-      .filter((key) => params[key])
-      .map(
-        (key) => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`
-      )
-      .join("&");
-  };
+  const [searchValues, setSearchValues] = useState(null);
 
-  const getAll = async (page = 1, searchValues = null) => {
-    const queryString = searchValues ? buildQueryString(searchValues) : "";
-    const response = await getAllCards(accessToken, page, queryString);
+  const getAll = async (page = 1, searchValues?) => {
+    const response = await getAllCards(accessToken, page, searchValues);
     if (response.status === 200) {
       const { data: cards, meta } = response.data;
       setTotalPages(meta.last_page);
@@ -57,11 +93,18 @@ const StatsPage = () => {
 
   const handlePageChange = (newPage) => {
     setPage(newPage);
-    getAll(newPage);
+    getAll(newPage, searchValues);
   };
+
   const handleSearch = (searchValues) => {
+    setSearchValues(searchValues);
     getAll(1, searchValues); // Reset to first page when performing a new search
   };
+
+  const handleDeleteCard = (id) => {
+    setAllCards((prev) => prev.filter((card) => card.id !== id));
+  };
+
   useEffect(() => {
     if (isReady && accessToken) {
       getAll();
@@ -79,49 +122,76 @@ const StatsPage = () => {
       <div className="hidden md:block md:mb-2">
         <FilterBar onSearch={handleSearch} board={true} />
       </div>
-      <div className="flex flex-col p-8">
-        <h2 className="text-3xl font-bold text-center">Statistics</h2>
-        <div className="mt-4">
-          <p className="text-lg">Coming soon...</p>
-        </div>
-      </div>
-      <div className="flex gap-2 md:mx-auto md:w-auto items-center mt-6 w-full">
-        <div className="flex items-center">
-          <Button
-            disabled={page <= 1}
-            variant="ghost"
-            onClick={() => handlePageChange(1)}
-          >
-            <ChevronFirst />
-          </Button>
-          <Button
-            disabled={page <= 1}
-            variant="ghost"
-            onClick={() => handlePageChange(page - 1)}
-          >
-            <ChevronLeft />
-          </Button>
-        </div>
-        <div className="md:min-w-20 flex-auto text-center">
-          {page} / {totalPages}
-        </div>
-        <div className="flex items-center">
-          <Button
-            disabled={page >= totalPages}
-            variant="ghost"
-            onClick={() => handlePageChange(page + 1)}
-          >
-            <ChevronRight />
-          </Button>
-          <Button
-            disabled={page >= totalPages}
-            variant="ghost"
-            onClick={() => handlePageChange(totalPages)}
-          >
-            <ChevronLast />
-          </Button>
-        </div>
-      </div>
+      <h2 className=" text-3xl text-center">Statistics</h2>
+      <motion.div
+        className="flex flex-col gap-4 p-4 md:gap-8 md:p-8"
+        initial="initial"
+        animate="visible"
+        variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
+      >
+        {allCards.map((item, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
+            <motion.div
+              variants={cardVariants}
+              key={index}
+              className=" col-span-1"
+            >
+              <QuizzDeckCard
+                id={item.id}
+                Cardname={item.name}
+                owner={item.owner}
+                tag={item.tag}
+                likes={item.likes}
+                isLiked={item.is_liked}
+                type={item.type}
+                flashcards={item.flashcards}
+                qcms={item.qcms}
+                onDeleteCard={handleDeleteCard}
+              />
+            </motion.div>
+            <div className="col-span-2 bg-slate-400/15 rounded-md">
+              <ChartContainer
+                config={chartConfig}
+                className="min-h-[80px] max-h-[200px] w-full pr-8"
+              >
+                <BarChart
+                  accessibilityLayer
+                  data={chartData}
+                  margin={{
+                    top: 35,
+                  }}
+                  maxBarSize={35}
+                >
+                  <XAxis
+                    dataKey="day"
+                    tickLine={false}
+                    tickMargin={5}
+                    axisLine={true}
+                    tickFormatter={(value) => value.slice(0, 5)}
+                  />
+                  <YAxis domain={[0, 100]} />
+                  <ReferenceLine y={100} stroke="gray" />
+                  <ReferenceLine y={50} stroke="gray" />
+                  <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent hideLabel />}
+                  />
+                  <Bar
+                    dataKey="results"
+                    fill="var(--color-results)"
+                    radius={[5, 5, 0, 0]}
+                  ></Bar>
+                </BarChart>
+              </ChartContainer>
+            </div>
+          </div>
+        ))}
+      </motion.div>
+      <Pagination
+        page={page}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </>
   );
 };

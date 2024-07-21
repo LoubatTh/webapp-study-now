@@ -31,8 +31,9 @@ const useFlashcardStore = create<FlashcardStore>((set, get) => ({
   },
   getAverageRating: () => {
     const { ratings } = get();
+    if (ratings.length === 0) return null;
     const total = ratings.reduce((acc, { rating }) => acc + rating, 0);
-    return total / ratings.length;
+    return parseFloat((total / ratings.length).toFixed(2));
   },
   resetRatings: () => {
     set({ ratings: [] });

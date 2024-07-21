@@ -43,6 +43,15 @@ const FilterBar = ({ onSearch, board }: FilterBarProps) => {
     }
   };
 
+  const buildQueryString = (params) => {
+    return Object.keys(params)
+      .filter((key) => params[key] !== "" && params[key] !== null)
+      .map(
+        (key) => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`
+      )
+      .join("&");
+  };
+
   const onSubmit = (e) => {
     e.preventDefault();
 
@@ -54,7 +63,9 @@ const FilterBar = ({ onSearch, board }: FilterBarProps) => {
       isPublic:
         isPublic === "public" ? true : isPublic === "private" ? false : null,
     };
-    onSearch(searchValues);
+
+    const queryString = buildQueryString(searchValues);
+    onSearch(queryString);
   };
 
   useEffect(() => {

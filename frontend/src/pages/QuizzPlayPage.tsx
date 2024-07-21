@@ -4,19 +4,35 @@ import QuestionQCM from "@/components/quizz/QuestionQCM";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { answerSchema } from "@/lib/form/answer.form";
+import useStore from "@/lib/stores/resultStore";
 import { fetchApi } from "@/utils/api";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-const ResponseQuizzPage = () => {
+const getQuizz = async (quizzId: string, accessToken?: string) => {
+  const response = await fetchApi(
+    "GET",
+    `quizzes/${quizzId}`,
+    null,
+    accessToken
+  );
+  return response;
+};
+
+const postResult = async (body: any, accessToken: string) => {
+  const response = await fetchApi("POST", `quizzes/results`, body, accessToken);
+  return response;
+};
+
+const QuizzPlayPage = () => {
+  const navigate = useNavigate();
+  const { setScore, setMaxScore } = useStore();
   // Permet de s'assurer que aucune action nécessitant l'authentification ne soit effectuée avant que le système soit initialisé
   const { isReady, accessToken } = useAuth();
   // Permet de récupérer l'identifiant du quizz passé en paramètre dans l'URL
   const { quizzId } = useParams();
   //  Permet de stocker le quizz récupéré depuis l'API
   const [quizz, setQuizz] = useState<any>(null);
-  // Permet de stocker le pourcentage de bonnes réponses de l'utilisateur
-  const [correctPercentage, setCorrectPercentage] = useState<number>(0);
   // Permet de stocker les réponses sélectionnées par l'utilisateur
   const [selectedAnswers, setSelectedAnswers] = useState<{
     [key: number]: any[];
@@ -33,50 +49,8 @@ const ResponseQuizzPage = () => {
   const [isNotFound, setIsNotFound] = useState<boolean>(false);
   // Permet de stocker l'état de la soumission du formulaire
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-
-  /*
-  Ce UseEffect permet de premièrement vérifier si l'utilisateur est prêt à 
-  utiliser l'application (en attendant que le AuthContext soit initialisé)
-  Puis ensuite de récupérer le quizz correspondant à l'identifiant passé en paramètre et le stocker dans le state quizz
-  */
-  useEffect(() => {
-    if (!isReady || !quizzId) return;
-
-    
-    //Initalisation des states 
-    setQuizz(null);
-    setIsForbidden(false);
-    setIsNotFound(false);
-
-    const fetchQuiz = async () => {
-      const response = await fetchApi(
-        "GET",
-        `quizzes/${quizzId}`,
-        null,
-        accessToken
-      );
-
-      const status = await response.status;
-
-      // Si la requête est bien effectué, on stocke le quizz dans le state quizz
-      if (status == 200) {
-        const data = await response.data;
-        setQuizz(data);
-      }
-
-      // Si le quizz est privé, on stocke la variable isForbidden à true
-      if (status == 403) {
-        setIsForbidden(true);
-      }
-
-      // Si le quizz n'existe pas, on stocke la variable isNotFound à true
-      if (status == 404 || status == 500) {
-        setIsNotFound(true);
-      }
-    };
-
-    fetchQuiz();
-  }, [isReady, quizzId]);
+  const [finalScore, setFinalScore] = useState<number>(0);
+  const [isQuizzOver, setIsQuizzOver] = useState<boolean>(false);
 
   /*
   Cette méthode permet de stocker les réponses sélectionnés par l'utilisateur dans le state selectedAnswers
@@ -97,12 +71,10 @@ const ResponseQuizzPage = () => {
   Cette méthode permet de calculer le pourcentage de bonnes réponses de l'utilisateur
   */
   const calcFinalResult = (correctAnswers) => {
-    const totalQuestions = quizz.qcms.length;
     const totalCorrestResponses = correctAnswers.filter(
       (answer) => answer.isCorrect
     ).length;
-    const pourcentage = (totalCorrestResponses * 100) / totalQuestions;
-    setCorrectPercentage(pourcentage);
+    setFinalScore(totalCorrestResponses);
   };
 
   /*
@@ -153,7 +125,6 @@ const ResponseQuizzPage = () => {
         userAnswers.length === correctAnswers.length;
 
       newAnsweredCorrectly[qcm.id] = isCorrect;
-
       return {
         question: qcm.question,
         isCorrect,
@@ -163,9 +134,92 @@ const ResponseQuizzPage = () => {
     calcFinalResult(correctAnswers);
     setAnsweredCorrectly(newAnsweredCorrectly);
     setIsSubmitting(true);
-
-    console.log(correctAnswers);
+    setIsQuizzOver(true);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
+
+  const handleResult = () => {
+    if (accessToken) {
+      postResultToApi();
+    } else {
+      setScore(finalScore);
+      setMaxScore(quizz.qcms.length);
+      navigate(`/quizz/${quizzId}/result`);
+    }
+  };
+
+  const postResultToApi = async () => {
+    if (!quizzId) {
+      console.error("Deck ID is required");
+      navigate("/");
+      return;
+    }
+    if (!accessToken) {
+      console.error("Access token is required");
+      return;
+    }
+
+    const body = {
+      quiz_id: parseInt(quizzId),
+      grade: finalScore,
+      max_grade: quizz.qcms.length,
+    };
+
+    const response = await postResult(body, accessToken);
+    if (response.status === 201) {
+      navigate(`/quizz/${quizzId}/result`);
+    } else {
+      console.error("Failed to post result:", response);
+    }
+  };
+
+  const fetchQuiz = async () => {
+    if (!quizzId) {
+      console.error("Quizz ID is required");
+      return;
+    }
+
+    let response: any;
+    if (!accessToken) {
+      response = await getQuizz(quizzId, accessToken);
+    } else {
+      response = await getQuizz(quizzId);
+    }
+    const status = await response.status;
+
+    // Si la requête est bien effectué, on stocke le quizz dans le state quizz
+    if (status == 200) {
+      const data = await response.data;
+      setQuizz(data);
+    }
+
+    // Si le quizz est privé, on stocke la variable isForbidden à true
+    if (status == 403) {
+      setIsForbidden(true);
+    }
+
+    // Si le quizz n'existe pas, on stocke la variable isNotFound à true
+    if (status == 404 || status == 500) {
+      setIsNotFound(true);
+    }
+  };
+
+  /*
+  Ce UseEffect permet de premièrement vérifier si l'utilisateur est prêt à 
+  utiliser l'application (en attendant que le AuthContext soit initialisé)
+  Puis ensuite de récupérer le quizz correspondant à l'identifiant passé en paramètre et le stocker dans le state quizz
+  */
+  useEffect(() => {
+    if (!isReady || !quizzId) return;
+
+    setQuizz(null);
+    setIsForbidden(false);
+    setIsNotFound(false);
+    fetchQuiz();
+  }, [isReady, quizzId]);
 
   if (isNotFound) {
     return <ResourceNotFound type="quizz" />;
@@ -200,16 +254,23 @@ const ResponseQuizzPage = () => {
               </div>
             ))}
             <div className="flex flex-col items-center gap-2 m-3">
-              <Button
-                className="w-1/2"
-                onClick={handleSubmit}
-                variant="default"
-              >
-                Valider
-              </Button>
-              <p className="">
-                Vous avez eu {correctPercentage}% de bonnes réponses
-              </p>
+              {isQuizzOver ? (
+                <Button
+                  className="w-1/2"
+                  onClick={handleResult}
+                  variant="default"
+                >
+                  Check result
+                </Button>
+              ) : (
+                <Button
+                  className="w-1/2"
+                  onClick={handleSubmit}
+                  variant="default"
+                >
+                  Validate
+                </Button>
+              )}
             </div>
           </div>
         ) : (
@@ -220,4 +281,4 @@ const ResponseQuizzPage = () => {
   );
 };
 
-export default ResponseQuizzPage;
+export default QuizzPlayPage;

@@ -13,9 +13,9 @@ const EditButton = ({ id, type, organizationName }: EditButtonProps) => {
   const editHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     if (type === "Quiz") {
-      navigate(`/quizz/${id}/edit?organization=${organizationName}`);
+      navigate(`/quizz/${id}/edit`);
     } else {
-      navigate(`/deck/${id}/edit?organization=${organizationName}`);
+      navigate(`/deck/${id}/edit`);
     }
   };
 

@@ -1,11 +1,15 @@
+import { Rating } from "@mui/material";
+
 type CongratulatoryMessageProps = {
   score: number;
   maxScore: number;
+  deck?: boolean;
 };
 
 const CongratulatoryMessage = ({
   score,
   maxScore,
+  deck,
 }: CongratulatoryMessageProps) => {
   let message: string, color: string, fontWeight: string;
 
@@ -28,11 +32,18 @@ const CongratulatoryMessage = ({
   }
 
   return (
-    <div className={`${color} ${fontWeight} flex flex-col gap-4 text-center`}>
-      <div className="text-xl">
-        {score}/{maxScore}
-      </div>
-      <div className="text-lg">{message}</div>
+    <div className="flex flex-col gap-4 text-center">
+      {deck ? (
+        <div className="flex flex-col items-center text-2xl gap-2">
+          <div className="text-2xl">My final score</div>
+          <Rating value={score} size="large" readOnly />
+        </div>
+      ) : (
+        <div className={`${color} ${fontWeight}`}>
+          {score}/{maxScore}
+        </div>
+      )}
+      <div className={`${color} ${fontWeight}`}>{message}</div>
     </div>
   );
 };

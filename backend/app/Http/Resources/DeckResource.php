@@ -28,6 +28,7 @@ class DeckResource extends JsonResource
                 return $this->user->name;
             }),
             "is_liked" => $this->getAttribute("is_liked"),
+            "flashcard_count" => $this->whenCounted('flashcards'),
             "flashcards" => FlashcardResource::collection($this->whenLoaded("flashcards"))
         ];
     }

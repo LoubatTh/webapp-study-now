@@ -23,7 +23,7 @@ class StoreUserQuizResultRequest extends FormRequest
     {
         return [
             'quiz_id' => 'required|int',
-            'grade' => 'required|int|max:5|min:0',
+            'grade' => 'required|int|min:0',
             'max_grade' => 'required|int|min:0',
         ];
     }

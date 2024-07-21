@@ -24,11 +24,11 @@ class StatsController extends Controller
         switch ($request->input('type')) {
             case 'Deck':
                 $userDecks = $this->userDecks($request);
-                $all->merge($userDecks);
+                $all = $userDecks;
                 break;
             case 'Quiz':
                 $userQuizzes = $this->userQuizzes($request);
-                $all->merge($userQuizzes);
+                $all = $userQuizzes;
                 break;
             default:
                 $userDecks = $this->userDecks($request);
@@ -73,7 +73,7 @@ class StatsController extends Controller
 
     public function userDecks(Request $request)
     {
-        $userDeck = UserDeck::with('results', 'deck', 'deck.tag')
+        $userDeck = UserDeck::with('results', 'deck', 'deck.tag', 'deck.user')
             ->whereHas(
                 'deck',
                 function ($query) use ($request) {
@@ -110,7 +110,7 @@ class StatsController extends Controller
 
     public function userQuizzes(Request $request)
     {
-        $userQuiz = UserQuiz::with('results', 'quiz', 'quiz.tag')
+        $userQuiz = UserQuiz::with('results', 'quiz', 'quiz.tag', 'quiz.user')
             ->whereHas(
                 'quiz',
                 function ($query) use ($request) {

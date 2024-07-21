@@ -3,48 +3,11 @@ import { useAuth } from "@/contexts/AuthContext";
 import { fetchApi } from "@/utils/api";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import { Bar, BarChart, ReferenceLine, XAxis, YAxis } from "recharts";
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
 import Pagination from "@/components/tools/Pagination";
 import FilterBarMobile from "@/components/FilterBarMobile";
 import FilterBar from "@/components/FilterBar";
-
-const chartConfig = {
-  results: {
-    label: "results",
-    color: "#2563eb",
-  },
-  type: {
-    label: "type",
-    color: "#60a5fa",
-  },
-} satisfies ChartConfig;
-
-const chartData = [
-  { day: "24/02", results: 33, type: "deck" },
-  { day: "20/02", results: 40, type: "deck" },
-  { day: "25/02", results: 80, type: "deck" },
-  { day: "24/02", results: 33, type: "deck" },
-  { day: "26/02", results: 100, type: "deck" },
-  { day: "18/02", results: 20, type: "deck" },
-  { day: "19/02", results: 30, type: "deck" },
-  { day: "20/02", results: 40, type: "deck" },
-  { day: "21/02", results: 80, type: "deck" },
-  { day: "19/02", results: 30, type: "deck" },
-  { day: "22/02", results: 12, type: "deck" },
-  { day: "21/02", results: 80, type: "deck" },
-  { day: "24/02", results: 33, type: "deck" },
-  { day: "24/02", results: 33, type: "deck" },
-  { day: "20/02", results: 40, type: "deck" },
-  { day: "25/02", results: 80, type: "deck" },
-  { day: "24/02", results: 33, type: "deck" },
-  { day: "26/02", results: 100, type: "deck" },
-];
+import StatGraph from "@/components/tools/StatGraph";
+import { formatDateDayMonth } from "@/utils/dateparser";
 
 const cardVariants = {
   initial: { opacity: 0, y: 50 },
@@ -55,18 +18,40 @@ const cardVariants = {
   },
 };
 
-const getAllCards = async (
+const getAllStats = async (
   accessToken: string,
   pageSelected = 1,
   queryString = ""
 ) => {
   const response = await fetchApi(
     "GET",
-    `all?me&page=${pageSelected}${queryString ? `&${queryString}` : ""}`,
+    `stats?&page=${pageSelected}${queryString ? `&${queryString}` : ""}`,
     null,
     accessToken
   );
   return response;
+};
+
+const formatData = (data) => {
+  return data.map((item) => {
+    const isQuiz = !!item.quiz_id;
+    const mainData = isQuiz ? item.quiz : item.deck;
+
+    return {
+      id: item.id,
+      Cardname: mainData.name,
+      owner: mainData.owner,
+      tag: mainData.tag,
+      type: mainData.type,
+      likes: mainData.likes,
+      isLiked: item.is_liked,
+      size: isQuiz ? mainData.qcms_count : mainData.flashcard_count,
+      results: item.results.map((result) => ({
+        date: formatDateDayMonth(result.created_at),
+        result: result.grade,
+      })),
+    };
+  });
 };
 
 const StatsPage = () => {
@@ -77,13 +62,14 @@ const StatsPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [searchValues, setSearchValues] = useState(null);
 
-  const getAll = async (page = 1, searchValues?) => {
-    const response = await getAllCards(accessToken, page, searchValues);
+  const fetchAllStats = async (page: number = 1, searchValues?: any) => {
+    const response = await getAllStats(accessToken, page, searchValues);
     if (response.status === 200) {
-      const { data: cards, meta } = response.data;
+      const { data, meta } = response.data;
       setTotalPages(meta.last_page);
       setPage(meta.current_page);
-      setAllCards(cards);
+      const formattedData = formatData(data);
+      setAllCards(formattedData);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
       console.error(response.message);
@@ -91,23 +77,23 @@ const StatsPage = () => {
     setLoading(false);
   };
 
-  const handlePageChange = (newPage) => {
+  const handlePageChange = (newPage: number) => {
     setPage(newPage);
-    getAll(newPage, searchValues);
+    fetchAllStats(newPage, searchValues);
   };
 
-  const handleSearch = (searchValues) => {
+  const handleSearch = (searchValues: any) => {
     setSearchValues(searchValues);
-    getAll(1, searchValues); // Reset to first page when performing a new search
+    fetchAllStats(1, searchValues);
   };
 
-  const handleDeleteCard = (id) => {
+  const handleDeleteCard = (id: number) => {
     setAllCards((prev) => prev.filter((card) => card.id !== id));
   };
 
   useEffect(() => {
     if (isReady && accessToken) {
-      getAll();
+      fetchAllStats();
     }
   }, [isReady, accessToken]);
 
@@ -122,67 +108,39 @@ const StatsPage = () => {
       <div className="hidden md:block md:mb-2">
         <FilterBar onSearch={handleSearch} board={true} />
       </div>
-      <h2 className=" text-3xl text-center">Statistics</h2>
+      <h2 className=" text-3xl text-center mt-6">Statistics</h2>
       <motion.div
-        className="flex flex-col gap-4 p-4 md:gap-8 md:p-8"
+        className="flex flex-col gap-8 p-4 md:p-8"
         initial="initial"
         animate="visible"
         variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
       >
         {allCards.map((item, index) => (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
+          <div
+            className="grid grid-rows-2 md:grid-rows-none md:grid-cols-3 gap-1 md:gap-8"
+            key={index}
+          >
             <motion.div
               variants={cardVariants}
-              key={index}
-              className=" col-span-1"
+              className="row-span-1 md:col-span-1"
             >
               <QuizzDeckCard
                 id={item.id}
-                Cardname={item.name}
+                Cardname={item.Cardname}
                 owner={item.owner}
                 tag={item.tag}
                 likes={item.likes}
-                isLiked={item.is_liked}
+                isLiked={item.isLiked}
                 type={item.type}
-                flashcards={item.flashcards}
-                qcms={item.qcms}
+                size={item.size}
                 onDeleteCard={handleDeleteCard}
               />
             </motion.div>
-            <div className="col-span-2 bg-slate-400/15 rounded-md">
-              <ChartContainer
-                config={chartConfig}
-                className="min-h-[80px] max-h-[200px] w-full pr-8"
-              >
-                <BarChart
-                  accessibilityLayer
-                  data={chartData}
-                  margin={{
-                    top: 35,
-                  }}
-                  maxBarSize={35}
-                >
-                  <XAxis
-                    dataKey="day"
-                    tickLine={false}
-                    tickMargin={5}
-                    axisLine={true}
-                    tickFormatter={(value) => value.slice(0, 5)}
-                  />
-                  <YAxis domain={[0, 100]} />
-                  <ReferenceLine y={100} stroke="gray" />
-                  <ReferenceLine y={50} stroke="gray" />
-                  <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent hideLabel />}
-                  />
-                  <Bar
-                    dataKey="results"
-                    fill="var(--color-results)"
-                    radius={[5, 5, 0, 0]}
-                  ></Bar>
-                </BarChart>
-              </ChartContainer>
+            <div className="row-span-1 md:col-span-2 bg-slate-400/15 rounded-md">
+              <StatGraph
+                results={item.results}
+                maxScore={item.type === "Quiz" ? item.size : null}
+              />
             </div>
           </div>
         ))}

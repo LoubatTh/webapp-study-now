@@ -26,6 +26,7 @@ type CommonCardProps = {
   type: string;
   likes: number;
   isLiked: boolean;
+  size?: number;
   flashcards?: Flashcard[];
   qcms?: QCM[];
   organizationName?: string;
@@ -40,6 +41,7 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
   type,
   likes,
   isLiked,
+  size,
   flashcards,
   qcms,
   organizationName,
@@ -47,7 +49,7 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
 }: CommonCardProps) => {
   const navigate = useNavigate();
   const { name } = useUser();
-  const [size, setSize] = useState<number>(0);
+  const [sizeCard, setSizeCard] = useState<number>(0);
   const cards = type === "Quiz" ? "quizz" : "deck";
   const itemLabel = type === "Quiz" ? "qcms" : "flashcards";
 
@@ -56,10 +58,12 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
   };
 
   useEffect(() => {
-    if (type === "Quiz") {
-      setSize(qcms?.length || 0);
+    if (size) {
+      setSizeCard(size);
+    } else if (type === "Quiz") {
+      setSizeCard(qcms?.length || 0);
     } else {
-      setSize(flashcards?.length || 0);
+      setSizeCard(flashcards?.length || 0);
     }
   }, [flashcards, qcms, type]);
 
@@ -86,7 +90,7 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
         <CardContent className="flex">
           <div className=" capitalize mr-1">{cards}</div>
           <div>
-            of {size} {itemLabel}
+            of {sizeCard} {itemLabel}
           </div>
         </CardContent>
         <CardFooter

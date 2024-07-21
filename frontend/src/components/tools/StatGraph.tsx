@@ -52,6 +52,10 @@ const StatGraph = ({ results, maxScore }: StatGraphProps) => {
       console.error = originalError;
     };
   }, []);
+
+  const getTicks = (maxScore) => {
+    return [0, maxScore * 0.25, maxScore * 0.5, maxScore * 0.75, maxScore];
+  };
   return (
     <ChartContainer
       config={chartConfig}
@@ -74,7 +78,7 @@ const StatGraph = ({ results, maxScore }: StatGraphProps) => {
         />
         {maxScore ? (
           <>
-            <YAxis domain={[0, maxScore]} />
+            <YAxis domain={[0, maxScore]} ticks={getTicks(maxScore)} />
             <ReferenceLine y={maxScore} stroke="gray" />
             <ReferenceLine y={maxScore / 2} stroke="gray" />
           </>
@@ -82,6 +86,7 @@ const StatGraph = ({ results, maxScore }: StatGraphProps) => {
           <>
             <YAxis domain={[1, 5]} />
             <ReferenceLine y={5} stroke="gray" />
+            <ReferenceLine y={3} stroke="gray" />
           </>
         )}
         <ChartTooltip

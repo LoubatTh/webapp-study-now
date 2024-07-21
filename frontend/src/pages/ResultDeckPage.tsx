@@ -108,7 +108,7 @@ const ResultDeckPage = () => {
       )}
 
       {accessToken ? (
-        <div className="flex flex-col">
+        <div className="flex flex-col max-w-[50rem] md:min-w-[45rem] w-full">
           <div className="text-xl ml-6">All your statistics</div>
           <StatGraph results={results} />
         </div>

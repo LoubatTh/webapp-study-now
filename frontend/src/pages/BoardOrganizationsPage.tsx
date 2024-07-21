@@ -241,7 +241,7 @@ const BoardOrganizationPage = () => {
           className="cursor-pointer hover:text-slate-500"
         />
 
-        <div className="flex flex-raw gap-4">
+        <div className="flex flex-row gap-4">
           <Sheet>
             <SheetTrigger>
               <Button className="flex gap-2">

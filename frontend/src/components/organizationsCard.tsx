@@ -4,9 +4,12 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Organization } from '@/types/organization.type';
 import { getColorClass } from '@/utils/tagscolor';
 import { useNavigate } from 'react-router-dom';
-import { SquareDashedMousePointer } from 'lucide-react';
+import { FilePen, SquareDashedMousePointer } from 'lucide-react';
 import { ScrollArea, ScrollBar } from './ui/scroll-area';
 import DeleteOrganizations from './deleteOrganizations';
+import EditOrganizations from './editOrganizations';
+import { Dialog, DialogTrigger } from './ui/dialog';
+import { Button } from './ui/button';
 
 const OrganizationsCard = ( organization: Organization  ) => {
 
@@ -25,11 +28,26 @@ const OrganizationsCard = ( organization: Organization  ) => {
               {organization.name}
             </CardTitle>
             {organization.removeOrganization && (
-            <DeleteOrganizations
-              org_id={organization.id}
-              removeOrganization={organization.removeOrganization}
-            />
-          )}
+              <div className="flex flex-row gap-3">
+                <Dialog>
+                  <DialogTrigger>
+                    <FilePen
+                      size={14}
+                    />
+                  </DialogTrigger>
+                  <EditOrganizations
+                    org_id={organization.id}
+                    updateOrganization={organization.updateOrganization}
+                    baseDescription={organization.description}
+                    baseName={organization.name}
+                  />
+                </Dialog>
+                <DeleteOrganizations
+                  org_id={organization.id}
+                  removeOrganization={organization.removeOrganization}
+                />
+              </div>
+            )}
           </div>
           <CardDescription>{organization.description}</CardDescription>
         </CardHeader>
@@ -65,7 +83,7 @@ const OrganizationsCard = ( organization: Organization  ) => {
               <AvatarImage src="https://github.com/shadcn.png" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
-            <p className="ml-2">Professeur</p>
+            <p className="ml-2">{organization.owner}</p>
           </div>
         </CardFooter>
       </Card>

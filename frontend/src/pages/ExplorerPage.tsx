@@ -3,9 +3,9 @@ import QuizzDeckCard from "@/components/quizzDeckCard";
 import { useAuth } from "@/contexts/AuthContext";
 import { fetchApi } from "@/utils/api";
 import { motion } from "framer-motion";
-import FilterBar from "@/components/FilterBar";
-import FilterBarMobile from "@/components/FilterBarMobile";
 import Pagination from "@/components/tools/Pagination";
+import FilterBarMobile from "@/components/FilterBarMobile";
+import FilterBar from "@/components/FilterBar";
 
 const cardVariants = {
   initial: { opacity: 0, y: 50 },

@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search } from "lucide-react";
+import { RotateCcw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -31,6 +31,7 @@ const FilterBar = ({ onSearch, board }: FilterBarProps) => {
   const [label, setLabel] = useState("");
   const [type, setType] = useState("");
   const [isPublic, setIsPublic] = useState("");
+  const [searchValues, setSearchValues] = useState<any>({});
 
   const getFormLabels = async () => {
     const response = await getLabels();
@@ -55,17 +56,26 @@ const FilterBar = ({ onSearch, board }: FilterBarProps) => {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    const searchValues = {
+    setSearchValues({
       name,
       owner,
       tag: label === "none" ? "" : label,
       type: type === "none" ? "" : type,
       isPublic:
         isPublic === "public" ? true : isPublic === "private" ? false : null,
-    };
+    });
 
     const queryString = buildQueryString(searchValues);
     onSearch(queryString);
+  };
+
+  const resetValues = () => {
+    setName("");
+    setOwner("");
+    setLabel("");
+    setType("");
+    setIsPublic("");
+    setSearchValues("");
   };
 
   useEffect(() => {
@@ -145,8 +155,14 @@ const FilterBar = ({ onSearch, board }: FilterBarProps) => {
           </SelectContent>
         </Select>
       </div>
-      <Button type="submit" className="mt-auto w-full md:w-auto">
+      <Button
+        type="submit"
+        className="mt-auto w-full md:w-auto bg-green-500 hover:bg-green-400"
+      >
         <Search />
+      </Button>
+      <Button onClick={resetValues} className="mt-auto w-full md:w-auto">
+        <RotateCcw />
       </Button>
     </form>
   );

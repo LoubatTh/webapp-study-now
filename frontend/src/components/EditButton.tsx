@@ -20,14 +20,12 @@ const EditButton = ({ id, type, organizationName }: EditButtonProps) => {
   };
 
   return (
-    <div>
-      <button
-        className="h-full p-2h-full p-2 rounded-md hover:bg-background hover:text-primary hover:ring-1 hover:ring-primary"
-        onClick={(event) => editHandler(event)}
-      >
-        <FilePen size={14} />
-      </button>
-    </div>
+    <button
+      className="h-full p-2h-full p-2 rounded-md hover:bg-background hover:text-primary hover:ring-1 hover:ring-primary"
+      onClick={(event) => editHandler(event)}
+    >
+      <FilePen size={14} />
+    </button>
   );
 };
 

@@ -42,8 +42,7 @@ const ResponseQuizzPage = () => {
   useEffect(() => {
     if (!isReady || !quizzId) return;
 
-    
-    //Initalisation des states 
+    //Initalisation des states
     setQuizz(null);
     setIsForbidden(false);
     setIsNotFound(false);
@@ -56,7 +55,7 @@ const ResponseQuizzPage = () => {
         accessToken
       );
 
-      const status = await response.status;
+      const status = response.status;
 
       // Si la requête est bien effectué, on stocke le quizz dans le state quizz
       if (status == 200) {

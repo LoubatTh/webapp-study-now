@@ -54,6 +54,7 @@ Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->valu
     Route::post('stripe/checkout', [StripeController::class, 'subcriptionCheckout']);
     Route::post('stripe/cancel', [StripeController::class, 'cancel']);
     Route::post('stripe/resume', [StripeController::class, 'resume']);
+    Route::get('stripe/me', [StripeController::class, 'show']);
     
     // Organization routes
     Route::post('organizations/invites/{id}', [OrganizationUserController::class, 'invite']);

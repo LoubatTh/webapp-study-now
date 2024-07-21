@@ -52,7 +52,7 @@ const DeleteButton = ({ id, type, onDeleteCard }: DeleteButtonProps) => {
   };
 
   return (
-    <div>
+    <button onClick={(event) => event.stopPropagation()}>
       <Dialog>
         <DialogTrigger asChild>
           <button
@@ -62,7 +62,10 @@ const DeleteButton = ({ id, type, onDeleteCard }: DeleteButtonProps) => {
             <Trash2 size={14} />
           </button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent
+          className="sm:max-w-md"
+          onClick={(event) => event.stopPropagation()}
+        >
           <DialogHeader>
             <DialogTitle>Delete {cards}</DialogTitle>
             <DialogDescription>
@@ -73,7 +76,10 @@ const DeleteButton = ({ id, type, onDeleteCard }: DeleteButtonProps) => {
             <DialogClose asChild>
               <Button
                 type="button"
-                onClick={(event) => deleteHandler(event)}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  deleteHandler(event);
+                }}
                 variant="destructive"
                 className="w-1/2"
               >
@@ -83,7 +89,7 @@ const DeleteButton = ({ id, type, onDeleteCard }: DeleteButtonProps) => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </button>
   );
 };
 

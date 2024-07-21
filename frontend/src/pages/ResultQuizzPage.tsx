@@ -1,10 +1,3 @@
-import { Bar, BarChart, ReferenceLine, XAxis, YAxis } from "recharts";
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
 import { useEffect, useState } from "react";
 import CongratulatoryMessage from "@/components/result/CongratulatoryMessage";
 import { fetchApi } from "@/utils/api";
@@ -13,13 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import useStore from "@/lib/stores/resultStore";
 import GuestResultMessage from "@/components/result/GuestResultMessage";
 import { formatDateDayMonth } from "@/utils/dateparser";
-
-const chartConfig = {
-  results: {
-    label: "result",
-    color: "#2563eb",
-  },
-} satisfies ChartConfig;
+import StatGraph from "@/components/tools/StatGraph";
 
 const getQuizz = async (quizzId: string, accessToken?: string) => {
   const response = await fetchApi(
@@ -116,6 +103,7 @@ const ResultQuizzPage = () => {
       <div className=" text-3xl font-bold text-center">
         {`Result for ${cardName}`}
       </div>
+
       {accessToken ? (
         <CongratulatoryMessage score={lastScore} maxScore={maxResults} />
       ) : (
@@ -128,39 +116,7 @@ const ResultQuizzPage = () => {
       {accessToken ? (
         <div className="flex flex-col">
           <div className="text-xl ml-6">All your statistics</div>
-          <ChartContainer
-            config={chartConfig}
-            className="min-h-[80px] max-h-[200px] w-full pr-8"
-          >
-            <BarChart
-              accessibilityLayer
-              data={results}
-              margin={{
-                top: 35,
-              }}
-              maxBarSize={35}
-            >
-              <XAxis
-                dataKey="date"
-                tickLine={false}
-                tickMargin={5}
-                axisLine={true}
-                tickFormatter={(value) => value.slice(0, 5)}
-              />
-              <YAxis domain={[0, maxResults]} />
-              <ReferenceLine y={maxResults} stroke="gray" />
-              <ReferenceLine y={maxResults / 2} stroke="gray" />
-              <ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent hideLabel />}
-              />
-              <Bar
-                dataKey="result"
-                fill="var(--color-results)"
-                radius={[5, 5, 0, 0]}
-              ></Bar>
-            </BarChart>
-          </ChartContainer>
+          <StatGraph results={results} maxScore={maxResults} />
         </div>
       ) : (
         <GuestResultMessage />

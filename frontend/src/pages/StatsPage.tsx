@@ -1,5 +1,3 @@
-import FilterBar from "@/components/FilterBar";
-import FilterBarMobile from "@/components/FilterBarMobile";
 import QuizzDeckCard from "@/components/quizzDeckCard";
 import { useAuth } from "@/contexts/AuthContext";
 import { fetchApi } from "@/utils/api";
@@ -13,6 +11,8 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import Pagination from "@/components/tools/Pagination";
+import FilterBarMobile from "@/components/FilterBarMobile";
+import FilterBar from "@/components/FilterBar";
 
 const chartConfig = {
   results: {

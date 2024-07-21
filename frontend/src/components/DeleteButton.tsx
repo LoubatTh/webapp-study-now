@@ -52,7 +52,7 @@ const DeleteButton = ({ id, type, onDeleteCard }: DeleteButtonProps) => {
   };
 
   return (
-    <button onClick={(event) => event.stopPropagation()}>
+    <div onClick={(event) => event.stopPropagation()}>
       <Dialog>
         <DialogTrigger asChild>
           <button
@@ -89,7 +89,7 @@ const DeleteButton = ({ id, type, onDeleteCard }: DeleteButtonProps) => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </button>
+    </div>
   );
 };
 

@@ -6,10 +6,12 @@ use App\Http\Requests\StoreOrganizationDeckRequest;
 use App\Http\Requests\UpdateOrganizationDeckRequest;
 use App\Http\Resources\OrganizationDeckResource;
 use App\Models\Deck;
+use App\Models\UserDeck;
 use App\Models\OrganizationDeck;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Support\Facades\Log;
 
 class OrganizationDeckController
 {
@@ -18,9 +20,16 @@ class OrganizationDeckController
      */
     public function index(Request $request, int $id)
     {
-        $decks = OrganizationDeck::with('deck.flashcards', 'deck.tag', 'deck.user')->where('organization_id', $id)->get();
+        $organizationDecks = OrganizationDeck::with('deck.flashcards', 'deck.tag', 'deck.user')->where('organization_id', $id)->get();
 
-        return response()->json(OrganizationDeckResource::collection($decks));
+        $user = $request->user();
+
+        foreach ($organizationDecks as $organizationDeck) {
+            $userDeck = UserDeck::where(["user_id" => $user->id, "deck_id" => $organizationDeck->deck_id])->first();
+            $organizationDeck->setAttribute("is_liked", $userDeck ? $userDeck->is_liked : false);
+        }
+
+        return response()->json(OrganizationDeckResource::collection($organizationDecks));
     }
 
     /**
@@ -100,6 +109,11 @@ class OrganizationDeckController
                 'error' => 'Not found'
             ], 404);
         }
+
+        $user = $request->user();
+
+        $userDeck = UserDeck::where(["user_id" => $user->id, "deck_id" => $deckId])->first();
+        $organizationDeck->setAttribute("is_liked", $userDeck ? $userDeck->is_liked : false);
 
         return response()->json(new OrganizationDeckResource($organizationDeck));
     }

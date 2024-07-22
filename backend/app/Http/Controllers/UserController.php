@@ -155,7 +155,7 @@ class UserController extends Controller
             array_push($tags, $quiz->tag->name);
         }
 
-        return array_unique($tags);
+        return array_values(array_unique($tags));
     }
 
     public function avatar(Request $request)

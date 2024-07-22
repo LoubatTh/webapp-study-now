@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\OrganizationQuizResource;
 use App\Models\OrganizationQuiz;
 use App\Models\Quiz;
+use App\Models\UserQuiz;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -16,9 +17,16 @@ class OrganizationQuizController
      */
     public function index(Request $request, int $id)
     {
-        $quizzes = OrganizationQuiz::with('quiz', 'quiz.qcms', 'quiz.tag', 'quiz.user')->where('organization_id', $id)->get();
+        $organizationQuizzes = OrganizationQuiz::with('quiz', 'quiz.qcms', 'quiz.tag', 'quiz.user')->where('organization_id', $id)->get();
 
-        return response()->json(OrganizationQuizResource::collection($quizzes));
+        $user = $request->user();
+
+        foreach ($organizationQuizzes as $organizationQuiz) {
+            $userQuiz = UserQuiz::where(["user_id" => $user->id, "quiz_id" => $organizationQuiz->quiz_id])->first();
+            $organizationQuiz->setAttribute("is_liked", $userQuiz ? $userQuiz->is_liked : false);
+        }
+
+        return response()->json(OrganizationQuizResource::collection($organizationQuizzes));
     }
 
     /**
@@ -99,6 +107,11 @@ class OrganizationQuizController
                 'error' => 'Not found'
             ], 404);
         }
+
+        $user = $request->user();
+
+        $userQuiz = UserQuiz::where(["user_id" => $user->id, "quiz_id" => $organizationQuiz->quiz_id])->first();
+        $organizationQuiz->setAttribute("is_liked", $userQuiz ? $userQuiz->is_liked : false);
 
         return response()->json(new OrganizationQuizResource($organizationQuiz));
     }

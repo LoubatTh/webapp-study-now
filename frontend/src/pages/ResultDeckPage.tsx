@@ -92,7 +92,7 @@ const ResultDeckPage = () => {
   }, [deckId, accessToken]);
 
   return (
-    <div className="flex flex-col p-6 justify-evenly flex-grow">
+    <div className="flex flex-col p-6 justify-evenly flex-grow items-center w-full">
       <div className=" text-3xl font-bold text-center">
         {`Result for ${cardName}`}
       </div>

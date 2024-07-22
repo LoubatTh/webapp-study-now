@@ -31,7 +31,6 @@ const FilterBar = ({ onSearch, board }: FilterBarProps) => {
   const [label, setLabel] = useState("");
   const [type, setType] = useState("");
   const [isPublic, setIsPublic] = useState("");
-  const [searchValues, setSearchValues] = useState<any>({});
 
   const getFormLabels = async () => {
     const response = await getLabels();
@@ -56,14 +55,14 @@ const FilterBar = ({ onSearch, board }: FilterBarProps) => {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    setSearchValues({
+    const searchValues = {
       name,
       owner,
       tag: label === "none" ? "" : label,
       type: type === "none" ? "" : type,
       isPublic:
         isPublic === "public" ? true : isPublic === "private" ? false : null,
-    });
+    };
 
     const queryString = buildQueryString(searchValues);
     onSearch(queryString);
@@ -75,7 +74,6 @@ const FilterBar = ({ onSearch, board }: FilterBarProps) => {
     setLabel("");
     setType("");
     setIsPublic("");
-    setSearchValues("");
   };
 
   useEffect(() => {

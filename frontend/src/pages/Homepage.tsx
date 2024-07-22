@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { StickyScroll } from "@/components/ui/sticky-scroll-reveal";
 
 const content = [
@@ -69,13 +70,14 @@ const content = [
 
 const Homepage = () => {
   return (
-    <div className="flex flex-col flex-grow justify-evenly items-center space-y-11">
+    <div className="flex flex-col flex-grow justify-evenly items-center space-y-11 p-4">
       <h1 className="uppercase font-extrabold text-5xl text-center tracking-widest">
         Welcome to Studynow
       </h1>
       <div className="w-full">
         <StickyScroll content={content} />
       </div>
+      <Button className="w-full md:w-44">Explore now</Button>
     </div>
   );
 };

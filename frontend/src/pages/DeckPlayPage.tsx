@@ -25,17 +25,22 @@ const DeckPlayPage = () => {
   const navigate = useNavigate();
   const { accessToken } = useAuth();
   const { setScore } = useStore();
-  const { addRating, getAverageRating, allFlashcardsGraded } =
+  const { addRating, getAverageRating, allFlashcardsGraded, ratings } =
     useFlashcardStore();
   const { deckId } = useParams<{ deckId: string }>();
   const [deck, setDeck] = useState<Deck | null>(null);
   const [isForbidden, setIsForbidden] = useState<boolean>(false);
   const [isNotFound, setIsNotFound] = useState<boolean>(false);
+  const [allGraded, setAllGraded] = useState<boolean>(false);
+
+  useEffect(() => {
+    setAllGraded(deck ? allFlashcardsGraded(deck.flashcards.length) : false);
+  }, [ratings, deck]);
 
   const handleResult = () => {
-    if (!deck || !allFlashcardsGraded(deck.flashcards.length)) {
+    if (!deck || !allGraded) {
       toast({
-        description: "You didnt graded all flashcards",
+        description: "You didn't grade all flashcards",
         variant: "destructive",
       });
       return;

@@ -29,7 +29,7 @@ const OrganizationMember = ({id: id_user, name, pending, is_owner, onRemoveUser}
                 <DialogHeader>
                   <DialogTitle>Remove this member ?</DialogTitle>
                   <DialogDescription>
-                    This action is irreversible, are you sure you want to remove
+                    This action is irreversible, are you sure you want to remove {name} ?
                   </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>

@@ -17,6 +17,7 @@ import DeleteOrganizations from "./deleteOrganizations";
 import EditOrganizations from "./editOrganizations";
 import { Dialog, DialogTrigger } from "./ui/dialog";
 import { useUser } from "@/contexts/UserContext";
+import { Button } from "./ui/button";
 
 const OrganizationsCard = (organization: Organization) => {
   const navigation = useNavigate();
@@ -39,12 +40,14 @@ const OrganizationsCard = (organization: Organization) => {
             </CardTitle>
             {organization.removeOrganization && (
               <div
-                className="flex flex-row gap-3"
+                className="flex flex-row gap-1"
                 onClick={(event) => event.stopPropagation()}
               >
                 <Dialog>
                   <DialogTrigger>
-                    <FilePen size={14} />
+                    <div className="hover:bg-primary hover:text-background p-3 rounded">
+                      <FilePen size={14} />
+                    </div>
                   </DialogTrigger>
                   <EditOrganizations
                     org_id={organization.id}

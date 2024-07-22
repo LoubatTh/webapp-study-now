@@ -212,17 +212,17 @@ const MyOrganizationsPage = () => {
 
   return (
     <>
+      {is_subscribed && (
+        <Dialog>
+          <DialogTrigger>
+            <Button> Create Organization </Button>
+          </DialogTrigger>
+          <CreateOrganizations onOrganizationCreated={fetchOrganizations} />
+        </Dialog>
+      )}
       {organizations.owned_organizations.length !== 0 && (
         <>
-          <div className="flex justify-around items-center p-4">
-            <PageTitle title="Owned Organizations" />
-            <Dialog>
-              <DialogTrigger>
-                <Button> Create Organization </Button>
-              </DialogTrigger>
-              <CreateOrganizations onOrganizationCreated={fetchOrganizations} />
-            </Dialog>
-          </div>
+          <h1 className="ml-4 font-bold text-xl">Owned Organizations</h1>
           <motion.div
             className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4"
             initial="initial"
@@ -246,6 +246,7 @@ const MyOrganizationsPage = () => {
                     description={organization.description}
                     owner_id={organization.owner_id}
                     owner={organization.owner}
+                    owner_avatar={organization.owner_avatar}
                     tags={organization.tags}
                     removeOrganization={removeOrganization}
                     updateOrganization={updateOrganization}
@@ -259,23 +260,38 @@ const MyOrganizationsPage = () => {
 
       {organizations.organizations.length !== 0 && (
         <>
-          <PageTitle title="Joined Organizations" />
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4">
-            {organizations.organizations.map(
-              (organization: Organization, index) => (
-                <OrganizationsCard
-                  key={index}
-                  id={organization.id}
-                  created_at={organization.created_at}
-                  updated_at={organization.updated_at}
-                  name={organization.name}
-                  description={organization.description}
-                  owner_id={organization.owner_id}
-                  tags={organization.tags}
-                />
-              )
-            )}
-          </div>
+          <h1 className="ml-4 font-bold text-xl">Joined Organizations</h1>
+          <motion.div
+            className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4"
+            initial="initial"
+            animate="visible"
+            variants={{
+              visible: {
+                transition: {
+                  staggerChildren: 0.1,
+                },
+              },
+            }}
+          >
+              {organizations.organizations.map(
+                (organization: Organization, index) => (
+                  <motion.div variants={cardVariants} key={index}>
+                    <OrganizationsCard
+                      key={index}
+                      id={organization.id}
+                      created_at={organization.created_at}
+                      updated_at={organization.updated_at}
+                      name={organization.name}
+                      description={organization.description}
+                      owner_id={organization.owner_id}
+                      owner={organization.owner}
+                      owner_avatar={organization.owner_avatar}
+                      tags={organization.tags}
+                    />
+                  </motion.div>
+                )
+              )}
+          </motion.div>
         </>
       )}
 

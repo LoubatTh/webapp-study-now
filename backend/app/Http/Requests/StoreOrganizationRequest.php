@@ -23,7 +23,7 @@ class StoreOrganizationRequest extends FormRequest
     {
         return [
             'name' => 'required|string|min:3|max:255',
-            'description' => 'required|string|max:100',
+            'description' => 'string|max:100',
         ];
     }
 }

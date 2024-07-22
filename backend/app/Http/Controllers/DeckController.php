@@ -15,6 +15,7 @@ use App\Models\UserDeck;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class DeckController extends Controller
 {
@@ -84,6 +85,8 @@ class DeckController extends Controller
             if (!$deck) {
                 return response()->json(["message" => "Deck not found"], 404);
             }
+            Log::info("test", ["deck" => $deck]);
+            Log::info("id", ["id" => $id]);
 
             $user = Auth::guard("sanctum")->user();
             $user ? $user = User::find($user->id) : null;
@@ -98,8 +101,10 @@ class DeckController extends Controller
                     ->merge($user->organizations->pluck('id'))
                     ->unique();
 
+                Log::info("ApresOrga", ["id" => $id]);
+                Log::info("orgaId", ["id" => $organizations]);
                 if ($organizations->count() > 0) {
-                    if ($user->id != $deck->user_id && !OrganizationDeck::where('organization_id', $organizations)->where('deck_id', $id)->exists()) {
+                    if ($user->id != $deck->user_id && !OrganizationDeck::wherein('organization_id', $organizations)->where('deck_id', $id)->exists()) {
                         return response()->json(["message" => "Forbidden"], 403);
                     }
                 } else if ($user->id != $deck->user_id) {

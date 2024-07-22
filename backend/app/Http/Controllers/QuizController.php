@@ -115,7 +115,7 @@ class QuizController extends Controller
                 ->unique();
 
             if ($organizations->count() > 0) {
-                if ($user->id != $quiz->user_id && !OrganizationQuiz::where('organization_id', $organizations)->where('quiz_id', $id)->exists()) {
+                if ($user->id != $quiz->user_id && !OrganizationQuiz::wherein('organization_id', $organizations)->where('quiz_id', $id)->exists()) {
                     return response()->json(['message' => 'Forbidden'], 403);
                 }
             } else if ($user->id != $quiz->user_id) {

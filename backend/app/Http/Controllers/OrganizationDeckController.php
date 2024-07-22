@@ -11,7 +11,6 @@ use App\Models\OrganizationDeck;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Illuminate\Support\Facades\Log;
 
 class OrganizationDeckController
 {

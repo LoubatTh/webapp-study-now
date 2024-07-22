@@ -59,7 +59,7 @@ class OrganizationDeckController
                         'error' => 'Only pdf files supported'
                     ], 400);
                 }
-                $filePath = Storage::putFile('organizations/decks', $file, 'public');
+                $filePath = Storage::disk('s3')->putFile('organizations/decks', $file);
             }
 
             OrganizationDeck::create([
@@ -71,7 +71,7 @@ class OrganizationDeckController
             if ($filePath) {
                 return response()->json([
                     'message' => 'Deck added to the organization',
-                    'file_url' => $this->urlBuilder($filePath),
+                    'url' => env('AWS_URL') . $filePath,
                 ], 201);
             }
 
@@ -125,10 +125,10 @@ class OrganizationDeckController
         }
 
         if ($organizationDeck['file_path']) {
-            Storage::delete($organizationDeck['file_path']);
+            Storage::disk('s3')->delete($organizationDeck['file_path']);
         }
 
-        $filePath = Storage::putFile('organizations/decks', $file, 'public');
+        $filePath = Storage::disk('s3')->putFile('organizations/decks', $file, 'public');
         $organizationDeck->update([
             'file_path' => $filePath,
         ]);
@@ -146,7 +146,7 @@ class OrganizationDeckController
     {
         $organizationDeck = OrganizationDeck::where('organization_id', $id)->where('deck_id', $deckId)->first();
 
-        Storage::delete($organizationDeck['file_path']);
+        Storage::disk('s3')->delete($organizationDeck['file_path']);
         $organizationDeck->delete();
 
         return response()->noContent();

@@ -57,7 +57,7 @@ class OrganizationQuizController
                         'error' => 'Only pdf files supported'
                     ], 400);
                 }
-                $filePath = Storage::putFile('organizations/quizzes', $file, 'public');
+                $filePath = Storage::disk('s3')->putFile('organizations/quizzes', $file, 'public');
             }
 
             OrganizationQuiz::create([
@@ -69,7 +69,7 @@ class OrganizationQuizController
             if ($filePath) {
                 return response()->json([
                     'message' => 'Quiz added to the organization',
-                    'file_url' => $this->urlBuilder($filePath),
+                    'file_url' => env('AWS_URL') . $filePath,
                 ], 201);
             }
 
@@ -124,10 +124,10 @@ class OrganizationQuizController
         }
 
         if ($organizationQuiz['file_path']) {
-            Storage::delete($organizationQuiz['file_path']);
+            Storage::disk('s3')->delete($organizationQuiz['file_path']);
         }
 
-        $filePath = Storage::putFile('organizations/quizzes', $file, 'public');
+        $filePath = Storage::disk('s3')->putFile('organizations/quizzes', $file, 'public');
         $organizationQuiz->update([
             'file_path' => $filePath,
         ]);
@@ -146,7 +146,7 @@ class OrganizationQuizController
     {
         $organizationQuiz = OrganizationQuiz::where('organization_id', $id)->where('quiz_id', $quizId)->first();
 
-        Storage::delete($organizationQuiz['file_path']);
+        Storage::disk('s3')->delete($organizationQuiz['file_path']);
         $organizationQuiz->delete();
 
         return response()->noContent();

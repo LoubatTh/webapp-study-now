@@ -9,7 +9,7 @@ import { Deck } from "@/types/deck.type";
 import { fetchApi } from "@/utils/api";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { set } from "react-hook-form";
+import { toast } from "@/components/ui/use-toast";
 
 const getDeck = async (deckId: string, accessToken?: string) => {
   const response = await fetchApi("GET", `decks/${deckId}`, null, accessToken);
@@ -25,13 +25,21 @@ const DeckPlayPage = () => {
   const navigate = useNavigate();
   const { accessToken } = useAuth();
   const { setScore } = useStore();
-  const { addRating, getAverageRating } = useFlashcardStore();
+  const { addRating, getAverageRating, allFlashcardsGraded } =
+    useFlashcardStore();
   const { deckId } = useParams<{ deckId: string }>();
   const [deck, setDeck] = useState<Deck | null>(null);
   const [isForbidden, setIsForbidden] = useState<boolean>(false);
   const [isNotFound, setIsNotFound] = useState<boolean>(false);
 
   const handleResult = () => {
+    if (!deck || !allFlashcardsGraded(deck.flashcards.length)) {
+      toast({
+        description: "You didnt graded all flashcards",
+        variant: "destructive",
+      });
+      return;
+    }
     const rating = getAverageRating();
     if (accessToken) {
       postResultToApi();

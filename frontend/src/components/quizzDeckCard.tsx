@@ -17,6 +17,7 @@ import LikeButton from "./LikeButton";
 import { Flashcard } from "@/types/deck.type";
 import { QCM } from "@/types/quizz.type";
 import { useUser } from "@/contexts/UserContext";
+import { User } from "lucide-react";
 
 type CommonCardProps = {
   id: number;
@@ -78,7 +79,9 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
           <CardHeader className="flex flex-row items-center p-3">
             <Avatar>
               <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>{owner}</AvatarFallback>
+              <AvatarFallback>
+                <User />
+              </AvatarFallback>
             </Avatar>
             <div className="flex-col ml-2 capitalize text-wrap lg:text-nowrap lg:max-w-80 xl:max-w-60">
               <CardTitle className="md:truncate">{Cardname}</CardTitle>

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreUserAvatarRequest;
 use App\Models\Deck;
 use App\Models\Organization;
 use App\Models\OrganizationDeck;

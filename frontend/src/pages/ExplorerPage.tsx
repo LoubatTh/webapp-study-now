@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import Pagination from "@/components/tools/Pagination";
 import FilterBarMobile from "@/components/FilterBarMobile";
 import FilterBar from "@/components/FilterBar";
+import Loading from "@/components/Loading";
 
 const cardVariants = {
   initial: { opacity: 0, y: 50 },
@@ -73,7 +74,7 @@ const ExplorerPage = () => {
   }, [isReady, accessToken]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (

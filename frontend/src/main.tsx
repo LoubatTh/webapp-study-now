@@ -22,6 +22,7 @@ import StatsPage from "./pages/StatsPage";
 import QuizzPlayPage from "./pages/QuizzPlayPage";
 import ResultQuizzPage from "./pages/ResultQuizzPage";
 import ResultDeckPage from "./pages/ResultDeckPage";
+import Loading from "./components/Loading";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
@@ -55,6 +56,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <Route path="/explore" element={<ExplorePage />} />
             <Route path="/premium" element={<PremiumPage />} />
             <Route path="*" element={<Error404 />} />
+            <Route path="/loading" element={<Loading />} />
           </Route>
         </Routes>
       </UserProvider>

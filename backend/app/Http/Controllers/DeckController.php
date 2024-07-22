@@ -102,9 +102,7 @@ class DeckController extends Controller
                     if ($user->id != $deck->user_id && !OrganizationDeck::where('organization_id', $organizations)->where('deck_id', $id)->exists()) {
                         return response()->json(["message" => "Forbidden"], 403);
                     }
-                }
-
-                if ($user->id != $deck->user_id) {
+                } else if ($user->id != $deck->user_id) {
                     return response()->json(["message" => "Forbidden"], 403);
                 }
             }

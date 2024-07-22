@@ -1,10 +1,18 @@
 import CreateOrganizations from "@/components/createOrganizations";
 import InvitationCard from "@/components/invitationCard";
+import Loading from "@/components/Loading";
 import OrganizationsCard from "@/components/organizationsCard";
 import PageTitle from "@/components/pageTitle";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { useToast } from "@/components/ui/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUser } from "@/contexts/UserContext";
@@ -29,22 +37,30 @@ const MyOrganizationsPage = () => {
   const navigation = useNavigate();
 
   const fetchOrganizations = async () => {
-    const response = await fetchApi( "GET","user/organizations", null,accessToken);
-    setOrganizations(await response.data as any);
-
+    const response = await fetchApi(
+      "GET",
+      "user/organizations",
+      null,
+      accessToken
+    );
+    setOrganizations((await response.data) as any);
   };
-  
 
   const fetchInvitations = async () => {
     const response = await fetchApi("GET", "user/invites", null, accessToken);
-    const data = await response.data as InvitationType[];
-    setInvitations(data) 
+    const data = (await response.data) as InvitationType[];
+    setInvitations(data);
     setIsLoading(false);
   };
 
   const requestInvitation = async (id: number, choice: boolean) => {
-    const choiceBody = {"accept": choice};
-    const response = await fetchApi("POST", `organizations/invites/${id}`, choiceBody, accessToken);
+    const choiceBody = { accept: choice };
+    const response = await fetchApi(
+      "POST",
+      `organizations/invites/${id}`,
+      choiceBody,
+      accessToken
+    );
     console.log(await response);
 
     if (response.status !== 200) {
@@ -63,10 +79,15 @@ const MyOrganizationsPage = () => {
       description: "Invitation " + (choice ? "accepted" : "declined"),
       className: "bg-green-400",
     });
-  }
+  };
 
   const removeOrganization = async (id: number) => {
-    const response = await fetchApi("DELETE", `organizations/${id}`,null,accessToken);
+    const response = await fetchApi(
+      "DELETE",
+      `organizations/${id}`,
+      null,
+      accessToken
+    );
 
     if (response.status !== 204) {
       toast({
@@ -75,7 +96,7 @@ const MyOrganizationsPage = () => {
         variant: "destructive",
       });
       return;
-    } 
+    }
 
     setOrganizations((prev) => ({
       owned_organizations: prev.owned_organizations.filter(
@@ -88,19 +109,28 @@ const MyOrganizationsPage = () => {
       title: "Success",
       description: "Organization deleted",
       className: "bg-green-400",
-    })
+    });
   };
 
-  const updateOrganization = async (id: number, name: string, description: string) => {
-    const response = await fetchApi("PUT", `organizations/${id}`, {"name": name, "description": description}, accessToken);
+  const updateOrganization = async (
+    id: number,
+    name: string,
+    description: string
+  ) => {
+    const response = await fetchApi(
+      "PUT",
+      `organizations/${id}`,
+      { name: name, description: description },
+      accessToken
+    );
     const status = await response.status;
 
-    if(status == 200){
+    if (status == 200) {
       toast({
         title: "Success",
         description: "Organization updated",
         className: "bg-green-400",
-      })
+      });
       fetchOrganizations();
     } else {
       toast({
@@ -109,7 +139,7 @@ const MyOrganizationsPage = () => {
         variant: "destructive",
       });
     }
-  }
+  };
 
   useEffect(() => {
     if (!isReady) return;
@@ -118,11 +148,10 @@ const MyOrganizationsPage = () => {
     fetchInvitations();
   }, [isReady]);
 
-
   console.log("invitations", invitations);
 
   if (isLoading) {
-    return "Loading...";
+    return <Loading />;
   }
 
   if (
@@ -177,7 +206,6 @@ const MyOrganizationsPage = () => {
                         />
                       ))}
                     </div>
-
                   </SheetContent>
                 </Sheet>
               </>
@@ -273,24 +301,24 @@ const MyOrganizationsPage = () => {
               },
             }}
           >
-              {organizations.organizations.map(
-                (organization: Organization, index) => (
-                  <motion.div variants={cardVariants} key={index}>
-                    <OrganizationsCard
-                      key={index}
-                      id={organization.id}
-                      created_at={organization.created_at}
-                      updated_at={organization.updated_at}
-                      name={organization.name}
-                      description={organization.description}
-                      owner_id={organization.owner_id}
-                      owner={organization.owner}
-                      owner_avatar={organization.owner_avatar}
-                      tags={organization.tags}
-                    />
-                  </motion.div>
-                )
-              )}
+            {organizations.organizations.map(
+              (organization: Organization, index) => (
+                <motion.div variants={cardVariants} key={index}>
+                  <OrganizationsCard
+                    key={index}
+                    id={organization.id}
+                    created_at={organization.created_at}
+                    updated_at={organization.updated_at}
+                    name={organization.name}
+                    description={organization.description}
+                    owner_id={organization.owner_id}
+                    owner={organization.owner}
+                    owner_avatar={organization.owner_avatar}
+                    tags={organization.tags}
+                  />
+                </motion.div>
+              )
+            )}
           </motion.div>
         </>
       )}

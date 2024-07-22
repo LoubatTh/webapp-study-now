@@ -33,8 +33,7 @@ import { Button } from "@/components/ui/button";
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import Image from "./image";
-import logo from "../assets/images/Logo-T-YEP.png";
+import logo from "../assets/images/logo-studynow.png";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { getColorClass } from "@/utils/tagscolor";
@@ -69,10 +68,10 @@ const Navbar = () => {
     <div className="flex justify-between p-2 items-center z-20">
       <div
         onClick={() => handleNavigate("/")}
-        className="flex items-center cursor-pointer"
+        className="flex gap-2 first:items-center cursor-pointer"
       >
         <div>
-          <Image src={logo} alt="logo du site" width="w-8" height="h-8" />
+          <img src={logo} alt={"Logo du site StudyNow"} className={`w-10`} />
         </div>
         <div>
           <h3 className="font-bold text-xl">StudyNow</h3>

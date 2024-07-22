@@ -29,18 +29,31 @@ const QuestionQCM = ({
   Lorsqu'on sait si la réponse est bonne ou pas, on affiche un fond vert si la réponse est bonne et un fond rouge sinon.
   Dans tous les cas si aucun de ces scénarios n'arrive, alors le fond est gris par défaut.
   */
-  const getBorderColor = (answer: Answer) => {
+  const getBorderColor = (answer) => {
     if (answeredCorrectly === undefined) {
-      return selectedAnswers.includes(answer)
-        ? "bg-blue-400 text-white"
-        : "border-slate-300";
+      if (selectedAnswers.includes(answer)) {
+        return "bg-blue-400 text-white"; 
+      } else {
+        return "border-slate-300"; 
+      }
     }
     const isAnswerCorrect = answer.isValid;
+
+    if (isSubmitting) {
+      if (isAnswerCorrect && !selectedAnswers.includes(answer)) {
+        return "bg-orange-400 text-white"; 
+      } else if (!isAnswerCorrect && selectedAnswers.includes(answer)) {
+        return "bg-red-400 text-white"; 
+      }
+    }
+
     if (selectedAnswers.includes(answer)) {
       return isAnswerCorrect
-        ? "bg-green-400 text-white"
-        : "bg-red-400 text-white";
+        ? "bg-green-400 text-white" 
+        : "bg-red-400 text-white"; 
     }
+
+    return "border-slate-300"; 
   };
 
   /*

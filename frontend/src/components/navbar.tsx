@@ -37,12 +37,9 @@ import logo from "../assets/images/logo-studynow.png";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { getColorClass } from "@/utils/tagscolor";
-import { useEffect, useState } from "react";
-import { fetchApi } from "@/utils/api";
 
 const Navbar = () => {
-  const { accessToken, isReady, logout } = useAuth();
-  const [invitations, setInvitations] = useState(0);
+  const { accessToken, logout } = useAuth();
 
   // handle click for navigation btn
   const navigate = useNavigate();
@@ -51,18 +48,6 @@ const Navbar = () => {
   const handleNavigate = (path: string) => {
     navigate(path);
   };
-
-  useEffect(() => {
-    if (!isReady) return;
-
-    const fetchInvites = async () => {
-      const response = await fetchApi("GET", "user/invites", null, accessToken);
-      const data = await response.data;
-      setInvitations(data.length);
-    };
-
-    fetchInvites();
-  }, [isReady, accessToken]);
 
   return (
     <div className="flex justify-between p-2 items-center z-20">
@@ -134,9 +119,6 @@ const Navbar = () => {
                   >
                     <LayoutDashboard className="mr-2 h-4 w-4" />
                     My Organizations
-                    {invitations > 0 && (
-                      <div className="bg-amber-400 p-1 rounded-full relative bottom-1 "></div>
-                    )}
                   </NavigationMenuLink>
                 </NavigationMenuItem>
                 <NavigationMenuItem>

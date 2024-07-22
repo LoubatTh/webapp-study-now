@@ -36,7 +36,7 @@ describe("DeckComponent Component", () => {
   it("renders deck elements", () => {
     render(<DeckComponent {...defaultProps} />);
 
-    expect(screen.getByText(`Deck: ${defaultProps.name}`)).toBeInTheDocument();
+    expect(screen.getByText(`${defaultProps.name}`)).toBeInTheDocument();
 
     const firstFlashcard = screen.getByTestId("flashcard-0");
     const secondFlashcard = screen.getByTestId("flashcard-1");

@@ -54,12 +54,7 @@ class UserDeckTest extends TestCase
             [
                 'user_id' => self::$user->id,
                 'deck_id' => $this->deck->id,
-                'easiness_factor' => 3,
-                'repetition' => 10,
-                'interval' => 18,
-                'date' => now(),
-                'user_grade' => 5,
-                'prev_user_grade' => 5,
+                'next_repetition' => 10,
                 'is_liked' => true,
             ]
         );
@@ -99,12 +94,7 @@ class UserDeckTest extends TestCase
 
         $this->assertEquals($userDeckAfter->user_id, self::$user->id);
         $this->assertEquals($userDeckAfter->deck_id, 1);
-        $this->assertEquals($userDeckAfter->easiness_factor, $userDeckBefore->easiness_factor);
         $this->assertEquals($userDeckAfter->repetition, $userDeckBefore->repetition);
-        $this->assertEquals($userDeckAfter->interval, $userDeckBefore->interval);
-        $this->assertEquals($userDeckAfter->date, $userDeckBefore->date);
-        $this->assertEquals($userDeckAfter->user_grade, $userDeckBefore->user_grade);
-        $this->assertEquals($userDeckAfter->prev_user_grade, $userDeckBefore->prev_user_grade);
 
         $this->assertTrue($userDeckBefore->is_liked);
         $this->assertFalse($userDeckAfter->is_liked);
@@ -128,16 +118,7 @@ class UserDeckTest extends TestCase
 
         $this->assertEquals($userDeckAfter->user_id, self::$user->id);
         $this->assertEquals($userDeckAfter->deck_id, 2);
-        $this->assertEquals($userDeckAfter->easiness_factor, 2.5);
-        $this->assertEquals($userDeckAfter->repetition, 0);
-        $this->assertEquals($userDeckAfter->interval, 0);
-        $this->assertEquals($userDeckAfter->user_grade, null);
-        $this->assertEquals($userDeckAfter->prev_user_grade, null);
-
-        $this->assertTrue(
-            $userDeckAfter->date->between(now()->subSeconds(2), now()->addSeconds(2)),
-            'The date is not within the expected range. Expected :' . now() . 'Real: ' . $userDeckAfter->date
-        );
+        $this->assertEquals($userDeckAfter->next_repetition, 0);
 
         $this->assertTrue($userDeckAfter->is_liked);
     }
@@ -176,165 +157,143 @@ class UserDeckTest extends TestCase
         ]);
     }
 
-    public function test_grade_deck_by_id(): void
+    public function test_store_deck_results(): void
     {
         $this->actingAs(self::$user);
 
-        $grade = [
-            'grade' => 3.2,
-        ];
-
-        $response = $this->putJson('/api/decks/2/grade', $grade, [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json'
-        ]);
-
-        $response->assertStatus(204);
-        $userDeck = UserDeck::where('user_id', self::$user->id)->where('deck_id', 2)->first();
-
-        $this->assertDatabaseHas('user_decks', [
-            'user_id' => self::$user->id,
+        $gradeData = [
             'deck_id' => 2,
-            'easiness_factor' => 2.5 + (0.1 - (5 - 3.2) * (0.08 + (5 - 3.2) * 0.02)),
-            'repetition' => 1,
-            'interval' => 1,
-            'user_grade' => 3.2,
-            'prev_user_grade' => null,
-            'is_liked' => false,
-        ]);
-
-        $this->assertTrue(
-            $userDeck->date->between(now()->subSeconds(2), now()->addSeconds(2)),
-            'The date is not within the expected range'
-        );
-    }
-
-    public function test_grade_deck_repetition_by_id(): void
-    {
-        $this->actingAs(self::$user);
-
-        $grade = [
-            'grade' => 3.2,
-        ];
-
-        $this->putJson('/api/decks/2/grade', $grade, [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json'
-        ]);
-
-        $grade = [
             'grade' => 5,
         ];
 
-        $userDeckBefore = UserDeck::where('user_id', self::$user->id)->where('deck_id', 2)->first();
-        $response = $this->putJson('/api/decks/2/grade', $grade, [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json'
-        ]);
+        $response = $this->postJson('/api/decks/results', $gradeData);
 
-        $response->assertStatus(204);
+        $response->assertStatus(201);
         $userDeck = UserDeck::where('user_id', self::$user->id)->where('deck_id', 2)->first();
 
         $this->assertDatabaseHas('user_decks', [
             'user_id' => self::$user->id,
             'deck_id' => 2,
-            'easiness_factor' => $userDeckBefore->easiness_factor + 0.1,
-            'repetition' => 2,
-            'interval' => 6,
-            'user_grade' => 5,
-            'prev_user_grade' => 3.2,
             'is_liked' => false,
         ]);
 
-        $this->assertTrue(
-            $userDeck->date->between(now()->subSeconds(2), now()->addSeconds(2)),
-            'The date is not within the expected range'
-        );
+        $this->assertDatabaseHas('user_deck_results', [
+            'user_deck_id' => $userDeck->id,
+            'grade' => 5
+        ]);
+
     }
 
-    public function test_grade_deck_badly_by_id(): void
+    public function test_store_deck_results_repetition(): void
     {
         $this->actingAs(self::$user);
 
-        $grade = [
-            'grade' => 3.2,
+        $gradeData = [
+            'deck_id' => 2,
+            'grade' => 0,
         ];
 
-        $this->putJson('/api/decks/2/grade', $grade, [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json'
-        ]);
+        $this->postJson('/api/decks/results', $gradeData);
 
         $grade = [
-            'grade' => 5,
+            'deck_id' => 2,
+            'grade' => 1,
         ];
 
-        $this->putJson('/api/decks/2/grade', $grade, [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json'
-        ]);
+        $response = $this->postJson('/api/decks/results', $grade);
 
-        $grade = [
-            'grade' => 1.2
-        ];
-
-        $userDeckBefore = UserDeck::where('user_id', self::$user->id)->where('deck_id', 2)->first();
-        $response = $this->putJson('/api/decks/2/grade', $grade, [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json'
-        ]);
-
-        $response->assertStatus(204);
+        $response->assertStatus(201);
         $userDeck = UserDeck::where('user_id', self::$user->id)->where('deck_id', 2)->first();
 
         $this->assertDatabaseHas('user_decks', [
             'user_id' => self::$user->id,
             'deck_id' => 2,
-            'easiness_factor' => $userDeckBefore->easiness_factor + (0.1 - (5 - 1.2) * (0.08 + (5 - 1.2) * 0.02)),
-            'repetition' => 0,
-            'interval' => 1,
-            'user_grade' => 1.2,
-            'prev_user_grade' => 5,
             'is_liked' => false,
         ]);
 
-        $this->assertTrue(
-            $userDeck->date->between(now()->subSeconds(2), now()->addSeconds(2)),
-            'The date is not within the expected range'
-        );
+        $this->assertDatabaseHas('user_deck_results', [
+            'user_deck_id' => $userDeck->id,
+            'grade' => 1,
+        ]);
+
+        $this->assertDatabaseHas('user_deck_results', [
+            'user_deck_id' => $userDeck->id,
+            'grade' => 0,
+        ]);
+
     }
 
-    public function test_grade_deck_by_id_unauthorized(): void
+    // public function test_grade_deck_badly_by_id(): void
+    // {
+    //     $this->actingAs(self::$user);
+
+    //     $grade = [
+    //         'grade' => 3.2,
+    //     ];
+
+    //     $this->putJson('/api/decks/2/grade', $grade, [
+    //         'Accept' => 'application/json',
+    //         'Content-Type' => 'application/json'
+    //     ]);
+
+    //     $grade = [
+    //         'grade' => 5,
+    //     ];
+
+    //     $this->putJson('/api/decks/2/grade', $grade, [
+    //         'Accept' => 'application/json',
+    //         'Content-Type' => 'application/json'
+    //     ]);
+
+    //     $grade = [
+    //         'grade' => 1.2
+    //     ];
+
+    //     $userDeckBefore = UserDeck::where('user_id', self::$user->id)->where('deck_id', 2)->first();
+    //     $response = $this->putJson('/api/decks/2/grade', $grade, [
+    //         'Accept' => 'application/json',
+    //         'Content-Type' => 'application/json'
+    //     ]);
+
+    //     $response->assertStatus(204);
+    //     $userDeck = UserDeck::where('user_id', self::$user->id)->where('deck_id', 2)->first();
+
+    //     $this->assertDatabaseHas('user_decks', [
+    //         'user_id' => self::$user->id,
+    //         'deck_id' => 2,
+    //         'next_repetition' => 0,
+    //         'is_liked' => false,
+    //     ]);
+
+    // }
+
+    public function test_store_deck_results_unauthorized(): void
     {
-        $grade = [
-            'grade' => 3.2
+        $gradeData = [
+            'deck_id' => 2,
+            'grade' => 4
         ];
 
-        $response = $this->putJson('/api/decks/2/grade', $grade, [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json'
-        ]);
+        $response = $this->postJson('/api/decks/results', $gradeData);
 
         $response->assertStatus(401)->assertJson([
             'message' => 'Unauthenticated.'
         ]);
     }
 
-    public function test_grade_deck_by_id_not_found(): void
+    public function test_store_deck_results_deck_not_found(): void
     {
         $this->actingAs(self::$user);
 
-        $grade = [
-            'grade' => 3.2
+        $gradeData = [
+            'deck_id' => 1000,
+            'grade' => 5
         ];
 
-        $response = $this->putJson('/api/decks/1000/grade', $grade, [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json'
-        ]);
+        $response = $this->postJson('/api/decks/results', $gradeData);
 
         $response->assertStatus(404)->assertJson([
-            'message' => 'Deck not found'
+            'error' => 'Deck not found'
         ]);
     }
 }

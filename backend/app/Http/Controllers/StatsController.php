@@ -98,6 +98,7 @@ class StatsController extends Controller
                 }
             );
 
+        $userDeck->whereNotNull('next_repetition');
         $request->has('isLiked') ? $userDeck->where('is_liked', $request->input('isLiked')) : null;
         $userDeck->with([
             'deck' => function ($query) {
@@ -133,6 +134,7 @@ class StatsController extends Controller
                 }
             );
 
+        $userQuiz->whereNotNull('next_repetition');
         $request->has('isLiked') ? $userQuiz->where('is_liked', $request->input('isLiked')) : null;
         $userQuiz->with([
             'quiz' => function ($query) {

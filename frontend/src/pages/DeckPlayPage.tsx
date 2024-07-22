@@ -1,3 +1,5 @@
+import { ResourceForbidden } from "@/components/errors/ResourceForbidden";
+import ResourceNotFound from "@/components/errors/ResourceNotFound";
 import DeckComponent from "@/components/deck/DeckComponent";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
@@ -25,6 +27,8 @@ const DeckPlayPage = () => {
   const { addRating, getAverageRating } = useFlashcardStore();
   const { deckId } = useParams<{ deckId: string }>();
   const [deck, setDeck] = useState<Deck | null>(null);
+  const [isForbidden, setIsForbidden] = useState<boolean>(false);
+  const [isNotFound, setIsNotFound] = useState<boolean>(false);
 
   const handleResult = () => {
     const rating = getAverageRating();
@@ -82,33 +86,50 @@ const DeckPlayPage = () => {
       console.log(data);
     } else {
       console.error("Failed to fetch deck:", response);
+
+      const status = await response.status;
+      if (status == 403) {
+        setIsForbidden(true);
+      }
+
+      if (status == 404 || status == 500) {
+        setIsNotFound(true);
+      }
     }
   };
 
   useEffect(() => {
+    setIsForbidden(false);
+    setIsNotFound(false);
     fetchDeck();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deckId, accessToken]);
 
-  if (!deck) {
-    return (
-      <div className="flex justify-center text-center text-6xl h-screen my-auto">
-        <div>No deck found</div>
-      </div>
-    );
+  if (isForbidden) {
+    return <ResourceForbidden type="deck" />;
+  }
+  if (isNotFound) {
+    return <ResourceNotFound type="deck" />;
   }
 
   return (
     <div className="flex flex-col justify-center items-center text-center gap-8 max-w-3xl min-w-full md:min-w-[768px] mx-auto p-6">
-      <DeckComponent
-        id={deck.id}
-        name={deck.name}
-        isPublic={deck.is_public}
-        flashcards={deck.flashcards}
-      />
-      <Button onClick={() => handleResult()} className="w-full md:w-1/3 mb-8">
-        Get my result
-      </Button>
+      {deck && (
+        <>
+          <DeckComponent
+            id={deck.id}
+            name={deck.name}
+            isPublic={deck.is_public}
+            flashcards={deck.flashcards}
+          />
+          <Button
+            onClick={() => handleResult()}
+            className="w-full md:w-1/3 mb-8"
+          >
+            Get my result
+          </Button>
+        </>
+      )}
     </div>
   );
 };

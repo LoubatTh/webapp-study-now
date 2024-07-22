@@ -5,21 +5,20 @@ export const RegisterFormSchema = z
     username: z
       .string()
       .min(3, {
-        message: "Le nom d'utilisateur doit contenir au moins 3 caractères",
+        message: "The username must be at least 3 characters long",
+      })
+      .max(25, {
+        message: "The username must be at most 25 characters long",
       }),
-    email: z.string().email({ message: "Merci de rentrer un email valide" }),
-    password: z
-      .string()
-      .min(8, {
-        message: "Le mot de passe doit contenir au moins 8 caractères",
-      }),
-    confirmPassword: z
-      .string()
-      .min(8, {
-        message: "Le mot de passe doit contenir au moins 8 caractères",
-      }),
+    email: z.string().email({ message: "Please enter a valid email address" }),
+    password: z.string().min(8, {
+      message: "The password must be at least 8 characters long",
+    }),
+    confirmPassword: z.string().min(8, {
+      message: "The password must be at least 8 characters long",
+    }),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Les mots de passe ne correspondent pas",
+    message: "The passwords do not match",
     path: ["confirmPassword"],
   });

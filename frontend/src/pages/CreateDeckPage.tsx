@@ -126,16 +126,17 @@ const CreateDeckPage = () => {
 
   // Function to create the deck with the flashcards and send it to the backend
   const createDeckHandler = async (): Promise<void> => {
-
     const organizationsBody = {
       organisations: selectedOrganizations.map(
         (organization) => organization.id
       ),
     };
 
-
     if (nameDeck.length < 1) {
       setErrorMessage("The name field is required.");
+      return;
+    } else if (nameDeck.length > 30) {
+      setErrorMessage("The name field must be less than 30 characters.");
       return;
     } else if (deck.length < 1) {
       setErrorMessage("You need to add at least one Flashcard.");
@@ -336,7 +337,7 @@ const CreateDeckPage = () => {
               <Autocomplete
                 multiple
                 id="organizations"
-                options={getFilteredOrganizations()} 
+                options={getFilteredOrganizations()}
                 getOptionLabel={(option) => option.name}
                 value={selectedOrganizations}
                 onChange={(event, newValue) => {
@@ -364,7 +365,7 @@ const CreateDeckPage = () => {
           </div>
         )}
       </div>
-      <div className="flex flex-col gap-2 p-2 max-w-3xl min-w-full md:min-w-[768px]">
+      <div className="flex flex-col gap-2 p-2 max-w-full md:max-w-3xl min-w-full md:min-w-[768px]">
         {flashcardList.map((flashcard, i) => (
           <React.Fragment key={flashcard.id}>
             <Separator className="my-2" />

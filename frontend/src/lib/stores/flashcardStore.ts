@@ -10,6 +10,7 @@ type FlashcardStore = {
   addRating: (flashcardId: number, rating: number) => void;
   getAverageRating: () => number | null;
   resetRatings: () => void;
+  allFlashcardsGraded: (totalFlashcards: number) => boolean;
 };
 
 const useFlashcardStore = create<FlashcardStore>((set, get) => ({
@@ -37,6 +38,12 @@ const useFlashcardStore = create<FlashcardStore>((set, get) => ({
   },
   resetRatings: () => {
     set({ ratings: [] });
+  },
+  allFlashcardsGraded: (totalFlashcards: number) => {
+    const { ratings } = get();
+    return (
+      ratings.length === totalFlashcards && ratings.every((r) => r.rating > 0)
+    );
   },
 }));
 

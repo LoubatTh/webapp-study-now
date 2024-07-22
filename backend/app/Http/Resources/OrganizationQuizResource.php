@@ -14,15 +14,19 @@ class OrganizationQuizResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
+        $response = [
             'id' => $this->id,
-            // 'deck_id' => $this->deck_id,
+            // 'quiz_id' => $this->quiz_id,
             'organization_id' => $this->organization_id,
-            'file_path' => env('AWS_URL') . $this->file_path,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'quiz' => new QuizResource($this->whenLoaded('quiz')),
         ];
+        
+        if ($this->file_path) {
+            $response['file_path'] =  env('AWS_URL') . $this->file_path;
+        }
 
+        return $response;
     }
 }

@@ -6,7 +6,6 @@ use App\Http\Controllers\FlashcardController;
 use App\Http\Requests\StoreDeckRequest;
 use App\Http\Requests\UpdateDeckRequest;
 use App\Http\Resources\DeckCollection;
-use App\Http\Resources\DeckResource;
 use App\Models\Deck;
 use App\Models\Organization;
 use App\Models\OrganizationDeck;
@@ -86,14 +85,20 @@ class DeckController extends Controller
                 return response()->json(["message" => "Deck not found"], 404);
             }
 
-            $user = Auth::guard("sanctum")->user();
-
+            $user = User::find(Auth::guard("sanctum")->user()->id);
+            
             if ($deck->is_public == false) {
                 if (!$user) {
                     return response()->json(["message" => "Unauthorized"], 401);
                 }
 
-                if ($user->id != $deck->user_id) {
+                $organizations = Organization::where('owner_id', $user->id)
+                    ->pluck('id')
+                    ->merge($user->organizations->pluck('id'))
+                    ->unique();
+
+
+                if ($user->id != $deck->user_id && !OrganizationDeck::where('organization_id', $organizations)->where('deck_id', $deck->id)->exists()) {
                     return response()->json(["message" => "Forbidden"], 403);
                 }
             }

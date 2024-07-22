@@ -86,7 +86,7 @@ const BoardPage = () => {
         <FilterBar onSearch={handleSearch} board={true} />
       </div>
       <motion.div
-        className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4 md:gap-8 md:p-8"
+        className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3 p-4 md:gap-8 md:p-8 max-w-full"
         initial="initial"
         animate="visible"
         variants={{ visible: { transition: { staggerChildren: 0.1 } } }}

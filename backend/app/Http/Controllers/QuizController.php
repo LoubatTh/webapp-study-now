@@ -93,7 +93,7 @@ class QuizController extends Controller
 
     public function show(Request $request, string $id): JsonResponse
     {
-        $user = Auth::guard('sanctum')->user();
+        $user = User::find(Auth::guard("sanctum")->user()->id);
 
         $quiz = Quiz::with('qcms', 'user')->find($id);
 
@@ -110,7 +110,12 @@ class QuizController extends Controller
                 return response()->json(["message" => "Unauthorized"], 401);
             }
 
-            if ($user->id != $quiz->user_id) {
+            $organizations = Organization::where('owner_id', $user->id)
+                ->pluck('id')
+                ->merge($user->organizations->pluck('id'))
+                ->unique();
+
+            if ($user->id != $quiz->user_id && !OrganizationQuiz::where('organization_id', $organizations)->where('quiz_id', $quiz->id)->exists()) {
                 return response()->json(['message' => 'Forbidden'], 403);
             }
         }
@@ -133,7 +138,7 @@ class QuizController extends Controller
             $userQuiz = UserQuiz::where(["user_id" => $user->id, "quiz_id" => $quiz->id])->first();
             $quiz->setAttribute("is_liked", $userQuiz ? $userQuiz->is_liked : false);
             $ownedOrganizations = Organization::where('owner_id', $user->id)->get('id');
-    
+
             if (count($ownedOrganizations) > 0) {
                 $relatedOrganizations = [];
                 foreach ($ownedOrganizations as $organization) {
@@ -142,7 +147,7 @@ class QuizController extends Controller
                         array_push($relatedOrganizations, $organization['id']);
                     }
                 }
-    
+
                 $response['organizations'] = $relatedOrganizations;
             }
         }

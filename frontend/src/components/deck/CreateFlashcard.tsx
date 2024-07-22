@@ -80,10 +80,12 @@ const CreateFlashcard = ({
     <div className="flex flex-col border bg-slate-400/15 rounded-md p-4 backdrop-blur-xl">
       {collapsed ? (
         <div className="flex flex-col gap-2">
-          <Label className=" text-md">
+          <Label className="text-md truncate">
             Question: {form.getValues().question}
           </Label>
-          <Label className="text-md">Answer: {form.getValues().answer}</Label>
+          <Label className="text-md truncate">
+            Answer: {form.getValues().answer}
+          </Label>
           <Separator />
           <div className="flex gap-2">
             <Button onClick={onToggleCollapse} className="w-1/2">

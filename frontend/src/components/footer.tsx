@@ -1,7 +1,7 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { Github } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import Logo from "@/assets/images/Logo-T-YEP.png";
+import Logo from "@/assets/images/logo-studynow.png";
 
 const Footer = () => {
   const { accessToken, logout } = useAuth();
@@ -74,7 +74,7 @@ const Footer = () => {
         </div>
       </div>
       <hr className="m-4 h-1 w-2/3" />
-      <div className="flex justify-center items-center">
+      <div className="flex gap-1 justify-center items-center font-bold">
         <img className="w-10" src={Logo} alt="logo" />
         <h4>StudyNow</h4>
       </div>

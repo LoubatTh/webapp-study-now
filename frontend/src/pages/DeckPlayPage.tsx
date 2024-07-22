@@ -77,6 +77,7 @@ const DeckPlayPage = () => {
     } else {
       response = await getDeck(deckId);
     }
+    console.log(response);
     if (response.status === 200) {
       const data: Deck = response.data as Deck;
       setDeck(data);

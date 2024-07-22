@@ -68,10 +68,10 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
   }, [flashcards, qcms, type]);
 
   return (
-    <div onClick={handleClick} className="cursor-pointer">
+    <div onClick={handleClick} className="cursor-pointer max-w-full">
       <Card
         className={cn(
-          "transition duration-200 shadow-lg transform hover:shadow-2xl hover:scale-105 flex flex-col gap-4"
+          "transition duration-200 shadow-lg transform hover:shadow-2xl hover:scale-105 flex flex-col gap-4 max-w-full"
         )}
       >
         <div className="flex justify-between">
@@ -80,15 +80,15 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
               <AvatarImage src="https://github.com/shadcn.png" />
               <AvatarFallback>{owner}</AvatarFallback>
             </Avatar>
-            <div className="flex-col flex-grow ml-2 capitalize">
-              <CardTitle>{Cardname}</CardTitle>
-              <CardDescription>{owner}</CardDescription>
+            <div className="flex-col ml-2 capitalize text-wrap lg:text-nowrap lg:max-w-80 xl:max-w-60">
+              <CardTitle className="md:truncate">{Cardname}</CardTitle>
+              <CardDescription className="md:truncate">{owner}</CardDescription>
             </div>
           </CardHeader>
           <LikeButton id={id} type={type} likes={likes} isLiked={isLiked} />
         </div>
         <CardContent className="flex">
-          <div className=" capitalize mr-1">{cards}</div>
+          <div className="capitalize mr-1">{cards}</div>
           <div>
             of {sizeCard} {itemLabel}
           </div>

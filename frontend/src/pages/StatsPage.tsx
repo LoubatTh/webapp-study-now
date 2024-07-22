@@ -30,6 +30,7 @@ const getAllStats = async (
     null,
     accessToken
   );
+  console.log(response);
   return response;
 };
 
@@ -39,9 +40,10 @@ const formatData = (data) => {
     const mainData = isQuiz ? item.quiz : item.deck;
 
     return {
-      id: item.id,
-      Cardname: mainData.name,
+      id: mainData.id,
+      Cardname: isQuiz ? mainData.quiz_id : mainData.deck_id,
       owner: mainData.owner,
+      ownerAvatar: mainData.owner_avatar,
       tag: mainData.tag,
       type: mainData.type,
       likes: mainData.likes,
@@ -129,6 +131,7 @@ const StatsPage = () => {
                 id={item.id}
                 Cardname={item.Cardname}
                 owner={item.owner}
+                owner_avatar={item.ownerAvatar}
                 tag={item.tag}
                 likes={item.likes}
                 isLiked={item.isLiked}

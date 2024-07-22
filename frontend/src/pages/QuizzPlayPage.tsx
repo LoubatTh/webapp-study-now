@@ -263,7 +263,7 @@ const QuizzPlayPage = () => {
               <div className="flex flex-col items-center gap-2 m-3">
                 {isQuizzOver ? (
                   <Button
-                    className="w-1/2"
+                    className="w-full md:w-48"
                     onClick={handleResult}
                     variant="default"
                   >
@@ -271,7 +271,7 @@ const QuizzPlayPage = () => {
                   </Button>
                 ) : (
                   <Button
-                    className="w-1/2"
+                    className="w-full md:w-48"
                     onClick={handleSubmit}
                     variant="default"
                   >

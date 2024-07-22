@@ -2,7 +2,6 @@ import CreateOrganizations from "@/components/createOrganizations";
 import InvitationCard from "@/components/invitationCard";
 import Loading from "@/components/Loading";
 import OrganizationsCard from "@/components/organizationsCard";
-import PageTitle from "@/components/pageTitle";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import {

@@ -91,7 +91,7 @@ class QuizController extends Controller
     }
 
 
-    public function show(Request $request, string $id): JsonResponse
+    public function show(Request $request, int $id): JsonResponse
     {
         $user = Auth::guard("sanctum")->user();
         $user ? $user = User::find($user->id) : null;
@@ -103,7 +103,6 @@ class QuizController extends Controller
             return response()->json(['message' => 'Quizz not found'], 404);
 
         }
-
 
         if ($quiz->is_public == false) {
             if (!$user) {
@@ -119,9 +118,7 @@ class QuizController extends Controller
                 if ($user->id != $quiz->user_id && !OrganizationQuiz::where('organization_id', $organizations)->where('quiz_id', $id)->exists()) {
                     return response()->json(['message' => 'Forbidden'], 403);
                 }
-            }
-
-            if ($user->id != $quiz->user_id) {
+            } else if ($user->id != $quiz->user_id) {
                 return response()->json(['message' => 'Forbidden'], 403);
             }
         }

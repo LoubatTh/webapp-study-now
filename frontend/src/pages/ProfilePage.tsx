@@ -150,10 +150,6 @@ const ProfilePage = () => {
               <span className="ml-2 text-gray-800">{email}</span>
             </div>
             <div className="flex items-center mt-2">
-              <Phone className=" text-gray-600" />
-              <span className="ml-2 text-gray-800">+330000000</span>
-            </div>
-            <div className="flex items-center mt-2">
               {is_subscribed ? (
                 <>
                   <StarsIcon className="text-blue-500" />

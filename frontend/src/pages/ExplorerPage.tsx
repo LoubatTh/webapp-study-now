@@ -28,6 +28,7 @@ const getAllCards = async (
     null,
     accessToken
   );
+  console.log(response);
   return response;
 };
 

@@ -30,9 +30,10 @@ const likeFetch = async (
 };
 
 const LikeButton = ({ id, type, likes, isLiked }: LikeButtonProps) => {
+  console.log(likes);
   const { accessToken } = useAuth();
-  const [liked, setLiked] = useState(isLiked);
-  const [currentLikes, setCurrentLikes] = useState(likes);
+  const [liked, setLiked] = useState(false);
+  const [currentLikes, setCurrentLikes] = useState(0);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const cards = type === "Quiz" ? "quizz" : "deck";
 
@@ -56,6 +57,11 @@ const LikeButton = ({ id, type, likes, isLiked }: LikeButtonProps) => {
       likeFetch(id, cards, !liked, accessToken);
     }, 500);
   };
+
+  useEffect(() => {
+    setCurrentLikes(likes);
+    setLiked(isLiked);
+  }, [isLiked, likes]);
 
   useEffect(() => {
     return () => {

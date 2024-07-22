@@ -43,12 +43,16 @@ const FlashcardComponent = ({
           transition={{ duration: 0.6 }}
           style={{ transformStyle: "preserve-3d" }}
         >
-          <div className="absolute inset-0 flex justify-center items-center backface-hidden">
-            <h2 className="text-xl font-bold">{question}</h2>
+          <div className="absolute inset-0 flex flex-col gap-2 p-4 backface-hidden">
+            <h2 className="text-xl font-bold break-words overflow-wrap text-center">
+              {question}
+            </h2>
           </div>
-          <div className="absolute inset-0 flex flex-col gap-2 p-2 backface-hidden rotate-y-180 ring-1 ring-electricalBlue rounded-xl">
+          <div className="absolute inset-0 flex flex-col gap-2 p-4 backface-hidden rotate-y-180 ring-1 ring-electricalBlue rounded-xl">
             <h2 className="text-xl font-bold text-center">Answer</h2>
-            <p className="text-lg">{answer}</p>
+            <p className="text-lg break-words overflow-wrap text-center">
+              {answer}
+            </p>
           </div>
         </motion.div>
       </div>

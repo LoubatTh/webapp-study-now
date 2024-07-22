@@ -231,13 +231,13 @@ const QuizzPlayPage = () => {
 
   return (
     <>
-      <div className="flex flex-col items-center w-full p-2">
+      <div className="flex flex-col items-center max-w-full p-2">
         {quizz ? (
           <>
-            <h1 className="my-8 text-center text-3xl uppercase">
+            <h1 className="my-8 text-center text-3xl uppercase break-words overflow-wrap w-full">
               {quizz.name}
             </h1>
-            <div className="flex flex-col gap-10">
+            <div className="flex flex-col gap-10 w-full">
               {quizz.qcms.map((qcm, i) => (
                 <div
                   key={qcm.id}

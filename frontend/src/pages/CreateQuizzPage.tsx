@@ -121,8 +121,11 @@ const CreateQuizzPage = () => {
       ),
     };
 
-    if (name.length < 1) {
+    if (nameQuizz.length < 1) {
       setErrorMessage("The name field is required.");
+      return;
+    } else if (nameQuizz.length > 30) {
+      setErrorMessage("The name field must be less than 30 characters.");
       return;
     } else if (qcms.length < 1) {
       setErrorMessage("You need to add at least one QCM.");
@@ -252,14 +255,14 @@ const CreateQuizzPage = () => {
   }, [id, accessToken, name, loading, organizationName]);
 
   useEffect(() => {
-      if (organizationName) {
-        const organization = organizations.find(
-          (organization) => organization.name === organizationName
-        );
-        if (organization) {
-          setSelectedOrganizations([organization]);
-        }
+    if (organizationName) {
+      const organization = organizations.find(
+        (organization) => organization.name === organizationName
+      );
+      if (organization) {
+        setSelectedOrganizations([organization]);
       }
+    }
   }, [organizationName, organizations]);
 
   // Fonction pour filtrer les organisations disponibles
@@ -365,7 +368,7 @@ const CreateQuizzPage = () => {
           )}
         </div>
       </div>
-      <div className="flex flex-col gap-2 p-2 max-w-3xl min-w-full md:min-w-[768px]">
+      <div className="flex flex-col max-w-full md:max-w-3xl min-w-full md:min-w-[768px] p-2">
         {qcmList.map((qcm, i) => (
           <React.Fragment key={qcm.id}>
             <Separator className="my-2" />

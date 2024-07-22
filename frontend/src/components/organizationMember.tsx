@@ -13,7 +13,7 @@ const OrganizationMember = ({id: id_user, name, pending, is_owner, onRemoveUser}
   return (
     <>
       <div className="flex items-center justify-between gap-2 border-2 border-slate-300 p-3 rounded-lg">
-        <p className="flex flex-raw items-center gap-2">
+        <p className="flex flex-row items-center gap-2">
           {name} {id == id_user && <User size={20} />}
         </p>
         {is_owner && (
@@ -29,7 +29,7 @@ const OrganizationMember = ({id: id_user, name, pending, is_owner, onRemoveUser}
                 <DialogHeader>
                   <DialogTitle>Remove this member ?</DialogTitle>
                   <DialogDescription>
-                    This action is irreversible, are you sure you want to remove
+                    This action is irreversible, are you sure you want to remove {name} ?
                   </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>

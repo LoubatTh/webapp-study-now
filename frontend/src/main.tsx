@@ -12,7 +12,6 @@ import RouteChangeListener from "./listeners/routes/RouteChangeListener";
 import { UserProvider } from "./contexts/UserContext";
 import ProfilePage from "./pages/ProfilePage";
 import DeckPlayPage from "./pages/DeckPlayPage";
-import ResponseQuizzPage from "./pages/ResponseQuizzPage";
 import LayoutNavbarPage from "./pages/LayoutNavbarPage";
 import MyOrganizationsPage from "./pages/MyOrganizationsPage";
 import Error404 from "./pages/errors/Error404";
@@ -20,6 +19,9 @@ import PremiumPage from "./pages/PremiumPage";
 import ExplorePage from "./pages/ExplorerPage";
 import BoardOrganizationsPage from "./pages/BoardOrganizationsPage";
 import StatsPage from "./pages/StatsPage";
+import QuizzPlayPage from "./pages/QuizzPlayPage";
+import ResultQuizzPage from "./pages/ResultQuizzPage";
+import ResultDeckPage from "./pages/ResultDeckPage";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
@@ -33,10 +35,15 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <Route path="/board" element={<BoardPage />} />
             <Route path="/create-quizz" element={<CreateQuizzPage />} />
             <Route path="/quizz/:id/edit" element={<CreateQuizzPage />} />
-            <Route path="/quizz/:quizzId" element={<ResponseQuizzPage />} />
+            <Route path="/quizz/:quizzId" element={<QuizzPlayPage />} />
+            <Route
+              path="/quizz/:quizzId/result"
+              element={<ResultQuizzPage />}
+            />
             <Route path="/create-deck" element={<CreateDeckPage />} />
             <Route path="/deck/:id/edit" element={<CreateDeckPage />} />
             <Route path="/deck/:deckId" element={<DeckPlayPage />} />
+            <Route path="/deck/:deckId/result" element={<ResultDeckPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/organizations" element={<MyOrganizationsPage />} />
             <Route

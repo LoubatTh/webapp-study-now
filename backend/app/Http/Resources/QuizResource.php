@@ -22,10 +22,15 @@ class QuizResource extends JsonResource
             "name" => $this->name,
             "is_public" => $this->is_public,
             "likes" => $this->likes,
-            "tag" => $this->tag->name,
-            "owner" => $this->user->name,
+            "tag" => $this->whenLoaded("tag", function () {
+                return $this->tag->name;
+            }),
+            "owner" => $this->whenLoaded("user", function () {
+                return $this->user->name;
+            }),
             "is_liked" => $this->getAttribute("is_liked"),
-            "qcms" => QcmResource::collection($this->qcms),
+            "qcms_count" => $this->whenCounted('qcms'),
+            "qcms" => QcmResource::collection($this->whenLoaded('qcms')),
         ];
     }
 }

@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search } from "lucide-react";
+import { RotateCcw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -43,6 +43,15 @@ const FilterBar = ({ onSearch, board }: FilterBarProps) => {
     }
   };
 
+  const buildQueryString = (params) => {
+    return Object.keys(params)
+      .filter((key) => params[key] !== "" && params[key] !== null)
+      .map(
+        (key) => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`
+      )
+      .join("&");
+  };
+
   const onSubmit = (e) => {
     e.preventDefault();
 
@@ -54,7 +63,17 @@ const FilterBar = ({ onSearch, board }: FilterBarProps) => {
       isPublic:
         isPublic === "public" ? true : isPublic === "private" ? false : null,
     };
-    onSearch(searchValues);
+
+    const queryString = buildQueryString(searchValues);
+    onSearch(queryString);
+  };
+
+  const resetValues = () => {
+    setName("");
+    setOwner("");
+    setLabel("");
+    setType("");
+    setIsPublic("");
   };
 
   useEffect(() => {
@@ -64,7 +83,7 @@ const FilterBar = ({ onSearch, board }: FilterBarProps) => {
   return (
     <form
       onSubmit={onSubmit}
-      className="flex flex-col md:flex-row items-center w-full gap-2 md:p-4"
+      className="flex flex-col md:flex-row items-center w-full gap-2 bg-slate-300/20 rounded-lg  md:mb-2 md:p-4 p-8 "
     >
       <div className="flex-1 w-full md:w-auto">
         <Label htmlFor="name">Name</Label>
@@ -134,8 +153,14 @@ const FilterBar = ({ onSearch, board }: FilterBarProps) => {
           </SelectContent>
         </Select>
       </div>
-      <Button type="submit" className="mt-auto w-full md:w-auto">
+      <Button
+        type="submit"
+        className="mt-auto w-full md:w-auto bg-green-500 hover:bg-green-400"
+      >
         <Search />
+      </Button>
+      <Button onClick={resetValues} className="mt-auto w-full md:w-auto">
+        <RotateCcw />
       </Button>
     </form>
   );

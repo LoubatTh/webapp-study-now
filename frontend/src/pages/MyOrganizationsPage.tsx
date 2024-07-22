@@ -14,7 +14,6 @@ import { Organization } from "@/types/organization.type";
 import { fetchApi } from "@/utils/api";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import ReactLoading from "react-loading";
 import { useNavigate } from "react-router-dom";
 
 const MyOrganizationsPage = () => {
@@ -92,6 +91,26 @@ const MyOrganizationsPage = () => {
     })
   };
 
+  const updateOrganization = async (id: number, name: string, description: string) => {
+    const response = await fetchApi("PUT", `organizations/${id}`, {"name": name, "description": description}, accessToken);
+    const status = await response.status;
+
+    if(status == 200){
+      toast({
+        title: "Success",
+        description: "Organization updated",
+        className: "bg-green-400",
+      })
+      fetchOrganizations();
+    } else {
+      toast({
+        title: "Error",
+        description: "Failed to update organization",
+        variant: "destructive",
+      });
+    }
+  }
+
   useEffect(() => {
     if (!isReady) return;
     setIsLoading(true);
@@ -151,6 +170,8 @@ const MyOrganizationsPage = () => {
                           created_at={invitation.created_at}
                           updated_at={invitation.updated_at}
                           user_id={invitation.user_id}
+                          owner={invitation.owner}
+                          organization={invitation.organization}
                           organization_id={invitation.organization_id}
                           requestInvitation={requestInvitation}
                         />
@@ -224,8 +245,10 @@ const MyOrganizationsPage = () => {
                     name={organization.name}
                     description={organization.description}
                     owner_id={organization.owner_id}
+                    owner={organization.owner}
                     tags={organization.tags}
                     removeOrganization={removeOrganization}
+                    updateOrganization={updateOrganization}
                   />
                 </motion.div>
               )

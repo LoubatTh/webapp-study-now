@@ -2,12 +2,11 @@ import { ResourceForbidden } from "@/components/errors/ResourceForbidden";
 import ResourceNotFound from "@/components/errors/ResourceNotFound";
 import DeckComponent from "@/components/deck/DeckComponent";
 import { Button } from "@/components/ui/button";
-import { toast } from "@/components/ui/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import useFlashcardStore from "@/lib/stores/flashcardStore";
+import useStore from "@/lib/stores/resultStore";
 import { Deck } from "@/types/deck.type";
 import { fetchApi } from "@/utils/api";
-import { Rating, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -16,23 +15,53 @@ const getDeck = async (deckId: string, accessToken?: string) => {
   return response;
 };
 
+const postResult = async (body: any, accessToken: string) => {
+  const response = await fetchApi("POST", `decks/results`, body, accessToken);
+  return response;
+};
+
 const DeckPlayPage = () => {
-  const { accessToken } = useAuth();
   const navigate = useNavigate();
+  const { accessToken } = useAuth();
+  const { setScore } = useStore();
   const { addRating, getAverageRating } = useFlashcardStore();
   const { deckId } = useParams<{ deckId: string }>();
   const [deck, setDeck] = useState<Deck | null>(null);
-  const [result, setResult] = useState<number | null>(null);
   const [isForbidden, setIsForbidden] = useState<boolean>(false);
   const [isNotFound, setIsNotFound] = useState<boolean>(false);
 
   const handleResult = () => {
     const rating = getAverageRating();
-    setResult(rating);
-    if (result !== null && result > 0) {
-      toast({
-        description: "You have already calculated your result",
-      });
+    if (accessToken) {
+      postResultToApi();
+    } else {
+      console.log(rating);
+      setScore(rating ? rating : 0);
+      navigate(`/deck/${deckId}/result`);
+    }
+  };
+
+  const postResultToApi = async () => {
+    if (!deckId) {
+      console.error("Deck ID is required");
+      navigate("/");
+      return;
+    }
+    if (!accessToken) {
+      console.error("Access token is required");
+      return;
+    }
+
+    const body = {
+      deck_id: deckId,
+      grade: getAverageRating(),
+    };
+
+    const response = await postResult(body, accessToken);
+    if (response.status === 201) {
+      navigate(`/deck/${deckId}/result`);
+    } else {
+      console.error("Failed to post result:", response);
     }
   };
 
@@ -42,7 +71,7 @@ const DeckPlayPage = () => {
       navigate("/");
       return;
     }
-    let response;
+    let response: any;
     if (accessToken) {
       response = await getDeck(deckId, accessToken);
     } else {
@@ -54,6 +83,7 @@ const DeckPlayPage = () => {
       for (let i = 0; i < data.flashcards.length; i++) {
         addRating(i, 0);
       }
+      console.log(data);
     } else {
       console.error("Failed to fetch deck:", response);
 
@@ -98,12 +128,6 @@ const DeckPlayPage = () => {
           >
             Get my result
           </Button>
-          {result !== null && result > 0 && (
-            <div className="flex flex-col">
-              <Typography>My final score</Typography>
-              {result !== 0 && <Rating value={result} size="large" readOnly />}
-            </div>
-          )}
         </>
       )}
     </div>

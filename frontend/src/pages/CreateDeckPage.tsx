@@ -51,6 +51,16 @@ const getDeck = async (id: string, accessToken: string) => {
   return response;
 };
 
+const getAllOwnedOrganizations = async (accessToken: string) => {
+  const response = await fetchApi(
+    "GET",
+    "user/organizations",
+    null,
+    accessToken
+  );
+  return response;
+};
+
 const CreateDeckPage = () => {
   // Get the navigate function from the useNavigate hook
   const navigate = useNavigate();
@@ -60,10 +70,10 @@ const CreateDeckPage = () => {
   const { name } = useUser();
   // Check if its a creation page or an edition page
   const { id } = useParams();
-  // Get the search params
+  //Get the search params
   const [searchParams] = useSearchParams();
-  // Get the name of the organization from the search params
-  const organizationName = searchParams.get("organization");
+  //Get the name params
+  const organizationName = searchParams.get("name");
   // Use the useDeckStore store to get the decks
   const { deck, saveFlashcard, removeFlashcard, resetDeck } = useDeckStore();
   // Loading state
@@ -82,14 +92,10 @@ const CreateDeckPage = () => {
   const [flashcardList, setFlashcardList] = useState([
     { id: 0, collapsed: false },
   ]);
-  // State to manage selected organizations
+  //State to manage organizations
   const [organizations, setOrganizations] = useState<Organization[]>([]);
-  // State to manage the selected organizations
+  //State to manage the selected organizations
   const [selectedOrganizations, setSelectedOrganizations] = useState<
-    Organization[]
-  >([]);
-  // State to manage the filtered organizations for the autocomplete
-  const [filteredOrganizations, setFilteredOrganizations] = useState<
     Organization[]
   >([]);
 
@@ -120,15 +126,13 @@ const CreateDeckPage = () => {
 
   // Function to create the deck with the flashcards and send it to the backend
   const createDeckHandler = async (): Promise<void> => {
-    let organizationsBody = {
-      organisations: [] as number[],
+
+    const organizationsBody = {
+      organisations: selectedOrganizations.map(
+        (organization) => organization.id
+      ),
     };
 
-    if (selectedOrganizations.length > 0) {
-      organizationsBody.organisations = selectedOrganizations.map(
-        (org) => org.id
-      );
-    }
 
     if (nameDeck.length < 1) {
       setErrorMessage("The name field is required.");
@@ -185,6 +189,11 @@ const CreateDeckPage = () => {
           const deckResponse = await getDeck(id, accessToken);
           if (deckResponse.status === 200) {
             const data = deckResponse.data as PostDeck;
+            const matchOrganizations = organizations.filter((organization) =>
+              data.organizations.includes(organization.id)
+            );
+            setSelectedOrganizations(matchOrganizations);
+
             if (data.owner !== name) {
               navigate("/");
               return;
@@ -221,33 +230,12 @@ const CreateDeckPage = () => {
     setLoading(false);
   };
 
-  const fetchAllOwnedOrganizations = async (accessToken: string) => {
+  const fetchAllOwnedOrganizations = async () => {
     try {
-      const response = await fetchApi(
-        "GET",
-        "user/organizations",
-        null,
-        accessToken
-      );
+      const response = await getAllOwnedOrganizations(accessToken);
       if (response.status === 200) {
-        const allOrganizations = response.data
-          .owned_organizations as Organization[];
-        setOrganizations(allOrganizations);
-
-        // Find the default organization based on organizationName
-        if (organizationName) {
-          const defaultOrganization = allOrganizations.find(
-            (org) => org.name === organizationName
-          );
-          if (defaultOrganization) {
-            setSelectedOrganizations([defaultOrganization]);
-          }
-        }
-
-        // Filter the organizations to exclude the selected ones
-        setFilteredOrganizations(
-          allOrganizations.filter((org) => !selectedOrganizations.includes(org))
-        );
+        setOrganizations(response.data.owned_organizations as Organization[]);
+        console.log();
       } else {
         toast({ description: response.data.message });
       }
@@ -259,20 +247,28 @@ const CreateDeckPage = () => {
   useEffect(() => {
     if (accessToken && name) {
       fetchLabelsAndDeckData(id, accessToken);
-      fetchAllOwnedOrganizations(accessToken);
+      fetchAllOwnedOrganizations();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, accessToken, name, loading]);
 
-  // Update filtered organizations when selected organizations change
   useEffect(() => {
-    setFilteredOrganizations(
-      organizations.filter(
-        (org) =>
-          !selectedOrganizations.some((selected) => selected.id === org.id)
-      )
+    if (organizationName) {
+      const organization = organizations.find(
+        (organization) => organization.name === organizationName
+      );
+      if (organization) {
+        setSelectedOrganizations([organization]);
+      }
+    }
+  }, [organizationName, organizations]);
+
+  const getFilteredOrganizations = () => {
+    return organizations.filter(
+      (org) =>
+        !selectedOrganizations.some((selectedOrg) => selectedOrg.id === org.id)
     );
-  }, [selectedOrganizations, organizations]);
+  };
 
   return (
     <div className="flex flex-col items-center gap-4">
@@ -336,38 +332,32 @@ const CreateDeckPage = () => {
                 </HoverCardContent>
               </HoverCard>
             </div>
-            <div className="min-w-50">
+            <div className="min-w-96">
               <Autocomplete
                 multiple
                 id="organizations"
-                options={filteredOrganizations}
-                disableCloseOnSelect
-                defaultValue={selectedOrganizations}
+                options={getFilteredOrganizations()} 
                 getOptionLabel={(option) => option.name}
+                value={selectedOrganizations}
                 onChange={(event, newValue) => {
                   setSelectedOrganizations(newValue);
                 }}
-                renderOption={(props, option, { selected }) => {
-                  const { key, ...optionProps } = props;
-                  return (
-                    <li key={key} {...optionProps}>
-                      <Checkbox
-                        icon={<Square />}
-                        checkedIcon={<SquareCheck />}
-                        style={{ marginRight: 4 }}
-                        checked={selected}
-                      />
-                      {option.name}
-                    </li>
-                  );
-                }}
-                className="min-w-48 max-w-96"
                 renderInput={(params) => (
                   <TextField
                     {...params}
                     label="Organizations"
-                    placeholder="College Saint Exupery"
+                    placeholder="Choose..."
                   />
+                )}
+                renderOption={(props, option, { selected }) => (
+                  <li {...props}>
+                    <Checkbox
+                      icon={<Square />}
+                      checkedIcon={<SquareCheck />}
+                      checked={selected}
+                    />
+                    {option.name}
+                  </li>
                 )}
               />
             </div>

@@ -1,28 +1,57 @@
-import FilterBar from "@/components/FilterBar";
-import FilterBarMobile from "@/components/FilterBarMobile";
-import { Button } from "@/components/ui/button";
+import QuizzDeckCard from "@/components/quizzDeckCard";
 import { useAuth } from "@/contexts/AuthContext";
 import { fetchApi } from "@/utils/api";
-import {
-  ChevronFirst,
-  ChevronLeft,
-  ChevronRight,
-  ChevronLast,
-} from "lucide-react";
+import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
+import Pagination from "@/components/tools/Pagination";
+import FilterBarMobile from "@/components/FilterBarMobile";
+import FilterBar from "@/components/FilterBar";
+import StatGraph from "@/components/tools/StatGraph";
+import { formatDateDayMonth } from "@/utils/dateparser";
 
-const getAllCards = async (
+const cardVariants = {
+  initial: { opacity: 0, y: 50 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring", stiffness: 120 },
+  },
+};
+
+const getAllStats = async (
   accessToken: string,
   pageSelected = 1,
   queryString = ""
 ) => {
   const response = await fetchApi(
     "GET",
-    `all?me&page=${pageSelected}${queryString ? `&${queryString}` : ""}`,
+    `stats?&page=${pageSelected}${queryString ? `&${queryString}` : ""}`,
     null,
     accessToken
   );
   return response;
+};
+
+const formatData = (data) => {
+  return data.map((item) => {
+    const isQuiz = !!item.quiz_id;
+    const mainData = isQuiz ? item.quiz : item.deck;
+
+    return {
+      id: item.id,
+      Cardname: mainData.name,
+      owner: mainData.owner,
+      tag: mainData.tag,
+      type: mainData.type,
+      likes: mainData.likes,
+      isLiked: item.is_liked,
+      size: isQuiz ? mainData.qcms_count : mainData.flashcard_count,
+      results: item.results.map((result) => ({
+        date: formatDateDayMonth(result.created_at),
+        result: result.grade,
+      })),
+    };
+  });
 };
 
 const StatsPage = () => {
@@ -31,23 +60,16 @@ const StatsPage = () => {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const buildQueryString = (params) => {
-    return Object.keys(params)
-      .filter((key) => params[key])
-      .map(
-        (key) => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`
-      )
-      .join("&");
-  };
+  const [searchValues, setSearchValues] = useState(null);
 
-  const getAll = async (page = 1, searchValues = null) => {
-    const queryString = searchValues ? buildQueryString(searchValues) : "";
-    const response = await getAllCards(accessToken, page, queryString);
+  const fetchAllStats = async (page: number = 1, searchValues?: any) => {
+    const response = await getAllStats(accessToken, page, searchValues);
     if (response.status === 200) {
-      const { data: cards, meta } = response.data;
+      const { data, meta } = response.data;
       setTotalPages(meta.last_page);
       setPage(meta.current_page);
-      setAllCards(cards);
+      const formattedData = formatData(data);
+      setAllCards(formattedData);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
       console.error(response.message);
@@ -55,16 +77,23 @@ const StatsPage = () => {
     setLoading(false);
   };
 
-  const handlePageChange = (newPage) => {
+  const handlePageChange = (newPage: number) => {
     setPage(newPage);
-    getAll(newPage);
+    fetchAllStats(newPage, searchValues);
   };
-  const handleSearch = (searchValues) => {
-    getAll(1, searchValues); // Reset to first page when performing a new search
+
+  const handleSearch = (searchValues: any) => {
+    setSearchValues(searchValues);
+    fetchAllStats(1, searchValues);
   };
+
+  const handleDeleteCard = (id: number) => {
+    setAllCards((prev) => prev.filter((card) => card.id !== id));
+  };
+
   useEffect(() => {
     if (isReady && accessToken) {
-      getAll();
+      fetchAllStats();
     }
   }, [isReady, accessToken]);
 
@@ -79,49 +108,48 @@ const StatsPage = () => {
       <div className="hidden md:block md:mb-2">
         <FilterBar onSearch={handleSearch} board={true} />
       </div>
-      <div className="flex flex-col p-8">
-        <h2 className="text-3xl font-bold text-center">Statistics</h2>
-        <div className="mt-4">
-          <p className="text-lg">Coming soon...</p>
-        </div>
-      </div>
-      <div className="flex gap-2 md:mx-auto md:w-auto items-center mt-6 w-full">
-        <div className="flex items-center">
-          <Button
-            disabled={page <= 1}
-            variant="ghost"
-            onClick={() => handlePageChange(1)}
+      <h2 className=" text-3xl text-center mt-6">Statistics</h2>
+      <motion.div
+        className="flex flex-col gap-8 p-4 md:p-8"
+        initial="initial"
+        animate="visible"
+        variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
+      >
+        {allCards.map((item, index) => (
+          <div
+            className="grid grid-rows-2 md:grid-rows-none md:grid-cols-3 gap-1 md:gap-8"
+            key={index}
           >
-            <ChevronFirst />
-          </Button>
-          <Button
-            disabled={page <= 1}
-            variant="ghost"
-            onClick={() => handlePageChange(page - 1)}
-          >
-            <ChevronLeft />
-          </Button>
-        </div>
-        <div className="md:min-w-20 flex-auto text-center">
-          {page} / {totalPages}
-        </div>
-        <div className="flex items-center">
-          <Button
-            disabled={page >= totalPages}
-            variant="ghost"
-            onClick={() => handlePageChange(page + 1)}
-          >
-            <ChevronRight />
-          </Button>
-          <Button
-            disabled={page >= totalPages}
-            variant="ghost"
-            onClick={() => handlePageChange(totalPages)}
-          >
-            <ChevronLast />
-          </Button>
-        </div>
-      </div>
+            <motion.div
+              variants={cardVariants}
+              className="row-span-1 md:col-span-1"
+            >
+              <QuizzDeckCard
+                id={item.id}
+                Cardname={item.Cardname}
+                owner={item.owner}
+                tag={item.tag}
+                likes={item.likes}
+                isLiked={item.isLiked}
+                type={item.type}
+                size={item.size}
+                onDeleteCard={handleDeleteCard}
+              />
+            </motion.div>
+            <div className="row-span-1 md:col-span-2 bg-slate-400/15 rounded-md">
+              <StatGraph
+                results={item.results}
+                maxScore={item.type === "Quiz" ? item.size : null}
+              />
+            </div>
+          </div>
+        ))}
+      </motion.div>
+      <Pagination
+        page={page}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </>
   );
 };

@@ -41,4 +41,9 @@ class Deck extends Model
     {
         return $this->hasMany(Flashcard::class);
     }
+
+    public function userDecks()
+    {
+        return $this->hasMany(UserDeck::class);
+    }
 }

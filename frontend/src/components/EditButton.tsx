@@ -13,21 +13,19 @@ const EditButton = ({ id, type, organizationName }: EditButtonProps) => {
   const editHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     if (type === "Quiz") {
-      navigate(`/quizz/${id}/edit?organization=${organizationName}`);
+      navigate(`/quizz/${id}/edit`);
     } else {
-      navigate(`/deck/${id}/edit?organization=${organizationName}`);
+      navigate(`/deck/${id}/edit`);
     }
   };
 
   return (
-    <div>
-      <button
-        className="h-full p-2h-full p-2 rounded-md hover:bg-background hover:text-primary hover:ring-1 hover:ring-primary"
-        onClick={(event) => editHandler(event)}
-      >
-        <FilePen size={14} />
-      </button>
-    </div>
+    <button
+      className="h-full p-2h-full p-2 rounded-md hover:bg-background hover:text-primary hover:ring-1 hover:ring-primary"
+      onClick={(event) => editHandler(event)}
+    >
+      <FilePen size={14} />
+    </button>
   );
 };
 

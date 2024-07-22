@@ -25,6 +25,7 @@ class OrganizationInvitationResource extends JsonResource
         }
 
         return [
+            'id' => $this->id,
             'user_id' => $this->user_id,
             'organization_id' => $this->organization_id,
             'organization' => $organization->name,

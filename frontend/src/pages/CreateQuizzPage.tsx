@@ -10,12 +10,7 @@ import { fetchApi } from "@/utils/api";
 import CreateQCM from "../components/quizz/CreateQCM";
 import useQCMStore from "../lib/stores/quizzStore";
 import { toast } from "@/components/ui/use-toast";
-import {
-  useLocation,
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import {
   Select,
   SelectContent,
@@ -28,9 +23,9 @@ import { useUser } from "@/contexts/UserContext";
 import { Tag } from "@/types/tag.type";
 import { Organization } from "@/types/organization.type";
 import { Autocomplete, Checkbox, TextField } from "@mui/material";
-import { Check, Cross, Info, Square, SquareCheck } from "lucide-react";
 import { HoverCard } from "@radix-ui/react-hover-card";
 import { HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { Info, Square, SquareCheck } from "lucide-react";
 
 const postQuizz = async (quizz: PostQuizz, accessToken: string) => {
   const response = await fetchApi("POST", "quizzes", quizz, accessToken);
@@ -52,6 +47,16 @@ const getQuizz = async (id: string, accessToken: string) => {
   return response;
 };
 
+const getAllOwnedOrganizations = async (accessToken: string) => {
+  const response = await fetchApi(
+    "GET",
+    "user/organizations",
+    null,
+    accessToken
+  );
+  return response;
+};
+
 const CreateQuizzPage = () => {
   //Get the access token from the AuthContext
   const navigate = useNavigate();
@@ -63,8 +68,8 @@ const CreateQuizzPage = () => {
   const { id } = useParams();
   //Get the search params
   const [searchParams] = useSearchParams();
-  //Get the name of the organization from the search params
-  const organizationName = searchParams.get("organization");
+  //Get the name params
+  const organizationName = searchParams.get("name");
   //Use the useQCMStore store to get the QCMs
   const { qcms, saveQCM, removeQCM, resetQCMs } = useQCMStore();
   //loading state
@@ -81,14 +86,10 @@ const CreateQuizzPage = () => {
   const [errorMessage, setErrorMessage] = useState<string>("");
   //State to manage the list of QCMs
   const [qcmList, setQcmList] = useState([{ id: 0, collapsed: false }]);
-  //State to manage selected organizations
+  //State to manage organizations
   const [organizations, setOrganizations] = useState<Organization[]>([]);
-  // State to manage the selected organizations
+  //State to manage the selected organizations
   const [selectedOrganizations, setSelectedOrganizations] = useState<
-    Organization[]
-  >([]);
-  // State to manage the filtered organizations for the autocomplete
-  const [filteredOrganizations, setFilteredOrganizations] = useState<
     Organization[]
   >([]);
 
@@ -114,19 +115,11 @@ const CreateQuizzPage = () => {
 
   //Function to create the quizz with the QCMs and send it to the backend
   const createQuizzHandler = async (): Promise<void> => {
-    console.log("selected organizations");
-
-    let organizationsBody = {
-      organisations: [] as number[],
+    const organizationsBody = {
+      organisations: selectedOrganizations.map(
+        (organization) => organization.id
+      ),
     };
-
-    if (selectedOrganizations.length > 0) {
-      organizationsBody.organisations = selectedOrganizations.map(
-        (org) => org.id
-      );
-    }
-
-    console.log(organizationsBody);
 
     if (name.length < 1) {
       setErrorMessage("The name field is required.");
@@ -152,15 +145,6 @@ const CreateQuizzPage = () => {
         let response;
         if (id) {
           response = await editQuizz(id, createdQuizz, accessToken);
-
-          if (organizationsBody.organisations.length <= 0) {
-            await fetchApi(
-              "DELETE",
-              `organizations/${id}/organizations`,
-              null,
-              accessToken
-            );
-          }
 
           if (response.status === 200) {
             toast({
@@ -191,39 +175,6 @@ const CreateQuizzPage = () => {
     }
   };
 
-  const fetchAllOwnedOrganizations = async (accessToken: string) => {
-    try {
-      const response = await fetchApi(
-        "GET",
-        "user/organizations",
-        null,
-        accessToken
-      );
-      if (response.status === 200) {
-        const allOrganizations = response.data
-          .owned_organizations as Organization[];
-        setOrganizations(allOrganizations);
-
-        if (organizationName) {
-          const defaultOrganization = allOrganizations.find(
-            (org) => org.name === organizationName
-          );
-          if (defaultOrganization) {
-            setSelectedOrganizations([defaultOrganization]);
-          }
-        }
-
-        setFilteredOrganizations(
-          allOrganizations.filter((org) => !selectedOrganizations.includes(org))
-        );
-      } else {
-        toast({ description: response.data.message });
-      }
-    } catch (error) {
-      toast({ description: error.message });
-    }
-  };
-
   const fetchLabelsAndQuizzData = async (
     id: string | undefined,
     accessToken: string
@@ -237,6 +188,11 @@ const CreateQuizzPage = () => {
           const quizzResponse = await getQuizz(id, accessToken);
           if (quizzResponse.status === 200) {
             const data = quizzResponse.data as Quizz;
+            const matchOrganizations = organizations.filter((organization) =>
+              data.organizations.includes(organization.id)
+            );
+            setSelectedOrganizations(matchOrganizations);
+
             if (data.owner !== name) {
               navigate("/");
               return;
@@ -272,27 +228,47 @@ const CreateQuizzPage = () => {
     setLoading(false);
   };
 
-  useEffect(() => {
-    console.log("location changed");
-  }, [location]);
+  const fetchAllOwnedOrganizations = async () => {
+    try {
+      const response = await getAllOwnedOrganizations(accessToken);
+      if (response.status === 200) {
+        setOrganizations(response.data.owned_organizations as Organization[]);
+        console.log();
+      } else {
+        toast({ description: response.data.message });
+      }
+    } catch (error) {
+      toast({ description: error.message });
+    }
+  };
 
   useEffect(() => {
     if (accessToken && name) {
       fetchLabelsAndQuizzData(id, accessToken);
-      fetchAllOwnedOrganizations(accessToken);
+      fetchAllOwnedOrganizations();
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, accessToken, name, loading]);
+  }, [id, accessToken, name, loading, organizationName]);
 
   useEffect(() => {
-    setFilteredOrganizations(
-      organizations.filter(
-        (org) =>
-          !selectedOrganizations.some((selected) => selected.id === org.id)
-      )
+      if (organizationName) {
+        const organization = organizations.find(
+          (organization) => organization.name === organizationName
+        );
+        if (organization) {
+          setSelectedOrganizations([organization]);
+        }
+      }
+  }, [organizationName, organizations]);
+
+  // Fonction pour filtrer les organisations disponibles
+  const getFilteredOrganizations = () => {
+    return organizations.filter(
+      (org) =>
+        !selectedOrganizations.some((selectedOrg) => selectedOrg.id === org.id)
     );
-  }, [selectedOrganizations, organizations]);
+  };
 
   return (
     <div className="flex flex-col items-center gap-4">
@@ -356,38 +332,32 @@ const CreateQuizzPage = () => {
                   </HoverCardContent>
                 </HoverCard>
               </div>
-              <div className="min-w-50">
+              <div className="min-w-96">
                 <Autocomplete
                   multiple
                   id="organizations"
-                  options={filteredOrganizations}
-                  disableCloseOnSelect
-                  defaultValue={selectedOrganizations}
+                  options={getFilteredOrganizations()}
                   getOptionLabel={(option) => option.name}
+                  value={selectedOrganizations}
                   onChange={(event, newValue) => {
                     setSelectedOrganizations(newValue);
                   }}
-                  renderOption={(props, option, { selected }) => {
-                    const { key, ...optionProps } = props;
-                    return (
-                      <li key={key} {...optionProps}>
-                        <Checkbox
-                          icon={<Square />}
-                          checkedIcon={<SquareCheck />}
-                          style={{ marginRight: 4 }}
-                          checked={selected}
-                        />
-                        {option.name}
-                      </li>
-                    );
-                  }}
-                  className="min-w-48 max-w-96"
                   renderInput={(params) => (
                     <TextField
                       {...params}
                       label="Organizations"
-                      placeholder="College Saint Exupery"
+                      placeholder="Choose..."
                     />
+                  )}
+                  renderOption={(props, option, { selected }) => (
+                    <li {...props}>
+                      <Checkbox
+                        icon={<Square />}
+                        checkedIcon={<SquareCheck />}
+                        checked={selected}
+                      />
+                      {option.name}
+                    </li>
                   )}
                 />
               </div>

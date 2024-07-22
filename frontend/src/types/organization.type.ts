@@ -5,6 +5,8 @@ export type Organization = {
   name: string;
   description: string;
   owner_id: number;
+  owner: string;
   tags: string[];
   removeOrganization?: (id: number) => void;
+  updateOrganization?: (id: number, name: string, description: string) => void;
 };

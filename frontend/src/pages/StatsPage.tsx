@@ -41,7 +41,7 @@ const formatData = (data) => {
 
     return {
       id: mainData.id,
-      Cardname: isQuiz ? mainData.quiz_id : mainData.deck_id,
+      Cardname: mainData.name,
       owner: mainData.owner,
       ownerAvatar: mainData.owner_avatar,
       tag: mainData.tag,

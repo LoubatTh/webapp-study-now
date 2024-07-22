@@ -47,6 +47,7 @@ Route::middleware(['auth:sanctum', 'abilities:' . TokenAbility::ACCESS_API->valu
     Route::get('user', [UserController::class, 'show']);
     Route::get('user/organizations', [UserController::class, 'showOrganizations']);
     Route::get('user/invites', [OrganizationUserController::class, 'showInvite']);
+    Route::post('/user/avatar', [UserController::class, 'avatar']);
     Route::put('user', [UserController::class, 'update']);
     Route::delete('user', [UserController::class, 'destroy']);
     

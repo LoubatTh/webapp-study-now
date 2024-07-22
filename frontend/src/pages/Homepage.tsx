@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { StickyScroll } from "@/components/ui/sticky-scroll-reveal";
+import { useNavigate } from "react-router-dom";
 
 const content = [
   {
@@ -69,6 +70,7 @@ const content = [
 ];
 
 const Homepage = () => {
+  const navigate = useNavigate();
   return (
     <div className="flex flex-col flex-grow justify-evenly items-center space-y-11 p-4">
       <h1 className="uppercase font-extrabold text-5xl text-center tracking-widest">
@@ -77,7 +79,14 @@ const Homepage = () => {
       <div className="w-full">
         <StickyScroll content={content} />
       </div>
-      <Button className="w-full md:w-44">Explore now</Button>
+      <Button
+        className="w-full md:w-44"
+        onClick={() => {
+          navigate("/explore");
+        }}
+      >
+        Explore now
+      </Button>
     </div>
   );
 };

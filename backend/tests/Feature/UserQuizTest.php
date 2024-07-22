@@ -207,7 +207,7 @@ class UserQuizTest extends TestCase
 
         $response = $this->postJson('/api/quizzes/results', $grade);
 
-        // dd($response);
+      
         $response->assertStatus(201);
         $userQuiz = UserQuiz::where('user_id', self::$user->id)->where('quiz_id', 2)->first();
 

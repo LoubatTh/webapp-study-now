@@ -74,9 +74,10 @@ const LoginPage = () => {
 
     const data: AuthTokenData = response.data as AuthTokenData;
     toast({
-      title: "Welcome back !",
+      description: "Welcome back !",
       className: "bg-green-400",
     });
+
     setToken(
       data.access_token,
       data.access_token_expiration,
@@ -112,7 +113,7 @@ const LoginPage = () => {
     }
 
     toast({
-      title: "Welcome !",
+      description: "Welcome !",
       className: "bg-green-400",
     });
 

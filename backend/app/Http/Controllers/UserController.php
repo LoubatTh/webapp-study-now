@@ -165,9 +165,9 @@ class UserController extends Controller
         }
         $file = $request->file('file');
 
-        if ($file->extension() !== 'png' && $file->extension() !== 'jpg') {
+        if ($file->extension() !== 'png' && $file->extension() !== 'jpg' && $file->extension() !== 'jpeg') {
             return response()->json([
-                'error' => 'Only png/jpg files allowed as avatar'
+                'error' => 'Only png, jpg and jpeg files allowed as avatar'
             ], 400);
         }
 

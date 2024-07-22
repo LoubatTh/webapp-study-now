@@ -10,10 +10,12 @@ import DeleteOrganizations from './deleteOrganizations';
 import EditOrganizations from './editOrganizations';
 import { Dialog, DialogTrigger } from './ui/dialog';
 import { Button } from './ui/button';
+import { useUser } from '@/contexts/UserContext';
 
 const OrganizationsCard = ( organization: Organization  ) => {
 
   const navigation = useNavigate();
+  const { name, avatar } = useUser();
 
   const handleClick = () => {
     navigation(`/organizations/${organization.id}`);
@@ -31,9 +33,7 @@ const OrganizationsCard = ( organization: Organization  ) => {
               <div className="flex flex-row gap-3">
                 <Dialog>
                   <DialogTrigger>
-                    <FilePen
-                      size={14}
-                    />
+                    <FilePen size={14} />
                   </DialogTrigger>
                   <EditOrganizations
                     org_id={organization.id}
@@ -80,7 +80,11 @@ const OrganizationsCard = ( organization: Organization  ) => {
         <CardFooter className="justify-between">
           <div className="flex items-center">
             <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarImage
+                src={organization.owner === name ? avatar : ""}
+                className="object-cover"
+                loading='lazy'
+              />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <p className="ml-2">{organization.owner}</p>

@@ -9,7 +9,6 @@ import { ScrollArea, ScrollBar } from './ui/scroll-area';
 import DeleteOrganizations from './deleteOrganizations';
 import EditOrganizations from './editOrganizations';
 import { Dialog, DialogTrigger } from './ui/dialog';
-import { Button } from './ui/button';
 import { useUser } from '@/contexts/UserContext';
 
 const OrganizationsCard = ( organization: Organization  ) => {
@@ -81,7 +80,7 @@ const OrganizationsCard = ( organization: Organization  ) => {
           <div className="flex items-center">
             <Avatar>
               <AvatarImage
-                src={organization.owner === name ? avatar : ""}
+                src={organization.owner === name ? avatar : organization.owner_avatar}
                 className="object-cover"
                 loading='lazy'
               />

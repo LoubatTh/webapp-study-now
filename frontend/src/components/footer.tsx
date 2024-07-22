@@ -11,7 +11,7 @@ const Footer = () => {
     navigate(path);
   };
   return (
-    <div className="flex flex-col items-center mb-3.5 border-t border-shadow-xl">
+    <div className="flex flex-col items-center mb-3.5 border-t border-shadow-xl z-20">
       <div className="flex justify-around w-full max-w-screen-lg mb-2.5 pt-6">
         <div className="">
           <h4 className="font-bold mb-2">Navigation</h4>
@@ -22,14 +22,18 @@ const Footer = () => {
             <li className="cursor-pointer mt-2">
               <a onClick={() => handleNavigate("/explore")}>Explore</a>
             </li>
-            <li className="cursor-pointer mt-2">
-              <a onClick={() => handleNavigate("/board")}>Board</a>
-            </li>
-            <li className="cursor-pointer mt-2">
-              <a onClick={() => handleNavigate("/organization")}>
-                Organization
-              </a>
-            </li>
+            {accessToken && (
+              <>
+                <li className="cursor-pointer mt-2">
+                  <a onClick={() => handleNavigate("/board")}>Board</a>
+                </li>
+                <li className="cursor-pointer mt-2">
+                  <a onClick={() => handleNavigate("/organization")}>
+                    Organization
+                  </a>
+                </li>
+              </>
+            )}
           </ul>
         </div>
         <div className="">

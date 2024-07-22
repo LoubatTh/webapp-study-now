@@ -1,18 +1,25 @@
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card';
-import { cn } from '@/lib/utils';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { Organization } from '@/types/organization.type';
-import { getColorClass } from '@/utils/tagscolor';
-import { useNavigate } from 'react-router-dom';
-import { FilePen, SquareDashedMousePointer } from 'lucide-react';
-import { ScrollArea, ScrollBar } from './ui/scroll-area';
-import DeleteOrganizations from './deleteOrganizations';
-import EditOrganizations from './editOrganizations';
-import { Dialog, DialogTrigger } from './ui/dialog';
-import { useUser } from '@/contexts/UserContext';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import { cn } from "@/lib/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Organization } from "@/types/organization.type";
+import { getColorClass } from "@/utils/tagscolor";
+import { useNavigate } from "react-router-dom";
+import { FilePen, SquareDashedMousePointer } from "lucide-react";
+import { ScrollArea, ScrollBar } from "./ui/scroll-area";
+import DeleteOrganizations from "./deleteOrganizations";
+import EditOrganizations from "./editOrganizations";
+import { Dialog, DialogTrigger } from "./ui/dialog";
+import { useUser } from "@/contexts/UserContext";
+import { Button } from "./ui/button";
 
-const OrganizationsCard = ( organization: Organization  ) => {
-
+const OrganizationsCard = (organization: Organization) => {
   const navigation = useNavigate();
   const { name, avatar } = useUser();
 
@@ -22,17 +29,25 @@ const OrganizationsCard = ( organization: Organization  ) => {
 
   return (
     <div>
-      <Card className="transition duration-200 shadow-lg transform hover:shadow-2xl hover:scale-105">
+      <Card
+        className="transition duration-200 shadow-lg transform hover:shadow-2xl hover:scale-105 cursor-pointer"
+        onClick={handleClick}
+      >
         <CardHeader>
           <div className="flex justify-between items-center">
-            <CardTitle onClick={handleClick} className="cursor-pointer">
+            <CardTitle className="cursor-pointer">
               {organization.name}
             </CardTitle>
             {organization.removeOrganization && (
-              <div className="flex flex-row gap-3">
+              <div
+                className="flex flex-row gap-1"
+                onClick={(event) => event.stopPropagation()}
+              >
                 <Dialog>
                   <DialogTrigger>
-                    <FilePen size={14} />
+                    <div className="hover:bg-primary hover:text-background p-3 rounded">
+                      <FilePen size={14} />
+                    </div>
                   </DialogTrigger>
                   <EditOrganizations
                     org_id={organization.id}
@@ -80,9 +95,13 @@ const OrganizationsCard = ( organization: Organization  ) => {
           <div className="flex items-center">
             <Avatar>
               <AvatarImage
-                src={organization.owner === name ? avatar : organization.owner_avatar}
+                src={
+                  organization.owner === name
+                    ? avatar
+                    : organization.owner_avatar
+                }
                 className="object-cover"
-                loading='lazy'
+                loading="lazy"
               />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
@@ -92,6 +111,6 @@ const OrganizationsCard = ( organization: Organization  ) => {
       </Card>
     </div>
   );
-}
+};
 
 export default OrganizationsCard;

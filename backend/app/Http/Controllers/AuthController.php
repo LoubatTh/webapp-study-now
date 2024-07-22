@@ -27,7 +27,7 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'avatar' => env('AWS_URL') . 'users/default.jpg',
+            'avatar' => 'users/default.jpg',
             'password' => Hash::make($data['password']),
         ]);
 

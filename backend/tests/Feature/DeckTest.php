@@ -154,7 +154,7 @@ class DeckTest extends TestCase
 
         $response->assertStatus(200)->assertJson(
             fn(AssertableJson $json) =>
-            $json->hasAll(['id', 'name', 'is_public', 'type', 'likes', 'tag', 'owner', 'is_liked', 'flashcards'])
+            $json->hasAll(['id', 'name', 'is_public', 'type', 'likes', 'tag', 'owner', 'is_liked', 'flashcards', 'owner_avatar'])
                 ->has(
                     'flashcards',
                     fn($json) =>
@@ -191,7 +191,7 @@ class DeckTest extends TestCase
 
         $response->assertStatus(200)->assertJson(
             fn(AssertableJson $json) =>
-            $json->hasAll(['id', 'name', 'is_public', 'type', 'likes', 'tag', 'owner', 'is_liked', 'flashcards'])
+            $json->hasAll(['id', 'name', 'is_public', 'type', 'likes', 'tag', 'owner', 'is_liked', 'flashcards', 'owner_avatar'])
                 ->has(
                     'flashcards',
                     fn($json) =>
@@ -482,5 +482,6 @@ class DeckTest extends TestCase
             'message' => 'Forbidden'
         ]);
     }
+    
 }
 

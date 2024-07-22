@@ -8,6 +8,7 @@ import FilterBarMobile from "@/components/FilterBarMobile";
 import FilterBar from "@/components/FilterBar";
 import StatGraph from "@/components/tools/StatGraph";
 import { formatDateDayMonth } from "@/utils/dateparser";
+import Loading from "@/components/Loading";
 
 const cardVariants = {
   initial: { opacity: 0, y: 50 },
@@ -98,7 +99,7 @@ const StatsPage = () => {
   }, [isReady, accessToken]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
   return (
     <>

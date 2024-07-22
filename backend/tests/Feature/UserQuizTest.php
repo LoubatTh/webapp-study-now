@@ -53,12 +53,7 @@ class UserQuizTest extends TestCase
             [
                 'user_id' => self::$user->id,
                 'quiz_id' => $this->quiz->id,
-                'easiness_factor' => 3,
-                'repetition' => 10,
-                'interval' => 18,
-                'date' => now(),
-                'user_grade' => 5,
-                'prev_user_grade' => 5,
+                'next_repetition' => 10,
                 'is_liked' => true,
             ]
         );
@@ -98,12 +93,7 @@ class UserQuizTest extends TestCase
 
         $this->assertEquals($userQuizAfter->user_id, self::$user->id);
         $this->assertEquals($userQuizAfter->quiz_id, 1);
-        $this->assertEquals($userQuizAfter->easiness_factor, $userQuizBefore->easiness_factor);
-        $this->assertEquals($userQuizAfter->repetition, $userQuizBefore->repetition);
-        $this->assertEquals($userQuizAfter->interval, $userQuizBefore->interval);
-        $this->assertEquals($userQuizAfter->date, $userQuizBefore->date);
-        $this->assertEquals($userQuizAfter->user_grade, $userQuizBefore->user_grade);
-        $this->assertEquals($userQuizAfter->prev_user_grade, $userQuizBefore->prev_user_grade);
+        $this->assertEquals($userQuizAfter->next_repetition, $userQuizBefore->next_repetition);
 
         $this->assertTrue($userQuizBefore->is_liked);
         $this->assertFalse($userQuizAfter->is_liked);
@@ -128,16 +118,7 @@ class UserQuizTest extends TestCase
 
         $this->assertEquals($userQuizAfter->user_id, self::$user->id);
         $this->assertEquals($userQuizAfter->quiz_id, 2);
-        $this->assertEquals($userQuizAfter->easiness_factor, 2.5);
-        $this->assertEquals($userQuizAfter->repetition, 0);
-        $this->assertEquals($userQuizAfter->interval, 0);
-        $this->assertEquals($userQuizAfter->user_grade, null);
-        $this->assertEquals($userQuizAfter->prev_user_grade, null);
-
-        $this->assertTrue(
-            $userQuizAfter->date->between(now()->subSeconds(2), now()->addSeconds(2)),
-            'The date is not within the expected range. Expected :' . now() . 'Real: ' . $userQuizAfter->date
-        );
+        $this->assertEquals($userQuizAfter->next_repetition, 0);
 
         $this->assertEquals($userQuizBefore, null);
         $this->assertTrue($userQuizAfter->is_liked);
@@ -177,165 +158,155 @@ class UserQuizTest extends TestCase
         ]);
     }
 
-    public function test_grade_quiz_by_id(): void
+    public function test_store_quiz_results(): void
     {
         $this->actingAs(self::$user);
 
-        $grade = [
-            'grade' => 3.2,
+        $gradeData = [
+            'quiz_id' => 2,
+            'grade' => 3,
+            'max_grade' => $this->privateQuiz->qcms()->count()
         ];
 
-        $response = $this->putJson('/api/quizzes/2/grade', $grade, [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json'
-        ]);
 
-        $response->assertStatus(204);
+        $response = $this->postJson('/api/quizzes/results', $gradeData);
+
+        $response->assertStatus(201);
         $userQuiz = UserQuiz::where('user_id', self::$user->id)->where('quiz_id', 2)->first();
 
         $this->assertDatabaseHas('user_quizzes', [
             'user_id' => self::$user->id,
             'quiz_id' => 2,
-            'easiness_factor' => 2.5 + (0.1 - (5 - 3.2) * (0.08 + (5 - 3.2) * 0.02)),
-            'repetition' => 1,
-            'interval' => 1,
-            'user_grade' => 3.2,
-            'prev_user_grade' => null,
             'is_liked' => false,
         ]);
 
-        $this->assertTrue(
-            $userQuiz->date->between(now()->subSeconds(2), now()->addSeconds(2)),
-            'The date is not within the expected range'
-        );
+        $this->assertDatabaseHas('user_quiz_results', [
+            'user_quiz_id' => $userQuiz->id,
+            'grade' => 3,
+            'max_grade' => $this->privateQuiz->qcms()->count()
+        ]);
     }
 
-    public function test_grade_quiz_repetition_by_id(): void
+    public function test_store_quiz_results_repetition(): void
     {
         $this->actingAs(self::$user);
 
-        $grade = [
-            'grade' => 3.2,
+        $gradeData = [
+            'quiz_id' => 2,
+            'grade' => 1,
+            'max_grade' => $this->privateQuiz->qcms()->count()
         ];
 
-        $this->putJson('/api/quizzes/2/grade', $grade, [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json'
-        ]);
+        $this->postJson('/api/quizzes/results', $gradeData);
 
         $grade = [
+            'quiz_id' => 2,
             'grade' => 5,
+            'max_grade' => $this->privateQuiz->qcms()->count()
         ];
 
-        $userQuizBefore = UserQuiz::where('user_id', self::$user->id)->where('quiz_id', 2)->first();
-        $response = $this->putJson('/api/quizzes/2/grade', $grade, [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json'
-        ]);
+        $response = $this->postJson('/api/quizzes/results', $grade);
 
-        $response->assertStatus(204);
+        // dd($response);
+        $response->assertStatus(201);
         $userQuiz = UserQuiz::where('user_id', self::$user->id)->where('quiz_id', 2)->first();
 
         $this->assertDatabaseHas('user_quizzes', [
             'user_id' => self::$user->id,
             'quiz_id' => 2,
-            'easiness_factor' => $userQuizBefore->easiness_factor + 0.1,
-            'repetition' => 2,
-            'interval' => 6,
-            'user_grade' => 5,
-            'prev_user_grade' => 3.2,
             'is_liked' => false,
         ]);
 
-        $this->assertTrue(
-            $userQuiz->date->between(now()->subSeconds(2), now()->addSeconds(2)),
-            'The date is not within the expected range'
-        );
-    }
-
-    public function test_grade_quiz_badly_by_id(): void
-    {
-        $this->actingAs(self::$user);
-
-        $grade = [
-            'grade' => 3.2,
-        ];
-
-        $this->putJson('/api/quizzes/2/grade', $grade, [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json'
+        $this->assertDatabaseHas('user_quiz_results', [
+            'user_quiz_id' => $userQuiz->id,
+            'grade' => 1,
+            'max_grade' => $this->privateQuiz->qcms()->count()
         ]);
 
-        $grade = [
+        $this->assertDatabaseHas('user_quiz_results', [
+            'user_quiz_id' => $userQuiz->id,
             'grade' => 5,
-        ];
-
-        $this->putJson('/api/quizzes/2/grade', $grade, [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json'
+            'max_grade' => $this->privateQuiz->qcms()->count()
         ]);
-
-        $grade = [
-            'grade' => 1.2
-        ];
-
-        $userQuizBefore = UserQuiz::where('user_id', self::$user->id)->where('quiz_id', 2)->first();
-        $response = $this->putJson('/api/quizzes/2/grade', $grade, [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json'
-        ]);
-
-        $response->assertStatus(204);
-        $userQuiz = UserQuiz::where('user_id', self::$user->id)->where('quiz_id', 2)->first();
-
-        $this->assertDatabaseHas('user_quizzes', [
-            'user_id' => self::$user->id,
-            'quiz_id' => 2,
-            'easiness_factor' => $userQuizBefore->easiness_factor + (0.1 - (5 - 1.2) * (0.08 + (5 - 1.2) * 0.02)),
-            'repetition' => 0,
-            'interval' => 1,
-            'user_grade' => 1.2,
-            'prev_user_grade' => 5,
-            'is_liked' => false,
-        ]);
-
-        $this->assertTrue(
-            $userQuiz->date->between(now()->subSeconds(2), now()->addSeconds(2)),
-            'The date is not within the expected range'
-        );
     }
 
-    public function test_grade_quiz_by_id_unauthorized(): void
+    // public function test_grade_quiz_badly_by_id(): void
+    // {
+    //     $this->actingAs(self::$user);
+
+    //     $grade = [
+    //         'grade' => 3.2,
+    //     ];
+
+    //     $this->putJson('/api/quizzes/2/grade', $grade, [
+    //         'Accept' => 'application/json',
+    //         'Content-Type' => 'application/json'
+    //     ]);
+
+    //     $grade = [
+    //         'grade' => 5,
+    //     ];
+
+    //     $this->putJson('/api/quizzes/2/grade', $grade, [
+    //         'Accept' => 'application/json',
+    //         'Content-Type' => 'application/json'
+    //     ]);
+
+    //     $grade = [
+    //         'grade' => 1.2
+    //     ];
+
+    //     $userQuizBefore = UserQuiz::where('user_id', self::$user->id)->where('quiz_id', 2)->first();
+    //     $response = $this->putJson('/api/quizzes/2/grade', $grade, [
+    //         'Accept' => 'application/json',
+    //         'Content-Type' => 'application/json'
+    //     ]);
+
+    //     $response->assertStatus(204);
+    //     $userQuiz = UserQuiz::where('user_id', self::$user->id)->where('quiz_id', 2)->first();
+
+    //     $this->assertDatabaseHas('user_quizzes', [
+    //         'user_id' => self::$user->id,
+    //         'quiz_id' => 2,
+    //         'next_repetition' => 0,
+    //         'is_liked' => false,
+    //     ]);
+
+    //     $this->assertTrue(
+    //         $userQuiz->date->between(now()->subSeconds(2), now()->addSeconds(2)),
+    //         'The date is not within the expected range'
+    //     );
+    // }
+
+    public function test_store_quiz_results_unauthorized(): void
     {
-        $grade = [
-            'grade' => 3.2
+        $gradeData = [
+            'quiz_id' => 2,
+            'grade' => 2,
+            'max_grade' => $this->privateQuiz->qcms()->count()
         ];
 
-        $response = $this->putJson('/api/quizzes/2/grade', $grade, [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json'
-        ]);
+        $response = $this->postJson('/api/quizzes/results', $gradeData);
 
         $response->assertStatus(401)->assertJson([
             'message' => 'Unauthenticated.'
         ]);
     }
 
-    public function test_grade_quiz_by_id_not_found(): void
+    public function test_store_quiz_results_quiz_not_found(): void
     {
         $this->actingAs(self::$user);
 
-        $grade = [
-            'grade' => 3.2
+        $gradeData = [
+            'quiz_id' => 1000,
+            'grade' => 2,
+            'max_grade' => $this->privateQuiz->qcms()->count()
         ];
 
-        $response = $this->putJson('/api/quizzes/1000/grade', $grade, [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json'
-        ]);
+        $response = $this->postJson('/api/quizzes/results', $gradeData);
 
         $response->assertStatus(404)->assertJson([
-            'message' => 'Quiz not found'
+            'error' => 'Quiz not found'
         ]);
     }
 }

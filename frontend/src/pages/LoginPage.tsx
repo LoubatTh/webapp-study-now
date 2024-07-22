@@ -23,6 +23,8 @@ import { useForm } from "react-hook-form";
 import { LoginFormSchema } from "@/lib/form/login.form";
 import { RegisterFormSchema } from "@/lib/form/register.form";
 import { fetchApi } from "@/utils/api";
+import { DataType } from "@/types/Api.type";
+import { AuthTokenData, AuthRegisterData } from "@/types/AuthContext.type";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
@@ -50,8 +52,16 @@ const LoginPage = () => {
     },
   });
 
-  const onSubmitLogin = async (values) => {
-    const response = await fetchApi("POST", "login", values);
+  const onSubmitLogin = async (values: AuthRegisterData) => {
+    const response: {
+      data?: AuthTokenData | string | DataType;
+      status: number;
+      error?: string;
+    } = await fetchApi<AuthRegisterData, AuthTokenData>(
+      "POST",
+      "login",
+      values
+    );
 
     if (response.status != 200) {
       toast({
@@ -62,9 +72,9 @@ const LoginPage = () => {
       return;
     }
 
-    const data = response.data;
+    const data: AuthTokenData = response.data as AuthTokenData;
     toast({
-      title: "Welcome !",
+      title: "Welcome back !",
       className: "bg-green-400",
     });
     setToken(
@@ -84,10 +94,14 @@ const LoginPage = () => {
       password: values.password,
     };
 
-    const response = await fetchApi("POST", "register", body);
+    const response: {
+      data?: AuthTokenData | string | DataType;
+      status: number;
+      error?: string;
+    } = await fetchApi("POST", "register", body);
 
     console.log(response);
-    const data = response.data;
+    const data: AuthTokenData = response.data as AuthTokenData;
     if (response.status != 201) {
       toast({
         title: "Uh oh! Something went wrong.",
@@ -98,7 +112,7 @@ const LoginPage = () => {
     }
 
     toast({
-      title: "Enregistrement effectué, connexion automatique...",
+      title: "Welcome !",
       className: "bg-green-400",
     });
 
@@ -125,7 +139,7 @@ const LoginPage = () => {
             <Card>
               <CardHeader>
                 <CardTitle>Login</CardTitle>
-                <CardDescription>Rentrez vos identifiants.</CardDescription>
+                <CardDescription>Enter your credentials.</CardDescription>
               </CardHeader>
               <Form {...loginForm}>
                 <form
@@ -141,7 +155,7 @@ const LoginPage = () => {
                           <FormLabel>Email</FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="votre.email@example.com"
+                              placeholder="your.email@example.com"
                               {...field}
                             />
                           </FormControl>
@@ -154,7 +168,7 @@ const LoginPage = () => {
                       name="password"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Mot de passe</FormLabel>
+                          <FormLabel>Password</FormLabel>
                           <FormControl>
                             <Input
                               type="password"
@@ -168,7 +182,7 @@ const LoginPage = () => {
                     />
                   </CardContent>
                   <CardFooter>
-                    <Button type="submit">Se connecter</Button>
+                    <Button type="submit">Login</Button>
                   </CardFooter>
                 </form>
               </Form>
@@ -179,7 +193,7 @@ const LoginPage = () => {
             <Card>
               <CardHeader>
                 <CardTitle>Register</CardTitle>
-                <CardDescription>Création de votre compte</CardDescription>
+                <CardDescription>Create your account</CardDescription>
               </CardHeader>
               <Form {...registerForm}>
                 <form
@@ -192,12 +206,9 @@ const LoginPage = () => {
                       name="username"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Nom d'utilisateur</FormLabel>
+                          <FormLabel>Username</FormLabel>
                           <FormControl>
-                            <Input
-                              placeholder="Votre nom d'utilisateur"
-                              {...field}
-                            />
+                            <Input placeholder="Your username" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -211,7 +222,7 @@ const LoginPage = () => {
                           <FormLabel>Email</FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="votre.email@example.com"
+                              placeholder="your.email@example.com"
                               {...field}
                             />
                           </FormControl>
@@ -224,7 +235,7 @@ const LoginPage = () => {
                       name="password"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Mot de passe</FormLabel>
+                          <FormLabel>Password</FormLabel>
                           <FormControl>
                             <Input
                               type="password"
@@ -241,7 +252,7 @@ const LoginPage = () => {
                       name="confirmPassword"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Confirmer le mot de passe</FormLabel>
+                          <FormLabel>Confirm password</FormLabel>
                           <FormControl>
                             <Input
                               type="password"
@@ -255,7 +266,7 @@ const LoginPage = () => {
                     />
                   </CardContent>
                   <CardFooter>
-                    <Button type="submit">Créer un compte</Button>
+                    <Button type="submit">Register</Button>
                   </CardFooter>
                 </form>
               </Form>

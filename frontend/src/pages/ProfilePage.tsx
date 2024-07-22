@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { DataType, StripeCancelData, StripeResumeData } from "@/types/Api.type";
 import { fetchApi } from "@/utils/api";
 import { useAuth } from "@/contexts/AuthContext";
 import { EditFormSchema } from "@/lib/form/edit.form";
@@ -40,9 +41,18 @@ const ProfilePage = () => {
   };
 
   const cancelSubscription = async () => {
-    const response = await fetchApi("POST", "stripe/cancel", null, accessToken);
-    const status = await response.status;
-    const data = await response.data;
+    const response: {
+      data?: StripeCancelData | string | DataType;
+      status: number;
+      error?: string;
+    } = await fetchApi<null, StripeCancelData>(
+      "POST",
+      "stripe/cancel",
+      null,
+      accessToken
+    );
+    const status = response.status;
+    const data = response.data as StripeCancelData;
 
     if (status == 200) {
       toast({
@@ -51,7 +61,7 @@ const ProfilePage = () => {
         className: "bg-green-400",
       });
     } else {
-      const errorMessage = await response.error;
+      const errorMessage = response.error;
       toast({
         title: "Error",
         description: errorMessage,
@@ -61,9 +71,18 @@ const ProfilePage = () => {
   };
 
   const resumeSubscription = async () => {
-    const response = await fetchApi("POST", "stripe/resume", null, accessToken);
-    const status = await response.status;
-    const data = await response.data;
+    const response: {
+      data?: StripeResumeData | string | DataType;
+      status: number;
+      error?: string;
+    } = await fetchApi<null, StripeResumeData>(
+      "POST",
+      "stripe/resume",
+      null,
+      accessToken
+    );
+    const status = response.status;
+    const data = response.data as StripeResumeData;
 
     if (status == 200) {
       toast({

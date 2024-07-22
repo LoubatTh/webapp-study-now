@@ -234,7 +234,7 @@ const QuizzPlayPage = () => {
       <div className="flex flex-col items-center w-full p-2">
         {quizz ? (
           <>
-            <h1 className="my-8 text-center text-3xl uppercase">
+            <h1 className="my-8 text-center text-3xl font-bold uppercase">
               {quizz.name}
             </h1>
             <div className="flex flex-col gap-10">
@@ -282,7 +282,7 @@ const QuizzPlayPage = () => {
             </div>
           </>
         ) : (
-          <p>Chargement...</p>
+          <p>Loading...</p>
         )}
       </div>
     </>

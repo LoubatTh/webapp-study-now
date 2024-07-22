@@ -57,6 +57,7 @@ class UserController extends Controller
                 'updated_at' => $organization['updated_at'],
                 'owner_id' => $organization['owner_id'],
                 'owner' => $user->name,
+                'owner_avatar' => env('AWS_URL') . $user->avatar,
                 'tags' => $this->getOrganizationTags($organization['id']),
             ];
 
@@ -64,6 +65,7 @@ class UserController extends Controller
         }
 
         foreach ($user->organizations as $organization) {
+            $owner = User::find($organization['owner_id']);
             $response = [
                 'id' => $organization['id'],
                 'name' => $organization['name'],
@@ -71,7 +73,8 @@ class UserController extends Controller
                 'created_at' => $organization['created_at'],
                 'updated_at' => $organization['updated_at'],
                 'owner_id' => $organization['owner_id'],
-                'owner' => User::find($organization['owner_id'])->name,
+                'owner' => $owner->name,
+                'owner_avatar' => env('AWS_URL') . $owner->avatar,
                 'tags' => $this->getOrganizationTags($organization['id']),
             ];
 

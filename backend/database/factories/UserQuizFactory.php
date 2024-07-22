@@ -18,23 +18,13 @@ class UserQuizFactory extends Factory
      */
     public function definition(): array
     {
-        $easiness_factor = $this->faker->randomFloat(2, 0, 5);
-        $repetition = $this->faker->numberBetween(0, 5);
-        $interval = $this->faker->numberBetween(0, 5);
-        $date = $this->faker->dateTimeBetween('-2 years', 'now');
-        $user_grade = $this->faker->randomFloat(2, 0, 5);
-        $prev_user_grade = $this->faker->randomFloat(2, 0, 5);
+        $next_repetition = $this->faker->numberBetween(0, 5);
         $is_liked = $this->faker->boolean();
 
         return [
             'user_id' => User::factory(),
             'quiz_id' => Quiz::factory(),
-            'easiness_factor' => $easiness_factor,
-            'repetition' => $repetition,
-            'interval' => $interval,
-            'date' => $date,
-            'user_grade' => $user_grade,
-            'prev_user_grade' => $prev_user_grade,
+            'next_repetition' => $next_repetition,
             'is_liked' => $is_liked,
         ];
     }

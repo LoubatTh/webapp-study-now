@@ -134,6 +134,7 @@ class QuizController extends Controller
             'likes' => $quiz['likes'],
             'tag' => $quiz['tag']['name'],
             'owner' => $quiz['user']['name'],
+            'owner_avatar' => env('AWS_URL') . $quiz['user']['avatar'],
             'is_liked' => $quiz->getAttribute('is_liked'),
             'qcms' => $quiz['qcms']
         ];

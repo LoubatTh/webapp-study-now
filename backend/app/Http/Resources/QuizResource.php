@@ -28,6 +28,9 @@ class QuizResource extends JsonResource
             "owner" => $this->whenLoaded("user", function () {
                 return $this->user->name;
             }),
+            "owner_avatar" => $this->whenLoaded("user", function () {
+                return env('AWS_URL') . $this->user->avatar;
+            }),
             "is_liked" => $this->getAttribute("is_liked"),
             "qcms_count" => $this->whenCounted('qcms'),
             "qcms" => QcmResource::collection($this->whenLoaded('qcms')),

@@ -34,6 +34,7 @@ class OrganizationUserController
                 'owner' => [
                     'id' => $owner['id'],
                     'name' => $owner['name'],
+                    'avatar' => env('AWS_URL') . $owner['avatar'],
                 ],
                 'members' => $members,
                 'members_count' => count($members),

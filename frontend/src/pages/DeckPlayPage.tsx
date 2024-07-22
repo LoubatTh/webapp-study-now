@@ -86,26 +86,26 @@ const DeckPlayPage = () => {
       return;
     }
     let response: any;
+
     if (accessToken) {
       response = await getDeck(deckId, accessToken);
     } else {
       response = await getDeck(deckId);
     }
-    console.log(response);
+    const status = await response.status;
 
-    if (response.status == 403 || response.status == 401) {
+    if (status == 403 || status == 401) {
       setIsForbidden(true);
     }
-    if (response.status == 404 || response.status == 500) {
+    if (status == 404 || status == 500) {
       setIsNotFound(true);
     }
-    if (response.status === 200) {
+    if (status === 200) {
       const data: Deck = response.data as Deck;
       setDeck(data);
       for (let i = 0; i < data.flashcards.length; i++) {
         addRating(i, 0);
       }
-      console.log(data);
     } else {
       console.error("Failed to fetch deck:", response);
     }
@@ -118,11 +118,12 @@ const DeckPlayPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deckId, accessToken]);
 
-  if (isForbidden) {
-    return <ResourceForbidden type="deck" />;
-  }
   if (isNotFound) {
     return <ResourceNotFound type="deck" />;
+  }
+
+  if (isForbidden) {
+    return <ResourceForbidden type="deck" />;
   }
 
   return (

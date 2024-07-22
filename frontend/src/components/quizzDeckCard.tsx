@@ -49,7 +49,7 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
   onDeleteCard,
 }: CommonCardProps) => {
   const navigate = useNavigate();
-  const { name } = useUser();
+  const { name, avatar } = useUser();
   const [sizeCard, setSizeCard] = useState<number>(0);
   const cards = type === "Quiz" ? "quizz" : "deck";
   const itemLabel = type === "Quiz" ? "qcms" : "flashcards";
@@ -78,7 +78,7 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
         <div className="flex justify-between">
           <CardHeader className="flex flex-row items-center p-3">
             <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarImage src={owner == name ? avatar : ""} />
               <AvatarFallback>
                 <User />
               </AvatarFallback>

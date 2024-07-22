@@ -21,7 +21,6 @@ export type Quizz = {
   type: string;
   tag: string;
   is_public: boolean;
-  is_organization?: boolean;
   likes: number;
   qcms: QCM[];
   owner: string;

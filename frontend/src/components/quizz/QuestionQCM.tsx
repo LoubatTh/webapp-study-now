@@ -54,12 +54,16 @@ const QuestionQCM = ({
 
   return (
     <div className="flex flex-col bg-slate-300/20 rounded-xl p-4 gap-4 w-full max-w-[40rem] md:min-w-[40rem]">
-      <h2 className="bg-background rounded-xl font-semibold text-lg text-center min-h-40 p-4 break-words overflow-wrap">
+      <h2
+        data-testid="qcm-question"
+        className="bg-background rounded-xl font-semibold text-lg text-center min-h-40 p-4 break-words overflow-wrap"
+      >
         {question.question}
       </h2>
       <div className="grid grid-cols-2 grid-rows-2 gap-4">
         {question.answers.map((answer, index) => (
           <p
+            data-testid={`qcm-answer-${index}`}
             className={`flex bg-background rounded-xl p-2 truncate ${getBorderColor(
               answer
             )}`}

@@ -22,14 +22,18 @@ const Footer = () => {
             <li className="cursor-pointer mt-2">
               <a onClick={() => handleNavigate("/explore")}>Explore</a>
             </li>
-            <li className="cursor-pointer mt-2">
-              <a onClick={() => handleNavigate("/board")}>Board</a>
-            </li>
-            <li className="cursor-pointer mt-2">
-              <a onClick={() => handleNavigate("/organization")}>
-                Organization
-              </a>
-            </li>
+            {accessToken && (
+              <>
+                <li className="cursor-pointer mt-2">
+                  <a onClick={() => handleNavigate("/board")}>Board</a>
+                </li>
+                <li className="cursor-pointer mt-2">
+                  <a onClick={() => handleNavigate("/organization")}>
+                    Organization
+                  </a>
+                </li>
+              </>
+            )}
           </ul>
         </div>
         <div className="">

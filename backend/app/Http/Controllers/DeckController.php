@@ -117,6 +117,7 @@ class DeckController extends Controller
                 'likes' => $deck['likes'],
                 'tag' => $deck['tag']['name'],
                 'owner' => $deck['user']['name'],
+                'owner_avatar' => env('AWS_URL') . $deck['user']['avatar'],
                 'is_liked' => $deck->getAttribute('is_liked'),
                 'flashcards' => $deck['flashcards']
             ];

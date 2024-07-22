@@ -4,7 +4,6 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Auth;
 
 class DeckResource extends JsonResource
 {
@@ -26,6 +25,9 @@ class DeckResource extends JsonResource
             }),
             "owner" => $this->whenLoaded("user", function () {
                 return $this->user->name;
+            }),
+            "owner_avatar" => $this->whenLoaded("user", function () {
+                return env('AWS_URL') . $this->user->avatar;
             }),
             "is_liked" => $this->getAttribute("is_liked"),
             "flashcard_count" => $this->whenCounted('flashcards'),

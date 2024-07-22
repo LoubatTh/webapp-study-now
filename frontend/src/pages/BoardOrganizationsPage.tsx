@@ -57,7 +57,6 @@ const BoardOrganizationPage = () => {
 
   const [decks, setDecks] = useState<Deck[]>([]);
   const [quizzes, setQuizzes] = useState<Quizz[]>([]);
-  const [allCards, setAllCards] = useState<any[]>([]);
 
   const [loading, setLoading] = useState(true);
   const navigation = useNavigate();
@@ -74,8 +73,8 @@ const BoardOrganizationPage = () => {
   };
 
   const handleDeleteCard = (id: number) => {
-    setDecks((prev) => prev.filter((card) => card.id !== id));
-    setQuizzes((prev) => prev.filter((card) => card.id !== id));
+    setDecks((prev) => prev.filter((deck) => deck.deck.id !== id));
+    setQuizzes((prev) => prev.filter((quizz) => quizz.quiz.id !== id));
   };
 
   const handleRemoveUser = async (id_member: number) => {

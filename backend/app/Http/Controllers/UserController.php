@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUserAvatarRequest;
 use App\Models\Deck;
 use App\Models\Organization;
 use App\Models\OrganizationDeck;
@@ -11,6 +12,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
@@ -27,6 +29,7 @@ class UserController extends Controller
             'id' => $user['id'],
             'name' => $user['name'],
             'email' => $user['email'],
+            'avatar' => env('AWS_URL') . $user['avatar'],
             'role' => $user['role'],
             'email_verified_at' => $user['email_verified_at'],
             'created_at' => $user['created_at'],
@@ -45,7 +48,7 @@ class UserController extends Controller
         $user = $request->user();
         $ownedOrganizations = [];
         $organizations = [];
-        
+
         foreach (Organization::where('owner_id', $user->id)->get() as $organization) {
             $response = [
                 'id' => $organization['id'],
@@ -57,7 +60,7 @@ class UserController extends Controller
                 'owner' => $user->name,
                 'tags' => $this->getOrganizationTags($organization['id']),
             ];
-            
+
             array_push($ownedOrganizations, $response);
         }
 
@@ -151,5 +154,37 @@ class UserController extends Controller
         }
 
         return array_unique($tags);
+    }
+
+    public function avatar(Request $request)
+    {
+        $user = $request->user();
+        if (!$request->hasFile('file')) {
+            return response()->json([
+                'message' => 'The file is required.'
+            ], 422);
+        }
+        $file = $request->file('file');
+
+        if ($file->extension() !== 'png' && $file->extension() !== 'jpg') {
+            return response()->json([
+                'error' => 'Only png/jpg files allowed as avatar'
+            ], 400);
+        }
+
+        if ($user->avatar != 'users/default.jpg') {
+            Storage::disk('s3')->delete($user->avatar);
+        }
+
+        $path = Storage::disk('s3')->putFile('users', $file);
+
+        $user->update([
+            'avatar' => $path,
+        ]);
+
+        return response()->json([
+            'message' => 'Avatar updated',
+            'avatar' => env('AWS_URL') . $user->avatar,
+        ]);
     }
 }

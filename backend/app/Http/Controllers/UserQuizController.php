@@ -42,7 +42,7 @@ class UserQuizController extends Controller
             }
 
             $quiz->update([
-                "likes" => $userQuiz->is_liked ?
+                "likes" => $request->isLiked ?
                     $quiz->likes + 1 :
                     ($quiz->likes > 0 ?
                         $quiz->likes - 1 :

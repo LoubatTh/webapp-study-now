@@ -13,8 +13,7 @@ class StripeController extends Controller
     public function subcriptionCheckout(Request $request)
     {
         $checkoutSession = $request->user()
-            ->newSubscription('default', 'price_1PVCT5LDBaFPKLdsUk1W8WUK')
-            ->trialDays(1)
+            ->newSubscription('default', 'price_1PemT9LDBaFPKLds7A5CmJQD')
             ->allowPromotionCodes()
             ->checkout([
                 'success_url' => 'http://localhost:3000/profile',
@@ -69,6 +68,30 @@ class StripeController extends Controller
         $user->subscription('default')->resume();
         return response()->json([
             'message' => 'Subscription resumed'
+        ]);
+    }
+
+
+    /**
+     * Get use subscription infos.
+     */
+    public function show(Request $request)
+    {
+        $user = $request->user();
+
+        if (!$user->subscribed('default')) {
+            return response()->json([
+                'is_subscribed' => false,
+            ]);
+        }
+
+        $subscription = $user->subscription('default');
+
+        return response()->json([
+            'is_subscribed' => true,
+            'on_grace_period' => $subscription->onGracePeriod(),
+            'ends_at' => $subscription->ends_at,
+            'next_payment' => $subscription->asStripeSubscription()->current_period_end,
         ]);
     }
 }

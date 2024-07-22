@@ -35,13 +35,13 @@ const FlashcardComponent = ({
     >
       <div
         data-testid={`flashcard-click-${index}`}
-        className="relative w-96 h-48 perspective"
+        className="relative w-80 md:w-96 h-48 perspective"
         onClick={handleFlip}
       >
         <motion.div
           data-testid={`flashcard-card-${index}`}
-          className={`absolute inset-0 flex justify-center items-center border shadow-ms ${
-            isFlipped ? "rotate-y-180 border-primary" : ""
+          className={`bg-background rounded-xl absolute inset-0 flex border shadow-xl ${
+            isFlipped ? "rotate-y-180" : ""
           }`}
           initial={false}
           animate={{ rotateY: isFlipped ? 180 : 0 }}
@@ -56,19 +56,20 @@ const FlashcardComponent = ({
               {question}
             </h2>
           </div>
-          <div className="absolute inset-0 flex justify-center items-center backface-hidden rotate-y-180">
+          <div className="absolute inset-0 flex flex-col gap-2 p-2 backface-hidden rotate-y-180 ring-1 ring-electricalBlue rounded-xl">
+            <h2 className="text-xl font-bold text-center">Answer</h2>
             <p data-testid={`flashcard-answer-${index}`} className="text-lg">
               {answer}
             </p>
           </div>
         </motion.div>
       </div>
-      <div className="flex flex-col gap-2 text-center">
+      <div className="flex flex-col gap-2 text-center mb-8">
         <Typography>My rating</Typography>
         <Rating
           data-testid={`flashcard-rating-${index}`}
           value={star}
-          onChange={(event, newValue) => {
+          onChange={(_event, newValue) => {
             handleStar(newValue);
           }}
         />

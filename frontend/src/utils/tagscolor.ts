@@ -21,9 +21,17 @@ export const colorPalette: { [key: string]: string } = {
   architecture: "bg-sky-100 text-sky-800",
   "general culture": "bg-lime-100 text-lime-800",
   "civic education": "bg-orange-100 text-orange-800",
+  home: "text-teal-800",
+  explore: "text-rose-800",
+  board: "text-purple-400 underline",
+  organizations: "text-fuchsia-800",
+  create: "text-violet-800",
+  account: "text-lime-800",
+  navbar:
+    "text-purple-400 underline hover:bg-transparent hover:text-purple-400",
 };
 
 // method to define tag color
 export const getColorClass = (tagName: string) => {
-  return colorPalette[tagName] || "bg-gray-100 text-gray-800";
+  return colorPalette[tagName.toLowerCase()] || "bg-gray-100 text-gray-800";
 };

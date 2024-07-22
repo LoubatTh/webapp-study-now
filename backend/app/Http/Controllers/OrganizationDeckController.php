@@ -6,7 +6,6 @@ use App\Http\Requests\StoreOrganizationDeckRequest;
 use App\Http\Requests\UpdateOrganizationDeckRequest;
 use App\Http\Resources\OrganizationDeckResource;
 use App\Models\Deck;
-use App\Models\Organization;
 use App\Models\OrganizationDeck;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -19,7 +18,7 @@ class OrganizationDeckController
      */
     public function index(Request $request, int $id)
     {
-        $decks = OrganizationDeck::with('deck')->where('organization_id', $id)->get();
+        $decks = OrganizationDeck::with('deck.flashcards', 'deck.tag', 'deck.user')->where('organization_id', $id)->get();
 
         return response()->json(OrganizationDeckResource::collection($decks));
     }
@@ -45,7 +44,7 @@ class OrganizationDeckController
                 ]);
             }
 
-            if (!$deck['isPublic'] && $deck['user_id'] !== $request->user()['id']) {
+            if (!$deck['is_public'] && ($deck['user_id'] !== $request->user()['id'])) {
                 return response()->json([
                     'error' => 'Only owned or public decks can be added to the organization',
                 ], 403);
@@ -69,9 +68,15 @@ class OrganizationDeckController
                 'file_path' => $filePath,
             ]);
 
+            if ($filePath) {
+                return response()->json([
+                    'message' => 'Deck added to the organization',
+                    'file_url' => $this->urlBuilder($filePath),
+                ], 201);
+            }
+
             return response()->json([
                 'message' => 'Deck added to the organization',
-                'file_url' => $this->urlBuilder($filePath),
             ], 201);
         } catch (HttpException $e) {
             return response()->json([
@@ -85,7 +90,7 @@ class OrganizationDeckController
      */
     public function show(Request $request, int $id, int $deckId)
     {
-        $organizationDeck = OrganizationDeck::with('deck.flashcards')
+        $organizationDeck = OrganizationDeck::with('deck.flashcards', 'deck.tag', 'deck.user')
             ->where('organization_id', $id)
             ->where('deck_id', $deckId)
             ->first();
@@ -119,7 +124,10 @@ class OrganizationDeckController
             ], 404);
         }
 
-        Storage::delete($organizationDeck['file_path']);
+        if ($organizationDeck['file_path']) {
+            Storage::delete($organizationDeck['file_path']);
+        }
+
         $filePath = Storage::putFile('organizations/decks', $file, 'public');
         $organizationDeck->update([
             'file_path' => $filePath,

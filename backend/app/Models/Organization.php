@@ -13,6 +13,7 @@ class Organization extends Model
     protected $fillable = [
         'name',
         'owner_id',
+        'description'
     ];
 
     public function users(): BelongsToMany

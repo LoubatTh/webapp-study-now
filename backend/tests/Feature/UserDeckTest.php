@@ -11,7 +11,6 @@ class UserDeckTest extends TestCase
 {
     private $deck;
     private $privateDeck;
-
     private $userDeck;
     private static $user;
 
@@ -34,7 +33,6 @@ class UserDeckTest extends TestCase
                 'id' => 1,
                 'name' => 'Test',
                 'is_public' => true,
-                'is_organization' => false,
                 'likes' => 2,
                 'user_id' => self::$user->id,
             ]
@@ -45,7 +43,6 @@ class UserDeckTest extends TestCase
                 'id' => 2,
                 'name' => 'TestPrivate',
                 'is_public' => false,
-                'is_organization' => false,
                 'likes' => 20,
                 'user_id' => self::$userPrivate->id,
             ]
@@ -87,8 +84,15 @@ class UserDeckTest extends TestCase
     {
         $this->actingAs(self::$user);
 
+        $likeData = [
+            "isLiked" => false,
+        ];
+
         $userDeckBefore = UserDeck::where('user_id', self::$user->id)->where('deck_id', 1)->first();
-        $response = $this->putJson('/api/decks/1/like');
+        $response = $this->putJson('/api/decks/1/like', $likeData, [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json'
+        ]);
 
         $response->assertStatus(204);
         $userDeckAfter = UserDeck::where('user_id', self::$user->id)->where('deck_id', 1)->first();
@@ -110,7 +114,14 @@ class UserDeckTest extends TestCase
     {
         $this->actingAs(self::$user);
 
-        $response = $this->putJson('/api/decks/2/like');
+        $likeData = [
+            "isLiked" => true,
+        ];
+
+        $response = $this->putJson('/api/decks/2/like', $likeData, [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json'
+        ]);
 
         $response->assertStatus(204);
         $userDeckAfter = UserDeck::where('user_id', self::$user->id)->where('deck_id', 2)->first();
@@ -133,7 +144,14 @@ class UserDeckTest extends TestCase
 
     public function test_like_deck_by_id_unauthorized(): void
     {
-        $response = $this->putJson('/api/decks/1/like');
+        $likeData = [
+            "isLiked" => true,
+        ];
+
+        $response = $this->putJson('/api/decks/1/like', $likeData, [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json'
+        ]);
 
         $response->assertStatus(401)->assertJson([
             'message' => 'Unauthenticated.'
@@ -144,7 +162,14 @@ class UserDeckTest extends TestCase
     {
         $this->actingAs(self::$user);
 
-        $response = $this->putJson('/api/decks/1000/like');
+        $likeData = [
+            "isLiked" => true,
+        ];
+
+        $response = $this->putJson('/api/decks/1000/like', $likeData, [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json'
+        ]);
 
         $response->assertStatus(404)->assertJson([
             'message' => 'Deck not found'

@@ -1,244 +1,291 @@
-import React from "react";
 import { useUser } from "../contexts/UserContext";
-import { User, Mail, CheckCircle, XCircle, StarsIcon, StarIcon } from "lucide-react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { User, Mail, XCircle, StarsIcon, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { RegisterFormSchema } from "@/lib/form/register.form";
+import { DataType, StripeCancelData, StripeResumeData } from "@/types/Api.type";
 import { fetchApi } from "@/utils/api";
 import { useAuth } from "@/contexts/AuthContext";
-import { motion } from "framer-motion";
+import { EditFormSchema } from "@/lib/form/edit.form";
+import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
+import { getFormattedDate } from "@/utils/dateparser";
 
 const ProfilePage = () => {
+  const { id, name, email, is_subscribed, refreshUser } = useUser();
+  const { accessToken } = useAuth();
+  const { toast } = useToast();
+  const navigate = useNavigate();
 
-    const { id, name, email, is_subscribed } = useUser();
-    const { accessToken } = useAuth();
+  const editForm = useForm({
+    resolver: zodResolver(EditFormSchema),
+    defaultValues: {
+      username: "",
+      oldPassword: "",
+      newPassword: "",
+    },
+  });
 
-    const registerForm = useForm({
-      resolver: zodResolver(RegisterFormSchema),
-      defaultValues: {
-        username: name || "",
-        email: email || "",
-        password: "",
-        confirmPassword: "",
-      },
-    });
+  const handleNavigation = (path) => {
+    navigate(path);
+  };
 
-    const onChangeSaved = async (values) => {
+  const cancelSubscription = async () => {
+    const response: {
+      data?: StripeCancelData | string | DataType;
+      status: number;
+      error?: string;
+    } = await fetchApi<null, StripeCancelData>(
+      "POST",
+      "stripe/cancel",
+      null,
+      accessToken
+    );
+    const status = response.status;
+    const data = response.data as StripeCancelData;
 
-      const body = {
-        name: values.username,
-        email: values.email,
-        password: values.password,
-      };
-      
-      // TODO: A FINALISER (le back n'attends rien d'autres que le name)
-       const response = await fetchApi("PUT", "user", body, accessToken);
+    if (status == 200) {
+      toast({
+        title: data.message,
+        description: "Will end at " + getFormattedDate(data.ends_at),
+        className: "bg-green-400",
+      });
+    } else {
+      const errorMessage = response.error;
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    }
+  };
 
+  const resumeSubscription = async () => {
+    const response: {
+      data?: StripeResumeData | string | DataType;
+      status: number;
+      error?: string;
+    } = await fetchApi<null, StripeResumeData>(
+      "POST",
+      "stripe/resume",
+      null,
+      accessToken
+    );
+    const status = response.status;
+    const data = response.data as StripeResumeData;
+
+    if (status == 200) {
+      toast({
+        title: data.message,
+        className: "bg-green-400",
+      });
+    } else {
+      const errorMessage = await response.error;
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const onChangeSaved = async (values) => {
+    const body = {
+      name: values.username,
+      password: values.oldPassword,
+      new_password: values.newPassword,
     };
 
-    function handleResume() {
-      document.body.style.cursor = "wait";
+    console.log(body);
+    const response = await fetchApi("PUT", "user", body, accessToken);
+    const status = await response.status;
+
+    if (status == 200) {
+      toast({
+        title: "Profile updated",
+        description: "Your profile has been updated",
+        className: "bg-green-400",
+      });
+      refreshUser();
+    } else {
+      const errorMessage = await response.error;
+      toast({
+        title: "Error",
+        description: errorMessage,
+        className: "bg-red-400",
+      });
     }
-
-    function handleCancel() {
-      document.body.style.cursor = "wait";
-
-      try {
-        const response = fetchApi("POST", "stripe/cancel", null, accessToken);
-        console.log(response);
-      } catch (error) {
-        console.error("Error during the subscription process", error);
-      } finally {
-        document.body.style.cursor = "default";
-      
-      }
-
-    }
+  };
 
   return (
-    <div className="flex flex-grow justify-center items-center">
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ type: "spring", duration: 0.5 }}
-      >
-        <Tabs defaultValue="profile" className="w-[500px] shadow-2xl">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="profile">Profile</TabsTrigger>
+    <div className="flex justify-center items-center w-full my-6 md:my-auto">
+      <div className="flex flex-col md:flex-row gap-4 w-3/4 max-w-5xl">
+        {/* Profile */}
+        <div className="bg-white shadow-lg rounded-lg backdrop-blur-xl p-6 w-full md:w-1/3 h-96">
+          <div className="flex justify-center">
+            <img
+              className="w-24 h-24 rounded-full"
+              src="https://picsum.photos/200/300"
+              alt="Profile"
+            />
+          </div>
+          <div className="text-center mt-3 border-b-2 pb-4">
+            <h2 className="text-xl font-semibold">{name}</h2>
+            <p className="text-gray-600">Student</p>
+          </div>
+          <div className="flex flex-col gap-2 mt-3">
+            <div className="flex items-center mt-2">
+              <User className="text-gray-600" />
+              <span className="ml-2 text-gray-800">{name}</span>
+            </div>
+            <div className="flex items-center mt-2">
+              <Mail className="text-gray-600" />
+              <span className="ml-2 text-gray-800">{email}</span>
+            </div>
+            <div className="flex items-center mt-2">
+              <Phone className=" text-gray-600" />
+              <span className="ml-2 text-gray-800">+330000000</span>
+            </div>
+            <div className="flex items-center mt-2">
+              {is_subscribed ? (
+                <>
+                  <StarsIcon className="text-blue-500" />
+                  <span className="ml-2 text-blue-500 font-bold">
+                    Premium User
+                  </span>
+                </>
+              ) : (
+                <>
+                  <XCircle className="text-red-500" />
+                  <span className="ml-2 text-gray-800">Free User</span>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+        <Tabs defaultValue="account" className="w-full md:w-2/3">
+          <TabsList>
+            <TabsTrigger value="account">Account</TabsTrigger>
             <TabsTrigger value="subscription">Subscription</TabsTrigger>
           </TabsList>
-
-          <TabsContent value="profile">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <User className="mr-2" />
-                  Profile Information
-                </CardTitle>
-                <CardDescription>
-                  Update your profile information
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="flex items-center gap-4">
-                <Avatar className="w-16 h-16">
-                  <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-
-                <div>
-                  <div className="flex items-center mb-4">
-                    <User className="mr-2 text-gray-500" />
-                    <p>{name || "N/A"}</p>
-                  </div>
-                  <div className="flex items-center mb-4">
-                    <Mail className="mr-2 text-gray-500" />
-                    <p>{email || "N/A"}</p>
-                  </div>
-                  <div className="flex items-center mb-4">
-                    {is_subscribed ? (
-                      <StarsIcon className="mr-2 text-blue-500" />
-                    ) : (
-                      <XCircle className="mr-2 text-red-500" />
+          <TabsContent value="account">
+            <div className="bg-white rounded-lg p-8 shadow-lg">
+              <h1 className="flex gap-2 items-center text-xl font-semibold mb-2 border-b-2 pb-3">
+                <User /> Edit profile
+              </h1>
+              <Form {...editForm}>
+                <form
+                  onSubmit={editForm.handleSubmit(onChangeSaved)}
+                  className="grid grid-rows-4 md:grid-rows-none md:grid-cols-2 gap-4"
+                >
+                  <FormField
+                    control={editForm.control}
+                    name="username"
+                    render={({ field }) => (
+                      <FormItem className="row-span-1 md:col-span-2">
+                        <FormLabel>New username</FormLabel>
+                        <FormControl>
+                          <Input placeholder={name} {...field} />
+                        </FormControl>
+                        <FormMessage className="min-h-6" />
+                      </FormItem>
                     )}
-                    <p
-                      className={is_subscribed ? "text-blue-500 font-bold" : ""}
-                    >
-                      {is_subscribed ? "Premium" : "Free Subscription"}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button className="w-full">Edit Profile</Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[425px]">
-                    <DialogHeader>
-                      <DialogTitle>Edit profile</DialogTitle>
-                      <DialogDescription>
-                        Make changes to your profile here. Click save when
-                        you're done.
-                      </DialogDescription>
-                    </DialogHeader>
-
-                    <Form {...registerForm}>
-                      <form
-                        onSubmit={registerForm.handleSubmit(onChangeSaved)}
-                        className="space-y-8"
-                      >
-                        <CardContent className="space-y-2">
-                          <FormField
-                            control={registerForm.control}
-                            name="username"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Nom d'utilisateur</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    placeholder="Votre nom d'utilisateur"
-                                    {...field}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
+                  />
+                  <FormField
+                    control={editForm.control}
+                    name="oldPassword"
+                    render={({ field }) => (
+                      <FormItem className="row-span-1 ">
+                        <FormLabel>Old Password</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="password"
+                            placeholder="********"
+                            {...field}
                           />
-                          <FormField
-                            control={registerForm.control}
-                            name="email"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Email</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    placeholder="votre.email@example.com"
-                                    {...field}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
+                        </FormControl>
+                        <FormMessage className="min-h-6" />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={editForm.control}
+                    name="newPassword"
+                    render={({ field }) => (
+                      <FormItem className="row-span-1">
+                        <FormLabel>New Password</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="password"
+                            placeholder="********"
+                            {...field}
                           />
-                          <FormField
-                            control={registerForm.control}
-                            name="password"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Mot de passe</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    type="password"
-                                    placeholder="********"
-                                    {...field}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={registerForm.control}
-                            name="confirmPassword"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Confirmer le mot de passe</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    type="password"
-                                    placeholder="********"
-                                    {...field}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </CardContent>
-                        <CardFooter>
-                          <Button type="submit">Saves Changes</Button>
-                        </CardFooter>
-                      </form>
-                    </Form>
-                  </DialogContent>
-                </Dialog>
-              </CardFooter>
-            </Card>
+                        </FormControl>
+                        <FormMessage className="min-h-6" />
+                      </FormItem>
+                    )}
+                  />
+                  <Button
+                    className="row-span-1 md:col-span-2 w-full md:ml-auto md:w-auto"
+                    type="submit"
+                  >
+                    Save Changes
+                  </Button>
+                </form>
+              </Form>
+            </div>
           </TabsContent>
-
           <TabsContent value="subscription">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <StarsIcon className="mr-2" />
-                  Subscription
-                </CardTitle>
-                <CardDescription>Manage your subscription</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="flex flex-col gap-2 justify-between mt-4">
-                  <p>
-                    (TODO: Attendre que le back renvoie + d'infos pour améliorer cette
-                    page)
-                  </p>
-                  <Button onClick={handleResume}>Resume</Button>
-                  <p>
-                    (TODO: Cancel qui fonctionne askip mais le GET du user renvoie encore true pour is_subscribed donc ça marche pas encore)
-                  </p>
-                  <Button onClick={handleCancel}>Cancel</Button>
-                </div>
-              </CardContent>
-            </Card>
+            <>
+              <div className="bg-white rounded-lg shadow-lg p-8 h-full">
+                <h1 className="flex gap-2 items-center text-xl font-semibold mb-2 border-b-2 pb-3">
+                  <StarsIcon /> Manage subscription
+                </h1>
+                {!is_subscribed ? (
+                  <div className="flex flex-col gap-4">
+                    <p className="text-gray-800">
+                      You are currently using the free version of our app. To
+                      unlock all the features, you can subscribe to our premium
+                      plan.
+                    </p>
+                    <Button onClick={() => handleNavigation("/premium")}>
+                      Subscribe
+                    </Button>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex flex-col gap-4">
+                      <p className="text-gray-800">
+                        You are currently subscribed to our premium plan. You
+                        can cancel your subscription at any time.
+                      </p>
+                      <Button onClick={cancelSubscription}>
+                        Cancel Subscription
+                      </Button>
+                      <p className="text-gray-800">
+                        You can also resume your subscription at any time.
+                      </p>
+                      <Button onClick={resumeSubscription}>
+                        Resume Subscription
+                      </Button>
+                    </div>
+                  </>
+                )}
+              </div>
+            </>
           </TabsContent>
         </Tabs>
-      </motion.div>
+      </div>
     </div>
   );
 };

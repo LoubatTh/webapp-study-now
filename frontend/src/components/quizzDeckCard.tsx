@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -6,75 +7,112 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import React from "react";
-import { Heart } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useNavigate } from "react-router-dom";
 import { getColorClass } from "@/utils/tagscolor";
 import { cn } from "@/lib/utils";
-
-// set type for quizz and deck
-// type CardDataType = QuizzType | DeckType;
+import EditButton from "./EditButton";
+import DeleteButton from "./DeleteButton";
+import LikeButton from "./LikeButton";
+import { Flashcard } from "@/types/deck.type";
+import { QCM } from "@/types/quizz.type";
+import { useUser } from "@/contexts/UserContext";
 
 type CommonCardProps = {
-  id?: number;
-  name: string;
+  id: number;
+  Cardname: string;
+  owner: string;
   tag: string;
   type: string;
   likes: number;
-  is_public?: boolean;
-  is_organization?: boolean;
+  isLiked: boolean;
+  size?: number;
+  flashcards?: Flashcard[];
+  qcms?: QCM[];
+  organizationName?: string;
+  onDeleteCard: (id: number) => void;
 };
 
 const QuizzDeckCard: React.FC<CommonCardProps> = ({
   id,
-  name,
+  Cardname,
+  owner,
   tag,
   type,
   likes,
-  is_organization,
-  is_public,
+  isLiked,
+  size,
+  flashcards,
+  qcms,
+  organizationName,
+  onDeleteCard,
 }: CommonCardProps) => {
   const navigate = useNavigate();
+  const { name } = useUser();
+  const [sizeCard, setSizeCard] = useState<number>(0);
+  const cards = type === "Quiz" ? "quizz" : "deck";
+  const itemLabel = type === "Quiz" ? "qcms" : "flashcards";
 
   const handleClick = () => {
-    navigate(`/${type}/${id}`);
+    navigate(`/${cards}/${id}`);
   };
 
+  useEffect(() => {
+    if (size) {
+      setSizeCard(size);
+    } else if (type === "Quiz") {
+      setSizeCard(qcms?.length || 0);
+    } else {
+      setSizeCard(flashcards?.length || 0);
+    }
+  }, [flashcards, qcms, type]);
+
   return (
-      <div onClick={handleClick} className="cursor-pointer">
-        <Card className={cn("transition duration-200 shadow-lg transform hover:shadow-2xl hover:scale-105")}>
-          <CardHeader>
-            <CardTitle>{name}</CardTitle>
-            <CardDescription>
-              {type === "quizz" ? "Quizz" : "Deck"}
-            </CardDescription>
+    <div onClick={handleClick} className="cursor-pointer">
+      <Card
+        className={cn(
+          "transition duration-200 shadow-lg transform hover:shadow-2xl hover:scale-105 flex flex-col gap-4"
+        )}
+      >
+        <div className="flex justify-between">
+          <CardHeader className="flex flex-row items-center p-3">
+            <Avatar>
+              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarFallback>{owner}</AvatarFallback>
+            </Avatar>
+            <div className="flex-col flex-grow ml-2 capitalize">
+              <CardTitle>{Cardname}</CardTitle>
+              <CardDescription>{owner}</CardDescription>
+            </div>
           </CardHeader>
-          <CardContent>
-            <span
-              className={cn(
-                "p-1 ps-2 pe-2 rounded-lg font-medium text-sm",
-                getColorClass(tag.toLowerCase())
-              )}
-            >
-              {tag}
-            </span>
-          </CardContent>
-          <CardFooter className="justify-between">
-            <div className="flex items-center">
-              <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-              <p className="ml-2">lulu</p>
+          <LikeButton id={id} type={type} likes={likes} isLiked={isLiked} />
+        </div>
+        <CardContent className="flex">
+          <div className=" capitalize mr-1">{cards}</div>
+          <div>
+            of {sizeCard} {itemLabel}
+          </div>
+        </CardContent>
+        <CardFooter
+          className={cn(
+            "pt-2 pb-2 pr-2 justify-between items-center h-12",
+            getColorClass(tag.toLowerCase())
+          )}
+        >
+          <div>{tag}</div>
+          {owner === name && (
+            <div className="flex h-full gap-0.5">
+              <EditButton
+                id={id}
+                type={type}
+                organizationName={organizationName}
+              />
+              <DeleteButton id={id} type={type} onDeleteCard={onDeleteCard} />
             </div>
-            <div className="flex items-center">
-              <p className="mr-1">{likes}</p>
-              <Heart className="text-red-500" />
-            </div>
-          </CardFooter>
-        </Card>
-      </div>
+          )}
+        </CardFooter>
+      </Card>
+    </div>
   );
 };
 

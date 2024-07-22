@@ -14,7 +14,6 @@ class Quiz extends Model
     protected $fillable = [
         'name',
         'is_public',
-        'is_organization',
         'likes',
         'type',
         'tag_id',
@@ -34,5 +33,10 @@ class Quiz extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function userQuizzes()
+    {
+        return $this->hasMany(UserQuiz::class);
     }
 }

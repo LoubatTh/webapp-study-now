@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class DeckResource extends JsonResource
 {
@@ -19,14 +20,15 @@ class DeckResource extends JsonResource
             "type" => $this->type,
             "name" => $this->name,
             "is_public" => $this->is_public,
-            "is_organization" => $this->is_organization,
             "likes" => $this->likes,
-            "tag" => $this->whenLoaded('tag', function () {
+            "tag" => $this->whenLoaded("tag", function () {
                 return $this->tag->name;
             }),
-            "owner" => $this->whenLoaded('user', function () {
+            "owner" => $this->whenLoaded("user", function () {
                 return $this->user->name;
             }),
+            "is_liked" => $this->getAttribute("is_liked"),
+            "flashcard_count" => $this->whenCounted('flashcards'),
             "flashcards" => FlashcardResource::collection($this->whenLoaded("flashcards"))
         ];
     }

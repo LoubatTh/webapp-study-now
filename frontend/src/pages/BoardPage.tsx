@@ -1,122 +1,76 @@
 import { useEffect, useState } from "react";
-import CreateSetBtn from "@/components/createSetBtn";
-// import FilterBtnsBar from "@/components/filterBtnsBar";
 import QuizzDeckCard from "@/components/quizzDeckCard";
-// import { mockDeckData, mockQuizzData } from "@/lib/mockData";
-// import Pagin from "@/components/pagination";
 import { useAuth } from "@/contexts/AuthContext";
 import { fetchApi } from "@/utils/api";
-import { Deck } from "@/types/deck.type";
 import { motion } from "framer-motion";
-import PageTitle from "@/components/pageTitle";
-
-const getDecksUser = async (accessToken: string) => {
-  const response = await fetchApi("GET", `decks`, null, accessToken);
-  return response;
-};
-
-const getquizzesUser = async (accessToken: string) => {
-  const response = await fetchApi("GET", `quizzes`, null, accessToken);
-  return response;
-};
+import Pagination from "@/components/tools/Pagination";
+import FilterBarMobile from "@/components/FilterBarMobile";
+import FilterBar from "@/components/FilterBar";
 
 const cardVariants = {
-  initial: {
-    opacity: 0,
-    y: 50,
-  },
+  initial: { opacity: 0, y: 50 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: {
-      type: "spring",
-      stiffness: 120,
-    },
+    transition: { type: "spring", stiffness: 120 },
   },
+};
+
+const getAllCards = async (
+  accessToken: string,
+  pageSelected = 1,
+  queryString = ""
+) => {
+  console.log(queryString);
+  const response = await fetchApi(
+    "GET",
+    `all?me&page=${pageSelected}${queryString ? `&${queryString}` : ""}`,
+    null,
+    accessToken
+  );
+  return response;
 };
 
 const BoardPage = () => {
   const { accessToken, isReady } = useAuth();
-  const [decks, setDecks] = useState<Deck[]>([]);
-  const [quizzes, setQuizzes] = useState([]);
-  const [loading, isLoading] = useState(true);
-  // const [activeButton, setActiveButton] = useState("All");
-  // const [isFavActive, setIsFavActive] = useState(false);
-  // const [currentPage, setCurrentPage] = useState(1);
-  // const itemsPerPage = 9;
+  const [allCards, setAllCards] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [searchValues, setSearchValues] = useState(null);
 
-  // // handle click for filter btn
-  // const handleButtonClick = (buttonName: string) => {
-  //   setActiveButton(buttonName);
-  //   setCurrentPage(1);
-  // };
-
-  // // handle click for fav button
-  // const toggleHeartButton = () => {
-  //   setIsFavActive((prevState) => !prevState);
-  //   setCurrentPage(1);
-  // };
-
-  // // combine quizz and deck data
-  // const combinedData = [...mockQuizzData, ...mockDeckData];
-
-  // // Function to filter combined data
-  // const filteredData = combinedData.filter((item) => {
-  //   if (isFavActive && item.likes === 0) {
-  //     return false;
-  //   }
-
-  //   return activeButton === "All" || activeButton.toLowerCase() === item.type;
-  // });
-
-  // // method to set the number of page for pagination
-  // const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  // const displayedItems = filteredData.slice(
-  //   (currentPage - 1) * itemsPerPage,
-  //   currentPage * itemsPerPage
-  // );
-
-  // // handle click for pagination button
-  // const handlePageChange = (page) => {
-  //   setCurrentPage(page);
-  // };
-
-  const getDataDecks = async () => {
-    const response = await getDecksUser(accessToken);
+  const getAll = async (page = 1, searchValues = null) => {
+    const response = await getAllCards(accessToken, page, searchValues);
     if (response.status === 200) {
-      const decks: Deck[] = response.data?.decks as Deck[];
-      setDecks(decks);
+      const { data: cards, meta } = response.data;
+      setTotalPages(meta.last_page);
+      setPage(meta.current_page);
+      setAllCards(cards);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
-      console.log(response.message);
+      console.error(response.message);
     }
+    setLoading(false);
   };
 
-  const getDataQuizzes = async () => {
-    const response = await getquizzesUser(accessToken);
-    if (response.status === 200) {
-      const quizzes = response.data;
-      setQuizzes(quizzes);
-    } else {
-      console.log(response.message);
-    }
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+    getAll(newPage, searchValues);
   };
 
-  const getAllData = async () => {
-    if (isReady && accessToken) {
-      try {
-        await getDataDecks();
-        await getDataQuizzes();
-        isLoading(false);
-      } catch (err) {
-        console.log(err);
-      }
-    }
+  const handleSearch = (searchValues) => {
+    setSearchValues(searchValues);
+    getAll(1, searchValues); // Reset to first page when performing a new search
+  };
+
+  const handleDeleteCard = (id) => {
+    setAllCards((prev) => prev.filter((card) => card.id !== id));
   };
 
   useEffect(() => {
-    getAllData();
-    console.log("Decks: ", decks);
-    console.log("Quizzes: ", quizzes);
+    if (isReady && accessToken) {
+      getAll();
+    }
   }, [isReady, accessToken]);
 
   if (loading) {
@@ -125,76 +79,44 @@ const BoardPage = () => {
 
   return (
     <>
-      <div className="hidden md:flex justify-around p-10 items-center">
-        <div>
-          <CreateSetBtn />
-        </div>
-        <div>
-          <p>My board</p>
-        </div>
-        {/* <div>
-          <FilterBtnsBar
-            activeButton={activeButton}
-            isFavActive={isFavActive}
-            onButtonClick={handleButtonClick}
-            onToggleHeart={toggleHeartButton}
-          />
-        </div> */}
+      <div className="md:hidden">
+        <FilterBarMobile onSearch={handleSearch} board={true} />
       </div>
-      <div className="md:hidden flex flex-col items-center p-10">
-        <div className="mb-4">
-          <h3>My board</h3>
-        </div>
-        <div className="mb-4">
-          <CreateSetBtn />
-        </div>
-        {/* <div className="">
-          <FilterBtnsBar
-            activeButton={activeButton}
-            isFavActive={isFavActive}
-            onButtonClick={handleButtonClick}
-            onToggleHeart={toggleHeartButton}
-          />
-        </div> */}
+      <div className="hidden md:block px-8">
+        <FilterBar onSearch={handleSearch} board={true} />
       </div>
-        <motion.div
-          className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4"
-          initial="initial"
-          animate="visible"
-          variants={{
-            visible: {
-              transition: {
-                staggerChildren: 0.1, 
-              },
-            },
-          }}
-        >
-          {decks && (
-            <>
-              {decks.map((deck, index) => (
-                <motion.div variants={cardVariants} key={deck.id}>
-                  <QuizzDeckCard
-                    key={index}
-                    id={deck.id}
-                    name={deck.name}
-                    tag={deck.tag}
-                    likes={deck.likes}
-                    type={deck.type}
-                    is_public={deck.is_public}
-                    is_organization={deck.is_organization}
-                  />
-                </motion.div>
-              ))}
-            </>
-          )}
-        </motion.div>
-      {/* <div className="flex justify-center my-4">
-        <Pagin
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-        /> 
-      </div> */}
+      <motion.div
+        className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4 md:gap-8 md:p-8"
+        initial="initial"
+        animate="visible"
+        variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
+      >
+        {allCards && (
+          <>
+            {allCards.map((item, index) => (
+              <motion.div variants={cardVariants} key={index}>
+                <QuizzDeckCard
+                  id={item.id}
+                  Cardname={item.name}
+                  owner={item.owner}
+                  tag={item.tag}
+                  likes={item.likes}
+                  isLiked={item.is_liked}
+                  type={item.type}
+                  flashcards={item.flashcards}
+                  qcms={item.qcms}
+                  onDeleteCard={handleDeleteCard}
+                />
+              </motion.div>
+            ))}
+          </>
+        )}
+      </motion.div>
+      <Pagination
+        page={page}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </>
   );
 };

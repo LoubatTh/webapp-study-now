@@ -16,7 +16,7 @@ class OrganizationQuizController
      */
     public function index(Request $request, int $id)
     {
-        $quizzes = OrganizationQuiz::with('quiz')->where('organization_id', $id)->get();
+        $quizzes = OrganizationQuiz::with('quiz', 'quiz.qcms', 'quiz.tag', 'quiz.user')->where('organization_id', $id)->get();
 
         return response()->json(OrganizationQuizResource::collection($quizzes));
     }
@@ -42,7 +42,7 @@ class OrganizationQuizController
                 ]);
             }
 
-            if (!$quiz['isPublic'] && $quiz['user_id'] !== $request->user()['id']) {
+            if (!$quiz['is_public'] && $quiz['user_id'] !== $request->user()['id']) {
                 return response()->json([
                     'error' => 'Only owned or public quizzes can be added to the organization',
                 ], 403);
@@ -66,9 +66,15 @@ class OrganizationQuizController
                 'file_path' => $filePath,
             ]);
 
+            if ($filePath) {
+                return response()->json([
+                    'message' => 'Quiz added to the organization',
+                    'file_url' => $this->urlBuilder($filePath),
+                ], 201);
+            }
+
             return response()->json([
                 'message' => 'Quiz added to the organization',
-                'file_url' => $this->urlBuilder($filePath),
             ], 201);
         } catch (Exception $e) {
             return response()->json([
@@ -83,7 +89,7 @@ class OrganizationQuizController
      */
     public function show(Request $request, int $id, int $quizId)
     {
-        $organizationQuiz = OrganizationQuiz::with('quiz.qcms')
+        $organizationQuiz = OrganizationQuiz::with('quiz', 'quiz.qcms', 'quiz.tag', 'quiz.user')
             ->where('organization_id', $id)
             ->where('quiz_id', $quizId)
             ->first();
@@ -117,7 +123,10 @@ class OrganizationQuizController
             ], 404);
         }
 
-        Storage::delete($organizationQuiz['file_path']);
+        if ($organizationQuiz['file_path']) {
+            Storage::delete($organizationQuiz['file_path']);
+        }
+
         $filePath = Storage::putFile('organizations/quizzes', $file, 'public');
         $organizationQuiz->update([
             'file_path' => $filePath,

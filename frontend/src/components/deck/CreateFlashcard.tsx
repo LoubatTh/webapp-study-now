@@ -25,9 +25,11 @@ import { Separator } from "../ui/separator";
 import { DialogClose, DialogFooter } from "../ui/dialog";
 import { Flashcard } from "@/types/deck.type";
 import useDeckStore from "@/lib/stores/deckStore";
+import { useEffect } from "react";
 
 type CreateFlashcardProps = {
   id: number;
+  flashcard?: Flashcard;
   index: number;
   flashcardsSize: number;
   collapsed: boolean;
@@ -37,6 +39,7 @@ type CreateFlashcardProps = {
 
 const CreateFlashcard = ({
   id,
+  flashcard,
   index,
   flashcardsSize,
   collapsed,
@@ -62,13 +65,19 @@ const CreateFlashcard = ({
       question: values.question,
       answer: values.answer,
     };
-    console.log(body);
     saveFlashcard(body);
     onToggleCollapse();
   }
 
+  useEffect(() => {
+    if (flashcard) {
+      form.setValue("question", flashcard.question);
+      form.setValue("answer", flashcard.answer);
+    }
+  }, []);
+
   return (
-    <div className="flex flex-col border rounded-md p-2">
+    <div className="flex flex-col border bg-slate-400/15 rounded-md p-4 backdrop-blur-xl">
       {collapsed ? (
         <div className="flex flex-col gap-2">
           <Label className=" text-md">

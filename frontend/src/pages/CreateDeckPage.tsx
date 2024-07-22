@@ -18,11 +18,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useUser } from "@/contexts/UserContext";
+import { Autocomplete, Checkbox, TextField } from "@mui/material";
+import { Organization } from "@/types/organization.type";
+import { Tag } from "@/types/tag.type";
+import { Info, Square, SquareCheck } from "lucide-react";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 const postDeck = async (deck: PostDeck, accessToken: string) => {
   const response = await fetchApi("POST", "decks", deck, accessToken);
-  console.log(response);
+  return response;
+};
+
+const editDeck = async (id: string, deck: PostDeck, accessToken: string) => {
+  console.log("Deck: ", deck);
+  const response = await fetchApi("PUT", `decks/${id}`, deck, accessToken);
   return response;
 };
 
@@ -31,40 +46,77 @@ const getLabels = async () => {
   return response;
 };
 
+const getDeck = async (id: string, accessToken: string) => {
+  const response = await fetchApi("GET", `decks/${id}`, null, accessToken);
+  return response;
+};
+
+const getAllOwnedOrganizations = async (accessToken: string) => {
+  const response = await fetchApi(
+    "GET",
+    "user/organizations",
+    null,
+    accessToken
+  );
+  return response;
+};
+
 const CreateDeckPage = () => {
-  //Get the navigate function from the useNavigate hook
+  // Get the navigate function from the useNavigate hook
   const navigate = useNavigate();
-  //Get the access token from the AuthContext
+  // Get the access token from the AuthContext
   const { accessToken } = useAuth();
-  //Use the useDeckStore store to get the decks
-  const { deck, resetDeck } = useDeckStore();
-  //State to manage the name of the deck
-  const [name, setName] = useState<string>("");
-  //State to manage the lable of the deck
+  // Get the user from the AuthUser
+  const { name } = useUser();
+  // Check if its a creation page or an edition page
+  const { id } = useParams();
+  //Get the search params
+  const [searchParams] = useSearchParams();
+  //Get the name params
+  const organizationName = searchParams.get("name");
+  // Use the useDeckStore store to get the decks
+  const { deck, saveFlashcard, removeFlashcard, resetDeck } = useDeckStore();
+  // Loading state
+  const [loading, setLoading] = useState<boolean>(true);
+  // State to manage the name of the deck
+  const [nameDeck, setNameDeck] = useState<string>("");
+  // State to manage the label of the deck
   const [label, setLabel] = useState<string>("");
-  //State to manage the visibility of the deck
+  // State to manage the visibility of the deck
   const [isPublic, setIsPublic] = useState<boolean>(false);
-  //State to store the labels
-  const [labels, setLabels] = useState<string[]>([]);
-  //State to manage the error message
+  // State to store the labels
+  const [labels, setLabels] = useState<Tag[]>([]);
+  // State to manage the error message
   const [errorMessage, setErrorMessage] = useState<string>("");
-  //State to manage the list of decks
-  const [deckList, setFlashcardList] = useState([{ id: 0, collapsed: false }]);
+  // State to manage the list of flashcards
+  const [flashcardList, setFlashcardList] = useState([
+    { id: 0, collapsed: false },
+  ]);
+  //State to manage organizations
+  const [organizations, setOrganizations] = useState<Organization[]>([]);
+  //State to manage the selected organizations
+  const [selectedOrganizations, setSelectedOrganizations] = useState<
+    Organization[]
+  >([]);
 
-  //Function to add a new flashcard to the list
+  // Function to add a new flashcard to the list
   const addNewFlashcard = (): void => {
-    setFlashcardList([...deckList, { id: deckList.length, collapsed: false }]);
+    setFlashcardList([
+      ...flashcardList,
+      { id: flashcardList.length, collapsed: false },
+    ]);
   };
 
-  //Function to delete a flashcard from the list
+  // Function to delete a flashcard from the list
   const deleteFlashcard = (id: number): void => {
-    setFlashcardList(deckList.filter((flashcard) => flashcard.id !== id));
+    setFlashcardList(flashcardList.filter((flashcard) => flashcard.id !== id));
+    removeFlashcard(id);
   };
 
-  //Function to toggle the collapse of a deck
+  // Function to toggle the collapse of a flashcard
   const toggleCollapse = (id: number): void => {
     setFlashcardList(
-      deckList.map((flashcard) =>
+      flashcardList.map((flashcard) =>
         flashcard.id === id
           ? { ...flashcard, collapsed: !flashcard.collapsed }
           : flashcard
@@ -72,21 +124,17 @@ const CreateDeckPage = () => {
     );
   };
 
-  //Function to get the labels for the select input
-  const labelArray = async () => {
-    const response = await getLabels();
-    if (response.status === 200) {
-      const data = await response.data.json();
-      setLabels(data);
-    } else {
-      const data = await response.data.json();
-      toast({ description: data.message });
-    }
-  };
+  // Function to create the deck with the flashcards and send it to the backend
+  const createDeckHandler = async (): Promise<void> => {
 
-  //Function to create the flashcard with the decks and send it to the backend
-  async function createQuizzHandler(): Promise<void> {
-    if (name.length < 1) {
+    const organizationsBody = {
+      organisations: selectedOrganizations.map(
+        (organization) => organization.id
+      ),
+    };
+
+
+    if (nameDeck.length < 1) {
       setErrorMessage("The name field is required.");
       return;
     } else if (deck.length < 1) {
@@ -98,43 +146,143 @@ const CreateDeckPage = () => {
     } else {
       setErrorMessage("");
       const createdDeck = {
-        name,
+        name: nameDeck,
         is_public: isPublic,
         tag_id: parseInt(label),
+        organizations: organizationsBody.organisations,
         flashcards: deck,
       };
-      console.log(createdDeck);
-      // const response = await postDeck(createdDeck, accessToken);
-      // if (response.status === 201) {
-      //   setName("");
-      //   setFlashcardList([{ id: 0, collapsed: false }]);
-      //   resetDeck;
-      //   toast({
-      //     description: "Deck created successfully",
-      //   });
-      //   navigate("/homepage");
-      // } else {
-      //   const data = await response.data.json();
-      //   toast({ description: data.message });
-      // }
+      try {
+        let response: any;
+        if (id) {
+          response = await editDeck(id, createdDeck, accessToken);
+          if (response.status === 204) {
+            toast({ description: "Deck edited successfully" });
+          } else {
+            throw new Error(response.data.message);
+          }
+        } else {
+          response = await postDeck(createdDeck, accessToken);
+          if (response.status === 201) {
+            toast({ description: "Deck created successfully" });
+          } else {
+            throw new Error(response.data.message);
+          }
+        }
+        setNameDeck("");
+        setFlashcardList([{ id: 0, collapsed: false }]);
+        resetDeck();
+        navigate("/board");
+      } catch (error: any) {
+        toast({ description: error.message });
+      }
     }
-  }
+  };
+
+  const fetchLabelsAndDeckData = async (id: string, accessToken: string) => {
+    try {
+      const labelsResponse = await getLabels();
+      if (labelsResponse.status === 200) {
+        setLabels(labelsResponse.data);
+
+        if (id) {
+          const deckResponse = await getDeck(id, accessToken);
+          if (deckResponse.status === 200) {
+            const data = deckResponse.data as PostDeck;
+            const matchOrganizations = organizations.filter((organization) =>
+              data.organizations.includes(organization.id)
+            );
+            setSelectedOrganizations(matchOrganizations);
+
+            if (data.owner !== name) {
+              navigate("/");
+              return;
+            }
+            setNameDeck(data.name);
+            const foundLabel = labelsResponse.data.find(
+              (label) => label.name === data.tag
+            );
+            setLabel(foundLabel ? foundLabel.id : "");
+
+            setIsPublic(data.is_public);
+
+            const copiedFlashcards = data.flashcards.map((flashcard) => ({
+              ...flashcard,
+              question: flashcard.question,
+              answer: flashcard.answer,
+              collapsed: true,
+            }));
+
+            copiedFlashcards.forEach((flashcard) => {
+              saveFlashcard(flashcard);
+            });
+            setFlashcardList(copiedFlashcards);
+          } else {
+            toast({ description: deckResponse.data.message });
+          }
+        }
+      } else {
+        toast({ description: labelsResponse.data.message });
+      }
+    } catch (error) {
+      toast({ description: error.message });
+    }
+    setLoading(false);
+  };
+
+  const fetchAllOwnedOrganizations = async () => {
+    try {
+      const response = await getAllOwnedOrganizations(accessToken);
+      if (response.status === 200) {
+        setOrganizations(response.data.owned_organizations as Organization[]);
+        console.log();
+      } else {
+        toast({ description: response.data.message });
+      }
+    } catch (error) {
+      toast({ description: error.message });
+    }
+  };
 
   useEffect(() => {
-    labelArray();
-  }, []);
+    if (accessToken && name) {
+      fetchLabelsAndDeckData(id, accessToken);
+      fetchAllOwnedOrganizations();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, accessToken, name, loading]);
+
+  useEffect(() => {
+    if (organizationName) {
+      const organization = organizations.find(
+        (organization) => organization.name === organizationName
+      );
+      if (organization) {
+        setSelectedOrganizations([organization]);
+      }
+    }
+  }, [organizationName, organizations]);
+
+  const getFilteredOrganizations = () => {
+    return organizations.filter(
+      (org) =>
+        !selectedOrganizations.some((selectedOrg) => selectedOrg.id === org.id)
+    );
+  };
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <h1 className="mx-auto my-4">Create Deck</h1>
+      <h1 className="mx-auto my-4 text-3xl">
+        {id ? "Edit Deck" : "Create Deck"}
+      </h1>
       <div className="flex flex-col gap-2 p-2 max-w-3xl min-w-full md:min-w-[768px]">
-        <Label htmlFor="name">Deck name</Label>
+        <Label htmlFor="nameDeck">Deck name</Label>
         <Input
-          id="name"
+          id="nameDeck"
           type="text"
           placeholder="My Deck name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={nameDeck}
+          onChange={(e) => setNameDeck(e.target.value)}
         />
         {errorMessage && (
           <div className="text-sm font-medium text-destructive">
@@ -149,11 +297,11 @@ const CreateDeckPage = () => {
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectItem value="1">Apple</SelectItem>
-              <SelectItem value="2">Banana</SelectItem>
-              <SelectItem value="3">Blueberry</SelectItem>
-              <SelectItem value="4">Grapes</SelectItem>
-              <SelectItem value="5">Pineapple</SelectItem>
+              {labels.map((label) => (
+                <SelectItem key={label.id} value={label.id}>
+                  {label.name}
+                </SelectItem>
+              ))}
             </SelectGroup>
           </SelectContent>
         </Select>
@@ -168,17 +316,66 @@ const CreateDeckPage = () => {
           <div>{isPublic ? "Public" : "Private"}</div>
         </div>
       </div>
+      <div className="flex flex-col gap-3 p-2 max-w-3xl min-w-full md:min-w-[768px]">
+        {organizations.length > 0 && (
+          <div className="flex items-center gap-3">
+            <div>
+              <HoverCard>
+                <HoverCardTrigger asChild>
+                  <Info className="hover:text-slate-500" size={30} />
+                </HoverCardTrigger>
+                <HoverCardContent className="w-80">
+                  <div className="text-lg font-bold">Organizations</div>
+                  <div className="text-sm">
+                    Select the organizations that will have access to this deck.
+                  </div>
+                </HoverCardContent>
+              </HoverCard>
+            </div>
+            <div className="min-w-96">
+              <Autocomplete
+                multiple
+                id="organizations"
+                options={getFilteredOrganizations()} 
+                getOptionLabel={(option) => option.name}
+                value={selectedOrganizations}
+                onChange={(event, newValue) => {
+                  setSelectedOrganizations(newValue);
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Organizations"
+                    placeholder="Choose..."
+                  />
+                )}
+                renderOption={(props, option, { selected }) => (
+                  <li {...props}>
+                    <Checkbox
+                      icon={<Square />}
+                      checkedIcon={<SquareCheck />}
+                      checked={selected}
+                    />
+                    {option.name}
+                  </li>
+                )}
+              />
+            </div>
+          </div>
+        )}
+      </div>
       <div className="flex flex-col gap-2 p-2 max-w-3xl min-w-full md:min-w-[768px]">
-        {deckList.map((flashcard, i) => (
+        {flashcardList.map((flashcard, i) => (
           <React.Fragment key={flashcard.id}>
             <Separator className="my-2" />
             <div className="text-center">
-              Flashcard {i + 1} of {deckList.length}
+              Flashcard {i + 1} of {flashcardList.length}
             </div>
             <CreateFlashcard
               id={flashcard.id}
+              flashcard={flashcard}
               index={i + 1}
-              flashcardsSize={deckList.length}
+              flashcardsSize={flashcardList.length}
               collapsed={flashcard.collapsed}
               onToggleCollapse={() => toggleCollapse(flashcard.id)}
               onDelete={() => deleteFlashcard(flashcard.id)}
@@ -189,8 +386,12 @@ const CreateDeckPage = () => {
           Add New Flashcard
         </Button>
         <Separator className="my-2" />
-        <Button onClick={createQuizzHandler} variant="default">
-          Create Deck
+        <Button
+          onClick={createDeckHandler}
+          variant="default"
+          className="bg-green-500 hover:bg-green-400"
+        >
+          {id ? "Edit Deck" : "Create Deck"}
         </Button>
       </div>
     </div>

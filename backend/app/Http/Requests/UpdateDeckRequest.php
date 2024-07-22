@@ -25,7 +25,8 @@ class UpdateDeckRequest extends FormRequest
         return [
             "name" => "string|max:255",
             "is_public" => "boolean",
-            "is_organization" => "boolean",
+            'organizations' => 'array',
+            'organizations.*' => 'integer',
             "likes" => "integer",
             "tag_id" => "integer",
             "flashcards" => "array",

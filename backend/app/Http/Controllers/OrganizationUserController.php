@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\OrganizationInviteRequest;
+use App\Http\Resources\OrganizationInvitationResource;
 use App\Models\Organization;
+use App\Models\OrganizationInvitation;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -32,7 +35,8 @@ class OrganizationUserController
                     'id' => $owner['id'],
                     'name' => $owner['name'],
                 ],
-                'members' => $members
+                'members' => $members,
+                'members_count' => count($members),
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -61,10 +65,19 @@ class OrganizationUserController
             ], 400);
         }
 
-        $organization->users()->attach($member['id']);
+        if (OrganizationInvitation::where('user_id', $member['id'])->where('organization_id', $id)->first()) {
+            return response()->json([
+                'error' => 'User already invited to the organization',
+            ], 400);
+        }
+
+        OrganizationInvitation::create([
+            'user_id' => $member['id'],
+            'organization_id' => $organization->id,
+        ]);
 
         return response()->json([
-            'message' => 'User added to the organization'
+            'message' => 'Invitation created'
         ], 201);
     }
 
@@ -84,5 +97,44 @@ class OrganizationUserController
         $organization->users()->detach($userId);
 
         return response()->noContent();
+    }
+
+    public function invite(OrganizationInviteRequest $request, int $id)
+    {
+        $invite = OrganizationInvitation::find($id);
+        $user = $request->user();
+
+        if (!$invite) {
+            return response()->json([
+                'error' => 'Invitation not found'
+            ], 404);
+        }
+
+        if ($user['id'] !== $invite['user_id']) {
+            return response()->json([
+                'error' => 'Not allowed to accept/refuse this invitation'
+            ], 403);
+        }
+
+        if (!$request['accept']) {
+            $invite->delete();
+            return response()->json([
+                'message' => 'Invitation refused'
+            ]);
+        }
+
+        Organization::find($invite['organization_id'])->users()->attach($user['id']);
+        $invite->delete();
+
+        return response()->json([
+            'message' => 'Invitation accepted'
+        ]);
+    }
+
+    public function showInvite(Request $request)
+    {
+        $invitations = OrganizationInvitation::where('user_id', $request->user()['id'])->get();
+
+        return response()->json(OrganizationInvitationResource::collection($invitations));
     }
 }

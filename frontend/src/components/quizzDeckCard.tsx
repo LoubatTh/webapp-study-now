@@ -23,6 +23,7 @@ type CommonCardProps = {
   id: number;
   Cardname: string;
   owner: string;
+  owner_avatar: string;
   tag: string;
   type: string;
   likes: number;
@@ -38,6 +39,7 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
   id,
   Cardname,
   owner,
+  owner_avatar,
   tag,
   type,
   likes,
@@ -78,7 +80,11 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
         <div className="flex justify-between">
           <CardHeader className="flex flex-row items-center p-3">
             <Avatar>
-              <AvatarImage src={owner == name ? avatar : ""} />
+              <AvatarImage
+                src={owner == name ? avatar : owner_avatar}
+                className="object-cover"
+                loading="lazy"
+              />
               <AvatarFallback>
                 <User />
               </AvatarFallback>

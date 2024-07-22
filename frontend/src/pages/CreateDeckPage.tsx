@@ -29,6 +29,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import { ClassNames } from "@emotion/react";
 
 const postDeck = async (deck: PostDeck, accessToken: string) => {
   const response = await fetchApi("POST", "decks", deck, accessToken);
@@ -158,14 +159,20 @@ const CreateDeckPage = () => {
         if (id) {
           response = await editDeck(id, createdDeck, accessToken);
           if (response.status === 204) {
-            toast({ description: "Deck edited successfully" });
+            toast({
+              description: "Deck edited successfully",
+              className: "bg-green-400",
+            });
           } else {
             throw new Error(response.data.message);
           }
         } else {
           response = await postDeck(createdDeck, accessToken);
           if (response.status === 201) {
-            toast({ description: "Deck created successfully" });
+            toast({
+              description: "Deck created successfully",
+              className: "bg-green-400",
+            });
           } else {
             throw new Error(response.data.message);
           }

@@ -31,12 +31,15 @@ class PersoUserSeeder extends Seeder
         ]);
         $user->save();
 
-        $user = User::factory()->hasDecks(4)->create([
+        $user = User::factory()->hasDecks(8)->create([
             'name' => 'Nathan',
             'email' => 'nathan.dulac@epitech.eu',
             'password' => $password ??= Hash::make('password'),
         ]);
         $user->save();
+
+        $user->newSubscription('default', 'price_1PVCT5LDBaFPKLdsUk1W8WUK')->create('pm_card_visa');
+        $user = User::factory()->create();
 
         $user = User::factory()->hasDecks(4)->create([
             'name' => 'Steven',

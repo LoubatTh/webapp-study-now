@@ -204,9 +204,7 @@ const BoardOrganizationPage = () => {
                 <Button
                   className="flex gap-2"
                   onClick={() =>
-                    handleNavigation(
-                      `/create-quizz?name=${organization?.name}`
-                    )
+                    handleNavigation(`/create-quizz?name=${organization?.name}`)
                   }
                 >
                   <FilePlus size={20} /> Quizz
@@ -214,9 +212,7 @@ const BoardOrganizationPage = () => {
                 <Button
                   className="flex gap-2"
                   onClick={() =>
-                    handleNavigation(
-                      `/create-deck?name=${organization?.name}`
-                    )
+                    handleNavigation(`/create-deck?name=${organization?.name}`)
                   }
                 >
                   <FilePlus size={20} />
@@ -294,7 +290,8 @@ const BoardOrganizationPage = () => {
                     <div className="border-t-4 mt-4"></div>
                   )}
                   <p className="flex gap-2 mt-3 font-semibold bg-slate-200 rounded-lg p-2">
-                    <Users className="ml-2" /> {members.length} member {members.length > 1 ? "s" : ""}
+                    <Users className="ml-2" /> {members.length} member
+                    {members.length > 1 ? "s" : ""}
                   </p>
                   <div className="flex flex-col gap-3 mt-3">
                     {members.map((member, index) => (

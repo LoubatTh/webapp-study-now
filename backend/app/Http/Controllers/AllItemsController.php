@@ -78,7 +78,6 @@ class AllItemsController extends Controller
 
                     $decks = $decks->wherein("tag_id", $tag_ids);
                     $quizzes = $quizzes->wherein("tag_id", $tag_ids);
-                    \Log::info("Test1: ", ["decks", $decks->count()]);
                 } else {
                     $decks = $decks->where("tag_id", 0);
                     $quizzes = $quizzes->where("tag_id", 0);

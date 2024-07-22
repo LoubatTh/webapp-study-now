@@ -178,7 +178,9 @@ const ResponseQuizzPage = () => {
       <div className="flex flex-col items-center gap-4">
         {quizz ? (
           <div>
-            <h1 className="my-4 text-center text-lg	font-bold">{quizz.name}</h1>
+            <h1 className="text-3xl my-8 text-center font-bold uppercase">
+              {quizz.name}
+            </h1>
 
             {quizz.qcms.map((qcm) => (
               <div

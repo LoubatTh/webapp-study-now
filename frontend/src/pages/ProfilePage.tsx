@@ -1,13 +1,42 @@
 import React from "react";
 import { useUser } from "../contexts/UserContext";
-import { User, Mail, CheckCircle, XCircle, StarsIcon, StarIcon } from "lucide-react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  User,
+  Mail,
+  CheckCircle,
+  XCircle,
+  StarsIcon,
+  StarIcon,
+} from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RegisterFormSchema } from "@/lib/form/register.form";
@@ -16,51 +45,46 @@ import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
 
 const ProfilePage = () => {
+  const { id, name, email, is_subscribed } = useUser();
+  const { accessToken } = useAuth();
 
-    const { id, name, email, is_subscribed } = useUser();
-    const { accessToken } = useAuth();
+  const registerForm = useForm({
+    resolver: zodResolver(RegisterFormSchema),
+    defaultValues: {
+      username: name || "",
+      email: email || "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
 
-    const registerForm = useForm({
-      resolver: zodResolver(RegisterFormSchema),
-      defaultValues: {
-        username: name || "",
-        email: email || "",
-        password: "",
-        confirmPassword: "",
-      },
-    });
-
-    const onChangeSaved = async (values) => {
-
-      const body = {
-        name: values.username,
-        email: values.email,
-        password: values.password,
-      };
-      
-      // TODO: A FINALISER (le back n'attends rien d'autres que le name)
-       const response = await fetchApi("PUT", "user", body, accessToken);
-
+  const onChangeSaved = async (values) => {
+    const body = {
+      name: values.username,
+      email: values.email,
+      password: values.password,
     };
 
-    function handleResume() {
-      document.body.style.cursor = "wait";
+    // TODO: A FINALISER (le back n'attends rien d'autres que le name)
+    const response = await fetchApi("PUT", "user", body, accessToken);
+  };
+
+  function handleResume() {
+    document.body.style.cursor = "wait";
+  }
+
+  function handleCancel() {
+    document.body.style.cursor = "wait";
+
+    try {
+      const response = fetchApi("POST", "stripe/cancel", null, accessToken);
+      console.log(response);
+    } catch (error) {
+      console.error("Error during the subscription process", error);
+    } finally {
+      document.body.style.cursor = "default";
     }
-
-    function handleCancel() {
-      document.body.style.cursor = "wait";
-
-      try {
-        const response = fetchApi("POST", "stripe/cancel", null, accessToken);
-        console.log(response);
-      } catch (error) {
-        console.error("Error during the subscription process", error);
-      } finally {
-        document.body.style.cursor = "default";
-      
-      }
-
-    }
+  }
 
   return (
     <div className="flex flex-grow justify-center items-center">
@@ -140,10 +164,10 @@ const ProfilePage = () => {
                             name="username"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Nom d'utilisateur</FormLabel>
+                                <FormLabel>Username</FormLabel>
                                 <FormControl>
                                   <Input
-                                    placeholder="Votre nom d'utilisateur"
+                                    placeholder="Your username"
                                     {...field}
                                   />
                                 </FormControl>
@@ -159,7 +183,7 @@ const ProfilePage = () => {
                                 <FormLabel>Email</FormLabel>
                                 <FormControl>
                                   <Input
-                                    placeholder="votre.email@example.com"
+                                    placeholder="your.email@example.com"
                                     {...field}
                                   />
                                 </FormControl>
@@ -172,7 +196,7 @@ const ProfilePage = () => {
                             name="password"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Mot de passe</FormLabel>
+                                <FormLabel>Password</FormLabel>
                                 <FormControl>
                                   <Input
                                     type="password"
@@ -189,7 +213,7 @@ const ProfilePage = () => {
                             name="confirmPassword"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Confirmer le mot de passe</FormLabel>
+                                <FormLabel>Confirm password</FormLabel>
                                 <FormControl>
                                   <Input
                                     type="password"
@@ -225,12 +249,14 @@ const ProfilePage = () => {
               <CardContent className="space-y-2">
                 <div className="flex flex-col gap-2 justify-between mt-4">
                   <p>
-                    (TODO: Attendre que le back renvoie + d'infos pour améliorer cette
-                    page)
+                    (TODO: Attendre que le back renvoie + d'infos pour améliorer
+                    cette page)
                   </p>
                   <Button onClick={handleResume}>Resume</Button>
                   <p>
-                    (TODO: Cancel qui fonctionne askip mais le GET du user renvoie encore true pour is_subscribed donc ça marche pas encore)
+                    (TODO: Cancel qui fonctionne askip mais le GET du user
+                    renvoie encore true pour is_subscribed donc ça marche pas
+                    encore)
                   </p>
                   <Button onClick={handleCancel}>Cancel</Button>
                 </div>

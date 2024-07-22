@@ -94,13 +94,13 @@ describe("DeckComponent Component", () => {
 
     await waitFor(() => {
       expect(firstFlashcardCard).toHaveStyle({
-        transform: "rotateY(180deg) translateZ(0)",
+        transform: "rotateY(180deg)",
       });
       expect(secondFlashcardCard).toHaveStyle({
-        transform: "rotateY(180deg) translateZ(0)",
+        transform: "rotateY(180deg)",
       });
       expect(thirdFlashcardCard).toHaveStyle({
-        transform: "rotateY(180deg) translateZ(0)",
+        transform: "rotateY(180deg)",
       });
     });
   });

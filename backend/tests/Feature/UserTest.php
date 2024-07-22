@@ -51,7 +51,7 @@ class UserTest extends TestCase
 
         $response->assertStatus(200)->assertJson(
             fn(AssertableJson $json) =>
-            $json->hasAll(['id', 'name', 'email', 'role', 'email_verified_at', 'created_at', 'updated_at', 'is_subscribed'])
+            $json->hasAll(['id', 'name', 'email', 'avatar', 'role', 'email_verified_at', 'created_at', 'updated_at', 'is_subscribed'])
         );
     }
 

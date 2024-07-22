@@ -9,6 +9,7 @@ import { Deck } from "@/types/deck.type";
 import { fetchApi } from "@/utils/api";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { set } from "react-hook-form";
 
 const getDeck = async (deckId: string, accessToken?: string) => {
   const response = await fetchApi("GET", `decks/${deckId}`, null, accessToken);
@@ -60,7 +61,7 @@ const DeckPlayPage = () => {
     const response = await postResult(body, accessToken);
     if (response.status === 201) {
       navigate(`/deck/${deckId}/result`);
-    } else {
+    } else if (response.status === 403) {
       console.error("Failed to post result:", response);
     }
   };
@@ -78,6 +79,13 @@ const DeckPlayPage = () => {
       response = await getDeck(deckId);
     }
     console.log(response);
+
+    if (response.status == 403 || response.status == 401) {
+      setIsForbidden(true);
+    }
+    if (response.status == 404 || response.status == 500) {
+      setIsNotFound(true);
+    }
     if (response.status === 200) {
       const data: Deck = response.data as Deck;
       setDeck(data);
@@ -87,15 +95,6 @@ const DeckPlayPage = () => {
       console.log(data);
     } else {
       console.error("Failed to fetch deck:", response);
-
-      const status = await response.status;
-      if (status == 403) {
-        setIsForbidden(true);
-      }
-
-      if (status == 404 || status == 500) {
-        setIsNotFound(true);
-      }
     }
   };
 

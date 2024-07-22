@@ -85,8 +85,9 @@ class DeckController extends Controller
                 return response()->json(["message" => "Deck not found"], 404);
             }
 
-            $user = User::find(Auth::guard("sanctum")->user()->id);
-            
+            $user = Auth::guard("sanctum")->user();
+            $user ? $user = User::find($user->id) : null;
+
             if ($deck->is_public == false) {
                 if (!$user) {
                     return response()->json(["message" => "Unauthorized"], 401);
@@ -97,8 +98,13 @@ class DeckController extends Controller
                     ->merge($user->organizations->pluck('id'))
                     ->unique();
 
+                if ($organizations->count() > 0) {
+                    if ($user->id != $deck->user_id && !OrganizationDeck::where('organization_id', $organizations)->where('deck_id', $id)->exists()) {
+                        return response()->json(["message" => "Forbidden"], 403);
+                    }
+                }
 
-                if ($user->id != $deck->user_id && !OrganizationDeck::where('organization_id', $organizations)->where('deck_id', $deck->id)->exists()) {
+                if ($user->id != $deck->user_id) {
                     return response()->json(["message" => "Forbidden"], 403);
                 }
             }

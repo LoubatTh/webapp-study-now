@@ -11,6 +11,188 @@
 			"name": "User",
 			"item": [
 				{
+					"name": "UserDeckResults",
+					"item": [
+						{
+							"name": "Post a deck result",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deck_id\": 20,\n    \"grade\": 3.2\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/decks/results",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"decks",
+										"results"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET a deck results",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/decks/19/results",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"decks",
+										"19",
+										"results"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET decks results",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/decks/results",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"decks",
+										"results"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "UserQuizResults",
+					"item": [
+						{
+							"name": "Post a quiz result",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"quiz_id\": 331,\n    \"grade\": 1,\n    \"max_grade\": 2\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/quizzes/results",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"quizzes",
+										"results"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET a quiz results",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/quizzes/317/results",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"quizzes",
+										"317",
+										"results"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET decks results",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/quizzes/results",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"quizzes",
+										"results"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "Register",
 					"event": [
 						{
@@ -219,6 +401,113 @@
 					]
 				},
 				{
+					"name": "User Avatar",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/home/thomas/Pictures/Screenshots/2024-07-20_14-29.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/user/avatar",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"avatar"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"john@doe.com\",\n    \"password\": \"password\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/login",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.7"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 24 Jun 2024 09:39:46 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"accessToken\": \"61|oGVz18Wqx45LEVcktFpyn3ZU5ma4qJrYMlz3Y5q44ab4631c\",\n    \"accessTokenExpiration\": \"2024-06-24T10:39:46.344121Z\",\n    \"refreshToken\": \"62|M1sLzrUwrGuDEaqNCjOo9uvy9wqHRtwfPK7XckVF253a025a\",\n    \"refreshTokenExpiration\": \"2024-07-01T09:39:46.353634Z\"\n}"
+						}
+					]
+				},
+				{
 					"name": "Get current user Organizations",
 					"protocolProfileBehavior": {
 						"disabledSystemHeaders": {
@@ -242,6 +531,102 @@
 							"path": [
 								"user",
 								"organizations"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "422: Validation error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/organizations",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"organizations"
+									]
+								}
+							},
+							"status": "Unprocessable Content",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.7"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 01 Jul 2024 13:11:02 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"The name field must be a string.\",\n    \"errors\": {\n        \"name\": [\n            \"The name field must be a string.\"\n        ]\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get current user invites",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user/invites",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"invites"
 							]
 						}
 					},
@@ -481,7 +866,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"{{$randomUserName}}\"\n}",
+							"raw": "{\n    \"name\": \"{{$randomUserName}}\",\n    \"password\": \"password\",\n    \"new_password\": \"password\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -813,7 +1198,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"French Politics try\",\r\n    \"is_public\": false,\r\n    \"tag_id\": 1,\r\n    \"qcms\": [\r\n    {\r\n    \"question\": \"Who is the French president?\",\r\n    \"answers\": [\r\n        {\r\n            \"answer\": \"Emmanuel Macron\",\r\n            \"isValid\": true\r\n        },\r\n        {\r\n            \"answer\": \"Jordan Bardella\",\r\n            \"isValid\": false\r\n        },\r\n        {\r\n            \"answer\": \"Marine Le Pen\",\r\n            \"isValid\": false\r\n        },\r\n        {\r\n            \"answer\": \"Donald Trump\",\r\n            \"isValid\": false\r\n        }\r\n    ]\r\n    },\r\n    {\r\n    \"question\": \"Who is Sarkozy?\",\r\n    \"answers\": [\r\n        {\r\n            \"id\": 0,\r\n            \"answer\": \"Former french president\",\r\n            \"isValid\": true\r\n        },\r\n        {\r\n            \"id\": 1,\r\n            \"answer\": \"Nobody\",\r\n            \"isValid\": false\r\n        },\r\n        {\r\n            \"id\": 2,\r\n            \"answer\": \"Married to Carla Bruni\",\r\n            \"isValid\": true\r\n        },\r\n        {\r\n            \"id\": 3,\r\n            \"answer\": \"Whatever\",\r\n            \"isValid\": false\r\n        }\r\n    ]\r\n    }\r\n    ]\r\n}\r\n",
+							"raw": "{\r\n    \"name\": \"French Politics try\",\r\n    \"is_public\": false,\r\n    \"tag_id\": 1,\r\n    \"organizations\": [\r\n        1,\r\n        2,\r\n        3\r\n    ],\r\n    \"qcms\": [\r\n        {\r\n            \"question\": \"Who is the French president?\",\r\n            \"answers\": [\r\n                {\r\n                    \"answer\": \"Emmanuel Macron\",\r\n                    \"isValid\": true\r\n                },\r\n                {\r\n                    \"answer\": \"Jordan Bardella\",\r\n                    \"isValid\": false\r\n                },\r\n                {\r\n                    \"answer\": \"Marine Le Pen\",\r\n                    \"isValid\": false\r\n                },\r\n                {\r\n                    \"answer\": \"Donald Trump\",\r\n                    \"isValid\": false\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"question\": \"Who is Sarkozy?\",\r\n            \"answers\": [\r\n                {\r\n                    \"id\": 0,\r\n                    \"answer\": \"Former french president\",\r\n                    \"isValid\": true\r\n                },\r\n                {\r\n                    \"id\": 1,\r\n                    \"answer\": \"Nobody\",\r\n                    \"isValid\": false\r\n                },\r\n                {\r\n                    \"id\": 2,\r\n                    \"answer\": \"Married to Carla Bruni\",\r\n                    \"isValid\": true\r\n                },\r\n                {\r\n                    \"id\": 3,\r\n                    \"answer\": \"Whatever\",\r\n                    \"isValid\": false\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -869,15 +1254,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8000/api/quizzes/2",
+							"raw": "{{base_url}}/quizzes/318",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"quizzes",
-								"2"
+								"318"
 							]
 						}
 					},
@@ -887,10 +1270,16 @@
 					"name": "Update a quiz",
 					"request": {
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"French Politics try\",\r\n    \"is_public\": false,\r\n    \"tag_id\": 1,\r\n    \"qcms\": [\r\n    {\r\n    \"question\": \"Who is the French president?\",\r\n    \"answers\": [\r\n        {\r\n            \"answer\": \"Emmanuel Macron\",\r\n            \"isValid\": true\r\n        },\r\n        {\r\n            \"answer\": \"Jordan Bardella\",\r\n            \"isValid\": false\r\n        },\r\n        {\r\n            \"answer\": \"Marine Le Pen\",\r\n            \"isValid\": false\r\n        },\r\n        {\r\n            \"answer\": \"Donald Trump\",\r\n            \"isValid\": false\r\n        }\r\n    ]\r\n    },\r\n    {\r\n    \"question\": \"Who is Sarkozy?\",\r\n    \"answers\": [\r\n        {\r\n            \"id\": 0,\r\n            \"answer\": \"Former french president\",\r\n            \"isValid\": true\r\n        },\r\n        {\r\n            \"id\": 1,\r\n            \"answer\": \"Nobody\",\r\n            \"isValid\": false\r\n        },\r\n        {\r\n            \"id\": 2,\r\n            \"answer\": \"Married to Carla Bruni\",\r\n            \"isValid\": true\r\n        },\r\n        {\r\n            \"id\": 3,\r\n            \"answer\": \"Whatever\",\r\n            \"isValid\": false\r\n        }\r\n    ]\r\n    }\r\n    ]\r\n}\r\n",
+							"raw": "{\r\n    \"name\": \"French Politics\",\r\n    \"is_public\": false,\r\n    \"organizations\": [\r\n        1\r\n    ],\r\n    \"qcms\": [\r\n        {\r\n            \"question\": \"Who is the French president?\",\r\n            \"answers\": [\r\n                {\r\n                    \"answer\": \"MANU\",\r\n                    \"isValid\": true\r\n                },\r\n                {\r\n                    \"answer\": \"Jordan Bardella\",\r\n                    \"isValid\": false\r\n                },\r\n                {\r\n                    \"answer\": \"Marine Le Pen\",\r\n                    \"isValid\": false\r\n                },\r\n                {\r\n                    \"answer\": \"Donald Trump\",\r\n                    \"isValid\": false\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -898,20 +1287,20 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/quizzes/1",
+							"raw": "{{base_url}}/quizzes/375",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"quizzes",
-								"1"
+								"375"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Get quizzes",
+					"name": "Get all public quizzes",
 					"protocolProfileBehavior": {
 						"disabledSystemHeaders": {
 							"accept": true
@@ -954,14 +1343,23 @@
 								"type": "text"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"isLiked\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "{{base_url}}/quizzes/1/like",
+							"raw": "{{base_url}}/quizzes/3/like",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"quizzes",
-								"1",
+								"3",
 								"like"
 							]
 						}
@@ -1035,6 +1433,29 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get my quizzes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/quizzes?myQuizzes",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"quizzes"
+							],
+							"query": [
+								{
+									"key": "myQuizzes",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -1043,14 +1464,22 @@
 			"item": [
 				{
 					"name": "Get all decks by page",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
 					"request": {
-						"auth": {
-							"type": "noauth"
-						},
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "{{base_url}}/decks?myDecks",
+							"raw": "{{base_url}}/decks?page=1",
 							"host": [
 								"{{base_url}}"
 							],
@@ -1059,8 +1488,8 @@
 							],
 							"query": [
 								{
-									"key": "myDecks",
-									"value": null
+									"key": "page",
+									"value": "1"
 								}
 							]
 						}
@@ -1188,13 +1617,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/decks/1",
+							"raw": "{{base_url}}/decks/5",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"decks",
-								"1"
+								"5"
 							]
 						}
 					},
@@ -1484,7 +1913,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Test\",\r\n    \"tag_id\": 1,\r\n    \"flashcards\": [\r\n        {\r\n            \"question\": \"Ques1\",\r\n            \"answer\": \"Rep1\"\r\n        },\r\n        {\r\n            \"question\": \"Ques2\",\r\n            \"answer\": \"Rep2\"\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"name\": \"Test\",\r\n    \"tag_id\": 1,\r\n    \"organizations\": \r\n    [\r\n        6,\r\n        7,\r\n        8\r\n    ],\r\n    \"flashcards\": [\r\n        {\r\n            \"question\": \"Ques1\",\r\n            \"answer\": \"Rep1\"\r\n        },\r\n        {\r\n            \"question\": \"Ques2\",\r\n            \"answer\": \"Rep2\"\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1753,7 +2182,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"testsss\",\r\n    \"is_public\": false,\r\n    \"tag_id\": 15,\r\n    \"flashcards\": [\r\n        {\r\n            \"id\": 1000,\r\n            \"question\": \"Ques1azazazazaz\",\r\n            \"answer\": \"Rep1\"\r\n        },\r\n        {\r\n            \"id\": 2000,\r\n            \"question\": \"Ques2\",\r\n            \"answer\": \"Rep2azazazazazaza\"\r\n        },\r\n        {\r\n            \"id\": 23,\r\n            \"question\": \"Ques2\",\r\n            \"answer\": \"Rep2\"\r\n        },\r\n        {\r\n            \"id\": 23,\r\n            \"question\": \"Ques2\",\r\n            \"answer\": \"Rep2\"\r\n        },\r\n        {\r\n            \"id\": 23,\r\n            \"question\": \"Ques2\",\r\n            \"answer\": \"Rep2\"\r\n        },\r\n        {\r\n            \"id\": 0,\r\n            \"question\": \"Ques2\",\r\n            \"answer\": \"Rep2\"\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"name\": \"testsss\",\r\n    \"is_public\": false,\r\n    \"organizations\": [\r\n        1,\r\n        5,\r\n        6,\r\n        7,\r\n        8\r\n    ],\r\n    \"tag_id\": 15,\r\n    \"flashcards\": [\r\n        {\r\n            \"id\": 1000,\r\n            \"question\": \"Ques1azazazazaz\",\r\n            \"answer\": \"Rep1\"\r\n        },\r\n        {\r\n            \"id\": 2000,\r\n            \"question\": \"Ques2\",\r\n            \"answer\": \"Rep2azazazazazaza\"\r\n        },\r\n        {\r\n            \"id\": 23,\r\n            \"question\": \"Ques2\",\r\n            \"answer\": \"Rep2\"\r\n        },\r\n        {\r\n            \"id\": 23,\r\n            \"question\": \"Ques2\",\r\n            \"answer\": \"Rep2\"\r\n        },\r\n        {\r\n            \"id\": 23,\r\n            \"question\": \"Ques2\",\r\n            \"answer\": \"Rep2\"\r\n        },\r\n        {\r\n            \"id\": 0,\r\n            \"question\": \"Ques2\",\r\n            \"answer\": \"Rep2\"\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1761,13 +2190,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/decks/4",
+							"raw": "{{base_url}}/decks/394",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"decks",
-								"4"
+								"394"
 							]
 						}
 					},
@@ -1927,14 +2356,23 @@
 								"type": "text"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"isLiked\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "{{base_url}}/decks/368/like",
+							"raw": "{{base_url}}/decks/4/like",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"decks",
-								"368",
+								"4",
 								"like"
 							]
 						}
@@ -1982,17 +2420,34 @@
 				},
 				{
 					"name": "Get liked decks",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "{{base_url}}/decks/likes",
+							"raw": "{{base_url}}/decks/likes?page=1",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"decks",
 								"likes"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
 							]
 						}
 					},
@@ -2016,6 +2471,30 @@
 							"path": [
 								"stripe",
 								"checkout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get subscription infos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/stripe/me",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"stripe",
+								"me"
 							]
 						}
 					},
@@ -2078,7 +2557,7 @@
 					"name": "Users",
 					"item": [
 						{
-							"name": "Add a user to the organization",
+							"name": "invite a user to the organization",
 							"protocolProfileBehavior": {
 								"disabledSystemHeaders": {
 									"accept": true
@@ -2095,7 +2574,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"email\": \"john@doe.com\"\n}",
+									"raw": "{\n    \"email\": \"thomas.loubat@epitech.eu\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2111,6 +2590,220 @@
 										"organizations",
 										"1",
 										"users"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "403: not a member",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/organizations/2",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"organizations",
+												"2"
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Host",
+											"value": "localhost:8000"
+										},
+										{
+											"key": "Connection",
+											"value": "close"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.3.7"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 02 Jul 2024 09:41:54 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"error\": \"Only members of an ogranization can interact with it\"\n}"
+								},
+								{
+									"name": "404: not found",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/organizations/1234567",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"organizations",
+												"1234567"
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Host",
+											"value": "localhost:8000"
+										},
+										{
+											"key": "Connection",
+											"value": "close"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.3.7"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 02 Jul 2024 09:45:45 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"error\": \"Organization not found\"\n}"
+								},
+								{
+									"name": "200",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/organizations/1",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"organizations",
+												"1"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Host",
+											"value": "localhost:8000"
+										},
+										{
+											"key": "Connection",
+											"value": "close"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.3.7"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 02 Jul 2024 09:46:04 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": 1,\n    \"created_at\": \"2024-07-01T15:07:06.000000Z\",\n    \"updated_at\": \"2024-07-02T09:45:07.000000Z\",\n    \"name\": \"org-03e07687-110c-4571-aeb8-afe529857598\",\n    \"owner_id\": 1\n}"
+								}
+							]
+						},
+						{
+							"name": "Accepte/refuse an invitation to an organization",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"accept\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/organizations/invites/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"organizations",
+										"invites",
+										"1"
 									]
 								}
 							},
@@ -2763,7 +3456,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{base_url}}/organizations/1/decks/1",
+									"raw": "{{base_url}}/organizations/1/decks/392",
 									"host": [
 										"{{base_url}}"
 									],
@@ -2771,7 +3464,7 @@
 										"organizations",
 										"1",
 										"decks",
-										"1"
+										"392"
 									]
 								}
 							},
@@ -2860,11 +3553,12 @@
 										{
 											"key": "file",
 											"type": "file",
-											"src": "postman-cloud:///1ef3df40-b8dc-4650-b5a1-c743a31ea529"
+											"src": "postman-cloud:///1ef3df40-b8dc-4650-b5a1-c743a31ea529",
+											"disabled": true
 										},
 										{
 											"key": "data",
-											"value": "{\n    \"deck_id\": 1\n}",
+											"value": "{\n    \"deck_id\": 19\n}",
 											"contentType": "application/json",
 											"type": "text"
 										}
@@ -2901,7 +3595,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{base_url}}/organizations/1/decks/2",
+									"raw": "{{base_url}}/organizations/1/decks/511",
 									"host": [
 										"{{base_url}}"
 									],
@@ -2909,7 +3603,7 @@
 										"organizations",
 										"1",
 										"decks",
-										"2"
+										"511"
 									]
 								}
 							},
@@ -2948,7 +3642,7 @@
 									]
 								},
 								"url": {
-									"raw": "{{base_url}}/organizations/1/decks/1?_method=PUT",
+									"raw": "{{base_url}}/organizations/1/decks/393?_method=PUT",
 									"host": [
 										"{{base_url}}"
 									],
@@ -2956,6 +3650,202 @@
 										"organizations",
 										"1",
 										"decks",
+										"393"
+									],
+									"query": [
+										{
+											"key": "_method",
+											"value": "PUT"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Quizzes",
+					"item": [
+						{
+							"name": "Get an organization quizzes",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/organizations/1/quizzes",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"organizations",
+										"1",
+										"quizzes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get an organization quiz",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/organizations/1/quizzes/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"organizations",
+										"1",
+										"quizzes",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post an organization quiz",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "postman-cloud:///1ef3df40-b8dc-4650-b5a1-c743a31ea529"
+										},
+										{
+											"key": "data",
+											"value": "{\n    \"quiz_id\": 318\n}",
+											"contentType": "application/json",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/organizations/1/quizzes",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"organizations",
+										"1",
+										"quizzes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Remove quiz from organization",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/organizations/1/quizzes/2",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"organizations",
+										"1",
+										"quizzes",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update an organization quiz",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "postman-cloud:///1ef3df40-b8dc-4650-b5a1-c743a31ea529"
+										},
+										{
+											"key": "file",
+											"type": "file",
+											"src": "postman-cloud:///1ef3d369-2076-4060-aa5b-263bce56a818",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/organizations/1/quizzes/1?_method=PUT",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"organizations",
+										"1",
+										"quizzes",
 										"1"
 									],
 									"query": [
@@ -2988,7 +3878,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"org-{{$randomUUID}}\"\n}",
+							"raw": "{\n    \"name\": \"org-{{$randomUUID}}\",\n    \"description\": \"torsion\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -3428,7 +4318,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"org-{{$randomUUID}}\"\n}",
+							"raw": "{\n    \"name\": \"org-{{$randomUUID}}\",\n    \"description\": \"{{$randomLoremWords}}\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -3465,13 +4355,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/organizations/4",
+							"raw": "{{base_url}}/organizations/2",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"organizations",
-								"4"
+								"2"
 							]
 						}
 					},
@@ -3663,6 +4553,107 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Get Decks and Quizzes",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/all",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"all"
+					],
+					"query": [
+						{
+							"key": "tag",
+							"value": "germsasas",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get stats",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/stats",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"stats"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "aut",
+							"description": "Deck name",
+							"disabled": true
+						},
+						{
+							"key": "isPublic",
+							"value": "false",
+							"description": "Deck visibility",
+							"disabled": true
+						},
+						{
+							"key": "owner",
+							"value": "Thomas",
+							"description": "Deck owner",
+							"disabled": true
+						},
+						{
+							"key": "tag",
+							"value": "Computer Science",
+							"description": "Tag name",
+							"disabled": true
+						},
+						{
+							"key": "isLiked",
+							"value": "true",
+							"description": "Is Deck liked ?",
+							"disabled": true
+						},
+						{
+							"key": "type",
+							"value": "Deck",
+							"description": "Quiz || Deck ",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"auth": {

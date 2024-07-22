@@ -93,7 +93,8 @@ class QuizController extends Controller
 
     public function show(Request $request, string $id): JsonResponse
     {
-        $user = User::find(Auth::guard("sanctum")->user()->id);
+        $user = Auth::guard("sanctum")->user();
+        $user ? $user = User::find($user->id) : null;
 
         $quiz = Quiz::with('qcms', 'user')->find($id);
 
@@ -105,7 +106,6 @@ class QuizController extends Controller
 
 
         if ($quiz->is_public == false) {
-
             if (!$user) {
                 return response()->json(["message" => "Unauthorized"], 401);
             }
@@ -115,7 +115,13 @@ class QuizController extends Controller
                 ->merge($user->organizations->pluck('id'))
                 ->unique();
 
-            if ($user->id != $quiz->user_id && !OrganizationQuiz::where('organization_id', $organizations)->where('quiz_id', $quiz->id)->exists()) {
+            if ($organizations->count() > 0) {
+                if ($user->id != $quiz->user_id && !OrganizationQuiz::where('organization_id', $organizations)->where('quiz_id', $id)->exists()) {
+                    return response()->json(['message' => 'Forbidden'], 403);
+                }
+            }
+
+            if ($user->id != $quiz->user_id) {
                 return response()->json(['message' => 'Forbidden'], 403);
             }
         }
@@ -142,8 +148,8 @@ class QuizController extends Controller
             if (count($ownedOrganizations) > 0) {
                 $relatedOrganizations = [];
                 foreach ($ownedOrganizations as $organization) {
-                    $relatedDeck = OrganizationQuiz::where('quiz_id', $quiz['id'])->where('organization_id', $organization['id'])->first();
-                    if ($relatedDeck) {
+                    $relatedQuiz = OrganizationQuiz::where('quiz_id', $quiz['id'])->where('organization_id', $organization['id'])->first();
+                    if ($relatedQuiz) {
                         array_push($relatedOrganizations, $organization['id']);
                     }
                 }

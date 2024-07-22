@@ -74,9 +74,10 @@ const LoginPage = () => {
 
     const data: AuthTokenData = response.data as AuthTokenData;
     toast({
-      title: "Welcome back !",
+      description: "Welcome back !",
       className: "bg-green-400",
     });
+
     setToken(
       data.access_token,
       data.access_token_expiration,
@@ -112,7 +113,7 @@ const LoginPage = () => {
     }
 
     toast({
-      title: "Welcome !",
+      description: "Welcome !",
       className: "bg-green-400",
     });
 
@@ -127,9 +128,9 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex justify-center items-center">
-      <div className="max-w-md my-auto">
-        <Tabs defaultValue="login" className="w-[450px]">
+    <div className="flex gap-4 p-2 md:mx-auto my-4 md:my-16">
+      <div className="w-full md:w-[40rem]">
+        <Tabs defaultValue="login" className="w-full ">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="login">Login</TabsTrigger>
             <TabsTrigger value="register">Register</TabsTrigger>
@@ -144,7 +145,7 @@ const LoginPage = () => {
               <Form {...loginForm}>
                 <form
                   onSubmit={loginForm.handleSubmit(onSubmitLogin)}
-                  className="space-y-8"
+                  className="space-y-6"
                 >
                   <CardContent className="space-y-2">
                     <FormField
@@ -274,10 +275,12 @@ const LoginPage = () => {
           </TabsContent>
         </Tabs>
       </div>
-      <div className="hidden lg:flex w-1/2 items-center">
-        <div className="m-4">
-          <img src={heroImage} alt="Hero" className=" w-3/5 rounded-md" />
-        </div>
+      <div className="hidden lg:block h-[24.6rem]">
+        <img
+          src="/welcome.jpg"
+          alt="Welcome"
+          className="rounded-md h-full w-full object-cover"
+        />
       </div>
     </div>
   );

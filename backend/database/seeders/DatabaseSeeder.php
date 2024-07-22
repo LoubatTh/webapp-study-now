@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             PersoUserSeeder::class,
             QuizSeeder::class,
             QcmSeeder::class,
+            OrganizationSeeder::class,
             UserSeeder::class,
         ]);
     }

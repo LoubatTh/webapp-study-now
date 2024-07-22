@@ -1,6 +1,6 @@
 import React from "react";
 import "@testing-library/jest-dom";
-import { QCM, Answer } from "../../../../src/types/quizz.type";
+import { QCM } from "../../../../src/types/quizz.type";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import QuestionQCM from "../../../../src/components/quizz/QuestionQCM";
@@ -28,7 +28,7 @@ const qcm: QCM = {
   ],
 };
 
-//Test the Deck component
+//Test the QCM component
 describe("QuestionQCMComponent Component", () => {
   const defaultProps = {
     question: qcm,

@@ -90,15 +90,19 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
               </AvatarFallback>
             </Avatar>
             <div className="flex-col ml-2 capitalize text-wrap lg:text-nowrap lg:max-w-80 xl:max-w-60">
-              <CardTitle className="md:truncate">{Cardname}</CardTitle>
-              <CardDescription className="md:truncate">{owner}</CardDescription>
+              <CardTitle data-testid="card-name" className="md:truncate">
+                {Cardname}
+              </CardTitle>
+              <CardDescription data-testid="card-owner" className="md:truncate">
+                {owner}
+              </CardDescription>
             </div>
           </CardHeader>
           <LikeButton id={id} type={type} likes={likes} isLiked={isLiked} />
         </div>
         <CardContent className="flex">
           <div className="capitalize mr-1">{cards}</div>
-          <div>
+          <div data-testid="card-description">
             of {sizeCard} {itemLabel}
           </div>
         </CardContent>
@@ -108,7 +112,7 @@ const QuizzDeckCard: React.FC<CommonCardProps> = ({
             getColorClass(tag.toLowerCase())
           )}
         >
-          <div>{tag}</div>
+          <div data-testid="card-tag">{tag}</div>
           {owner === name && (
             <div className="flex h-full gap-0.5">
               <EditButton

@@ -41,5 +41,16 @@ class UserSeeder extends Seeder
             ->hasDecks(1) // 30 decks
             ->hasQuizzes(2) //60 quizzes
             ->create();
+
+        // print "Start long creation\n";
+        // for ($i = 0; $i < 300; $i++) {
+        //     if ($i % 25 == 0) {
+        //         print ("$i user created\n");
+        //     }
+        //     User::factory()
+        //         ->hasDecks(20)
+        //         ->hasQuizzes(20)
+        //         ->create();
+        // }
     }
 }

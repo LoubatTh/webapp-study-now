@@ -20,6 +20,7 @@ import { EditFormSchema } from "@/lib/form/edit.form";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 import { getFormattedDate } from "@/utils/dateparser";
+import ProfilePicture from "@/components/profilePicture";
 
 const ProfilePage = () => {
   const { id, name, email, is_subscribed, refreshUser } = useUser();
@@ -133,11 +134,7 @@ const ProfilePage = () => {
         {/* Profile */}
         <div className="bg-white shadow-lg rounded-lg backdrop-blur-xl p-6 w-full md:w-1/3 h-96">
           <div className="flex justify-center">
-            <img
-              className="w-24 h-24 rounded-full"
-              src="https://picsum.photos/200/300"
-              alt="Profile"
-            />
+            <ProfilePicture />
           </div>
           <div className="text-center mt-3 border-b-2 pb-4">
             <h2 className="text-xl font-semibold">{name}</h2>
@@ -151,10 +148,6 @@ const ProfilePage = () => {
             <div className="flex items-center mt-2">
               <Mail className="text-gray-600" />
               <span className="ml-2 text-gray-800">{email}</span>
-            </div>
-            <div className="flex items-center mt-2">
-              <Phone className=" text-gray-600" />
-              <span className="ml-2 text-gray-800">+330000000</span>
             </div>
             <div className="flex items-center mt-2">
               {is_subscribed ? (

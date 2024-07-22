@@ -96,6 +96,7 @@ const ExplorerPage = () => {
               id={item.id}
               Cardname={item.name}
               owner={item.owner}
+              owner_avatar={item.owner_avatar}
               tag={item.tag}
               likes={item.likes}
               isLiked={item.is_liked}

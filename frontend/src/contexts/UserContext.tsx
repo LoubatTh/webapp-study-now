@@ -19,6 +19,8 @@ const defaultState = {
   name: "",
   email: "",
   role: "",
+  avatar:
+    "https://epitechstudynow.s3.eu-west-3.amazonaws.com/users/default.jpg",
   is_subscribed: false,
   email_verified_at: null,
   created_at: "",

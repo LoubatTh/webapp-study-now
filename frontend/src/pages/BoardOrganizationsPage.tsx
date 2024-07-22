@@ -343,6 +343,7 @@ const BoardOrganizationPage = () => {
             id={quizz.quiz.id}
             Cardname={quizz.quiz.name}
             owner={quizz.quiz.owner}
+            owner_avatar={quizz.quiz.owner_avatar}
             tag={quizz.quiz.tag}
             likes={quizz.quiz.likes}
             isLiked={quizz.quiz.is_liked}
@@ -359,6 +360,7 @@ const BoardOrganizationPage = () => {
             id={deck.deck.id}
             Cardname={deck.deck.name}
             owner={deck.deck.owner}
+            owner_avatar={deck.deck.owner_avatar}
             tag={deck.deck.tag}
             likes={deck.deck.likes}
             isLiked={deck.deck.is_liked}

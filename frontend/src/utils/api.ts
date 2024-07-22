@@ -4,12 +4,15 @@ export async function fetchApi<T, D>(
   method: "GET" | "POST" | "PUT" | "DELETE",
   endpoint: string,
   body?: T,
-  token?: string | null
+  token?: string | null,
 ): Promise<{ data?: D | string | DataType; status: number; error?: string }> {
+  
   const headers = new Headers({
-    "Content-Type": "application/json",
-    Accept: "application/json",
-  });
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    });
+
+
   if (token) {
     headers.set("Authorization", `Bearer ${token}`);
   }

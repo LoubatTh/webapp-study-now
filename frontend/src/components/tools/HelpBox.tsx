@@ -104,19 +104,15 @@ const HelpBox = ({ type }: HelpBoxProps) => {
         {type === "quizz" && (
           <HoverCardContent className="max-w-56 mr-2">
             <div className="flex flex-col gap-3">
-              <p className=" font-semibold">
-                Rate your performance from 1 to 5 stars
-              </p>
+              <p className=" font-semibold">Colors legend</p>
               <Separator />
               <div className="flex flex-col gap-3 text-xs p-2">
-                <p className="text-blue-500">
-                  - Blue: The answer you selected.
-                </p>
-                <p className="text-green-500">- Green: The correct answer.</p>
+                <p className="text-blue-500">Blue: The answer you selected.</p>
+                <p className="text-green-500">Green: The correct answer.</p>
                 <p className="text-orange-500">
-                  - Orange: The correct answer that you missed.
+                  Orange: The correct answer that you missed.
                 </p>
-                <p className="text-red-500">- Red: The incorrect answer.</p>
+                <p className="text-red-500">Red: The incorrect answer.</p>
               </div>
             </div>
           </HoverCardContent>

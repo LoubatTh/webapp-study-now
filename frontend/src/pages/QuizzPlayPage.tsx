@@ -238,7 +238,7 @@ const QuizzPlayPage = () => {
             <h1 className="my-8 text-center text-3xl uppercase break-words overflow-wrap w-full">
               {quizz.name}
             </h1>
-            <div className="flex flex-col gap-10 w-full">
+            <div className="flex flex-col gap-10 w-full max-w-96">
               {quizz.qcms.map((qcm, i) => (
                 <div
                   key={qcm.id}

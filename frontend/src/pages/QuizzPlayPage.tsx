@@ -1,6 +1,7 @@
 import { ResourceForbidden } from "@/components/errors/ResourceForbidden";
 import ResourceNotFound from "@/components/errors/ResourceNotFound";
 import QuestionQCM from "@/components/quizz/QuestionQCM";
+import HelpBox from "@/components/tools/HelpBox";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/contexts/AuthContext";
@@ -285,6 +286,7 @@ const QuizzPlayPage = () => {
           <p>Loading...</p>
         )}
       </div>
+      <HelpBox type={"quizz"} />
     </>
   );
 };

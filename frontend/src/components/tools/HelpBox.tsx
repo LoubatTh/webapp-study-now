@@ -1,19 +1,10 @@
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { CalendarIcon, CircleHelp, Star } from "lucide-react";
+import { CircleHelp, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "../ui/hover-card";
-import { Avatar } from "@mui/material";
-import { AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
 import { Separator } from "../ui/separator";
 
 type HelpBoxProps = {

@@ -81,21 +81,21 @@ const HelpBox = ({ type }: HelpBoxProps) => {
               <div className="flex flex-col gap-3 text-xs text-ellipsis p-2">
                 <p>
                   - Select <Star size={10} className="inline fill-yellow-400" />{" "}
-                  star if you feel you failed or took too long to answer.
+                  if you feel you failed or took too long to answer.
                 </p>
                 <p>
                   - Select <Star size={10} className="inline fill-yellow-400" />{" "}
                   <Star size={10} className="inline fill-yellow-400" />{" "}
-                  <Star size={10} className="inline fill-yellow-400" /> stars if
-                  you were close to the correct answer but took a bit too long.
+                  <Star size={10} className="inline fill-yellow-400" /> if you
+                  were close to the correct answer but took a bit too long.
                 </p>
                 <p>
                   - Select <Star size={10} className="inline fill-yellow-400" />{" "}
                   <Star size={10} className="inline fill-yellow-400" />{" "}
                   <Star size={10} className="inline fill-yellow-400" />{" "}
                   <Star size={10} className="inline fill-yellow-400" />{" "}
-                  <Star size={10} className="inline fill-yellow-400" /> stars if
-                  you quickly found the correct answer.
+                  <Star size={10} className="inline fill-yellow-400" /> if you
+                  quickly found the correct answer.
                 </p>
               </div>
             </div>

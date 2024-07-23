@@ -50,7 +50,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="flex justify-between p-2 items-center z-20">
+    <div className="flex justify-between p-2 items-center z-50">
       <div
         onClick={() => handleNavigate("/")}
         className="flex gap-2 first:items-center cursor-pointer"

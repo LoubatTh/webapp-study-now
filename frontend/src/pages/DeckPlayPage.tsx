@@ -10,6 +10,7 @@ import { fetchApi } from "@/utils/api";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "@/components/ui/use-toast";
+import HelpBox from "@/components/tools/HelpBox";
 
 const getDeck = async (deckId: string, accessToken?: string) => {
   const response = await fetchApi("GET", `decks/${deckId}`, null, accessToken);
@@ -142,6 +143,7 @@ const DeckPlayPage = () => {
           >
             Get my result
           </Button>
+          <HelpBox type={"deck"} />
         </>
       )}
     </div>

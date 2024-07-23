@@ -64,7 +64,7 @@ const HelpBox = ({ type }: HelpBoxProps) => {
     //     )}
     //   </DropdownMenu>
     // </div>
-    <div className="fixed bottom-0 right-0 md:bottom-4 md:right-4  z-50">
+    <div className="fixed bottom-0 right-0 md:bottom-4 md:right-4 z-50">
       <HoverCard>
         <HoverCardTrigger asChild>
           <Button variant="link">
